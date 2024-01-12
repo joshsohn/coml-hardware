@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/CMakeFiles/adaptnotch"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/CMakeFiles/adaptnotch.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/CMakeFiles/adaptnotch-complete.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/adaptnotch-prefix/src/adaptnotch-stamp/adaptnotch-install.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/adaptnotch-prefix/src/adaptnotch-stamp/adaptnotch-mkdir.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/adaptnotch-prefix/src/adaptnotch-stamp/adaptnotch-download.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/adaptnotch-prefix/src/adaptnotch-stamp/adaptnotch-update.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/adaptnotch-prefix/src/adaptnotch-stamp/adaptnotch-patch.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/adaptnotch-prefix/src/adaptnotch-stamp/adaptnotch-configure.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/adaptnotch-prefix/src/adaptnotch-stamp/adaptnotch-build.rule"
+		},
+		{
+			"file" : "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/adaptnotch-prefix/src/adaptnotch-stamp/adaptnotch-test.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"adaptnotch"
+		],
+		"name" : "adaptnotch"
+	}
+}

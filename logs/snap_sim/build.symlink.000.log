@@ -1,0 +1,5 @@
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/share/snap_sim/cmake/snap_simConfig-version.cmake
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/share/snap_sim/cmake/snap_simConfig.cmake
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/lib/libsnap_ipc.so
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/lib/pkgconfig/snap_sim.pc
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/lib/snap_sim/snap_sim

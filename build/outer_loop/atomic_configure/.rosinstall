@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/setup.sh

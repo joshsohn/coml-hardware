@@ -1,0 +1,8 @@
+prefix=/home/raphaelpeabody/r/simulation_ws/install
+
+Name: snap
+Description: Description of snap
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

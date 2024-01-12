@@ -1,0 +1,1 @@
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/AttitudeCommand.h
