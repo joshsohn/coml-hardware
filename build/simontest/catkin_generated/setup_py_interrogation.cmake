@@ -1,0 +1,7 @@
+set(simontest_SETUP_PY_SETUP_MODULE "distutils.core")
+set(simontest_SETUP_PY_VERSION "0.0.0")
+set(simontest_SETUP_PY_SCRIPTS "")
+set(simontest_SETUP_PY_PACKAGES "simontest")
+set(simontest_SETUP_PY_PACKAGE_DIRS "src/simontest")
+set(simontest_SETUP_PY_MODULES "")
+set(simontest_SETUP_PY_MODULE_DIRS "")

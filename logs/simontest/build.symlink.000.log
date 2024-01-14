@@ -1,0 +1,4 @@
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/share/simontest/cmake/simontestConfig-version.cmake
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/share/simontest/cmake/simontestConfig.cmake
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/lib/pkgconfig/simontest.pc
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/lib/python3/dist-packages/simontest/__init__.py
