@@ -1,0 +1,4 @@
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/share/python_example/cmake/python_exampleConfig.cmake
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/share/python_example/cmake/python_exampleConfig-version.cmake
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/lib/pkgconfig/python_example.pc
+Symlinking /home/raphaelpeabody/r/simulation_ws/devel/lib/python3/dist-packages/python_example/__init__.py
