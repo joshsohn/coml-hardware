@@ -7,7 +7,7 @@
     <!-- Position / trajectory tracking -->
     <node name="python_node" pkg="python_example" type="python_node" output="screen"> 	
       <!-- Load vehicle type parameters -->
-      <!-- <rosparam file="$(find outer_loop)/param/$(arg veh).yaml" command="load"/> -->
+      <rosparam file="$(find outer_loop)/param/$(arg veh).yaml" command="load"/>
     </node>
 
   </group>

@@ -286,12 +286,7 @@ void OuterLoopROS::screenPrint(const snapstack_msgs::AttitudeCommand& attmsg)
   std::ostringstream str;
   str.setf(std::ios::fixed); // give all the doubles the same precision
   str.setf(std::ios::showpos); // show +/- signs always
-  str << std::setprecision(4) << std::endl;
-
-  str << "Act Pos:  x: " << log.p.x() << "  y: " << log.p.y()
-      << "  z: " << log.p.z() << std::endl;
-  str << "Des Pos:  x: " << log.p_ref.x() << "  y: " << log.p_ref.y()
-      << "  z: " << log.p_ref.z() << std::endl;
+  str << std::setprecision(OuterLoopROSref.z() << std::endl;
   str << std::endl;
 
   str << "Act Vel:  x: " << log.v.x() << "  y: " << log.v.y()
