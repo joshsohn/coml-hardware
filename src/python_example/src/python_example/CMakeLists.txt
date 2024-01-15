@@ -7,6 +7,7 @@ project(python_example)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
+  snapstack_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -100,8 +101,8 @@ catkin_python_setup()
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES simontest
-#  CATKIN_DEPENDS roscpp rospy std_msgs
+#  LIBRARIES python_example
+#  CATKIN_DEPENDS rospy std_msgs snapstack_msgs
 #  DEPENDS system_lib
 )
 
