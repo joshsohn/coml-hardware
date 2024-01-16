@@ -3,14 +3,16 @@ from .simon_pythonsubpackage1 import bar_fn, baz_fn
 from .structs import AttCmdClass, GoalClass, ParametersClass, StateClass
 print("  imported bar_fn, baz_fn from simon_pythonsubpackage1")
 import numpy as np
-import quaternion
+# import quaternion
 import rospy
+from geometry_msgs.msg import Point, Quaternion, Vector3
 from snapstack_msgs.msg import State, Goal, AttitudeCommand, ControlLog
-import tf
 
+# global variables
 state_ = StateClass()
 goal_ = GoalClass()
 
+# convert from ROS message to array
 def point_msg_to_array(point_msg):
     return np.array([point_msg.x, point_msg.y, point_msg.z])
 
@@ -18,18 +20,34 @@ def vector_msg_to_array(vector_msg):
     return np.array([vector_msg.x, vector_msg.y, vector_msg.z])
 
 def quaternion_msg_to_quaternion(quaternion_msg):
-    return np.quaternion(quaternion_msg.w, quaternion_msg.x, quaternion_msg.y, quaternion_msg.z)
+    return np.array([quaternion_msg.x, quaternion_msg.y, quaternion_msg.z, quaternion_msg.w])
 
+# convert from array to ROS message
+def point_array_to_msg(point_array):
+    return Point(x=point_array[0], y=point_array[1], z=point_array[2])
+
+def vector_array_to_msg(vector_array):
+    return Vector3(x=vector_array[0], y=vector_array[1], z=vector_array[2])
+
+def quaternion_array_to_msg(quaternion_array):
+    return Quaternion(x=quaternion_array[0], y=quaternion_array[1], z=quaternion_array[2], w=quaternion_array[3])
+
+# state callback function
 def state_cb(msg):
     statemsg_ = msg
+
+    global state_
     state_.t = msg.header.stamp.to_sec()
     state_.p = point_msg_to_array(msg.pos)
     state_.v = vector_msg_to_array(msg.vel)
     state_.q = quaternion_msg_to_quaternion(msg.quat)
     state_.w = vector_msg_to_array(msg.w)
 
+# goal callback function
 def goal_cb(msg):
     goalmsg_ = msg
+
+    global goal_
     goal_.t = msg.header.stamp.to_sec()
     goal_.p = point_msg_to_array(msg.p)
     goal_.v = vector_msg_to_array(msg.v)
@@ -40,6 +58,7 @@ def goal_cb(msg):
     goal_.mode_xy = GoalClass.Mode(msg.mode_xy)
     goal_.mode_z = GoalClass.Mode(msg.mode_z)
 
+# control callback function
 def cntrl_cb(event):
     cmd = AttCmdClass()
     cmd.q = state_.q
@@ -51,12 +70,21 @@ def cntrl_cb(event):
     if t_now.is_zero():
         return
 
+    # Publilsh command via ROS
     attmsg = AttitudeCommand()
+    attmsg.header.stamp = t_now
+    attmsg.power = 0
+    attmsg.q = quaternion_array_to_msg(cmd.q)
+    attmsg.w = vector_array_to_msg(cmd.w)
+    attmsg.F_W = vector_array_to_msg(cmd.F_W)
+
+    pub_att_cmd_.publish(attmsg)
 
 def load_parameters():
     p = ParametersClass()
 
     # Load parameters from the parameter server
+    global control_dt_, Tspinup_, spinup_thrust_gs_, alt_limit_
     control_dt_ = rospy.get_param("~control_dt", default=0.01)
     Tspinup_ = rospy.get_param("~spinup/time", default=1.0)
     spinup_thrust_gs_ = rospy.get_param("~spinup/thrust_gs", default=0.5)
@@ -86,18 +114,20 @@ def load_parameters():
     p.maxVelErr_xy = maxVelErr_xy
     p.maxVelErr_z = maxVelErr_z
 
-    return p, control_dt_, Tspinup_, spinup_thrust_gs_, alt_limit_
+    return p
 
 def main():
-    # Initialize the ROS node with a default name
+    # Initialize the ROS node with the default name 'my_node_name' (will be overwritten by launch file)
     rospy.init_node('my_node_name')
 
     # Load ROS parameters
-    p, control_dt_, Tspinup_, spinup_thrust_gs_, alt_limit_ = load_parameters()
+    p = load_parameters()
 
     # Subscribe and publish
     rospy.Subscriber('state', State, state_cb)
     rospy.Subscriber('goal', Goal, goal_cb)
+
+    global pub_att_cmd_, pub_log_
     pub_att_cmd_ = rospy.Publisher('attcmd', AttitudeCommand, queue_size=1)
     pub_log_ = rospy.Publisher('log', ControlLog, queue_size=1)
 

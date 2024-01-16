@@ -1,10 +1,10 @@
 from enum import Enum
-import quaternion
+# import quaternion
 import numpy as np
 
 class AttCmdClass:
     def __init__(self):
-        self.q = np.quaternion(1, 0, 0, 0)
+        self.q = np.array([0, 0, 0, 1]) # x, y, z, w
         self.w = np.zeros(3)
         self.F_W = np.zeros(3)
 
@@ -27,7 +27,7 @@ class StateClass:
         self.t = -1
         self.p = np.zeros(3)
         self.v = np.zeros(3)
-        self.q = np.quaternion(1, 0, 0, 0)
+        self.q = np.array([0, 0, 0, 1]) # x, y, z, w
         self.w = np.zeros(3)
 
 class GoalClass:
