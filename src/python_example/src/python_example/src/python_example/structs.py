@@ -10,21 +10,12 @@ class AttCmdClass:
 
 class ParametersClass:
     def __init__(self):
-        self.control_dt_ = 0.0
-        self.Tspinup_ = 0.0
-        self.spinup_thrust_gs_ = 0.0
         self.mass = 0.0
-        self.kp_xy = 0.0
-        self.ki_xy = 0.0
-        self.kd_xy = 0.0
-        self.kp_z = 0.0
-        self.ki_z = 0.0
-        self.kd_z = 0.0
-        self.maxPosErr_xy = 0.0
-        self.maxPosErr_z = 0.0
-        self.maxVelErr_xy = 0.0
-        self.maxVelErr_z = 0.0
-        self.alt_limit_ = 0.0
+        self.Kp = np.zeros(3)
+        self.Ki = np.zeros(3)
+        self.Kd = np.zeros(3)
+        self.maxPosErr = np.zeros(3)
+        self.maxVelErr = np.zeros(3)
 
 class StateClass:
     def __init__(self):
