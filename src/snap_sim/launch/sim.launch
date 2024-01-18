@@ -49,10 +49,10 @@
   </group>
 
   <!-- Position / trajectory tracking -->
-  <include file="$(find outer_loop)/launch/cntrl.launch">
+  <!-- <include file="$(find outer_loop)/launch/cntrl.launch">
     <arg name="veh" value="$(arg veh)" />
     <arg name="num" value="$(arg num)s" />
-  </include>
+  </include> -->
 
   <!-- snap stack autopilot -->
   <include file="$(find snap)/launch/snap.launch">

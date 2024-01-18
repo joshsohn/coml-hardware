@@ -21,6 +21,7 @@ class OuterLoopROS:
         self.alt_limit_ = 0.0
 
         self.safety_kill_reason = ""
+        self.mode_ = ModeClass.Preflight
 
         # Load ROS parameters
         self.p = self.load_parameters()
@@ -126,38 +127,42 @@ class OuterLoopROS:
 
         # If high-level planner doesn't allow power, set mode to Preflight
         if not self.goalmsg_.power:
-            self.mode = ModeClass.Preflight
+            self.mode_ = ModeClass.Preflight
 
         # Passthrough the current state and goal to keep log up to date
         self.olcntrl_.update_log(self.state_)
 
         # Flight Sequence State Machine
-        if self.mode == ModeClass.Preflight:
+        if self.mode_ == ModeClass.Preflight:
+            print('preflight')
             if self.goalmsg_.power:
-                self.mode = ModeClass.SpinningUp
+                self.mode_ = ModeClass.SpinningUp
                 self.t_start = rospy.get_time()
 
             if not self.do_preflight_checks_pass():
-                self.mode = ModeClass.Preflight
+                self.mode_ = ModeClass.Preflight
 
-        elif self.mode == ModeClass.SpinningUp:
+        elif self.mode_ == ModeClass.SpinningUp:
+            print('spinning up')
             if rospy.get_time() < self.t_start + self.Tspinup_:
                 cmd.q = self.state_.q
                 cmd.w = np.zeros(3)
                 cmd.F_W = self.spinup_thrust_ * np.array([0.0, 0.0, 1.0])
             else:
                 self.olcntrl_.reset()
-                self.mode = ModeClass.Flying
+                self.mode_ = ModeClass.Flying
                 rospy.logwarn_throttle(0.5, "Spinning up motors.")
 
-        elif self.mode == ModeClass.Flying:
+        elif self.mode_ == ModeClass.Flying:
+            print('flying')
             cmd = self.olcntrl_.compute_attitude_command(rospy.get_time(), self.state_, self.goal_)
 
             # Safety checks
             if not self.do_safety_checks_pass():
-                self.mode = ModeClass.EmergencyStop
+                self.mode_ = ModeClass.EmergencyStop
 
-        elif self.mode == ModeClass.EmergencyStop:
+        elif self.mode_ == ModeClass.EmergencyStop:
+            print('emergency stop')
             cmd.q = self.state_.q
             cmd.w = np.zeros(3)
             cmd.F_W = np.zeros(3)
@@ -167,6 +172,7 @@ class OuterLoopROS:
         attmsg = AttitudeCommand()
         attmsg.header.stamp = t_now
         attmsg.power = 0
+        print(cmd.q)
         attmsg.q = quaternion_array_to_msg(cmd.q)
         attmsg.w = vector_array_to_msg(cmd.w)
         attmsg.F_W = vector_array_to_msg(cmd.F_W)
@@ -188,7 +194,7 @@ class OuterLoopROS:
         return self.check_altitude() and self.check_comms()
 
     def check_altitude(self):
-        if self.state_.p[2] > self.alt_limit:
+        if self.state_.p[2] > self.alt_limit_:
             rospy.logerr(f"Safety --- Altitude check failed ({self.state_.p[2]} > {self.alt_limit_}).")
             self.safety_kill_reason += "ALT "
             return False

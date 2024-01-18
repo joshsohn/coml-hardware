@@ -4,7 +4,7 @@ import numpy as np
 
 class AttCmdClass:
     def __init__(self):
-        self.q = np.array([0, 0, 0, 1]) # x, y, z, w
+        self.q = np.array([1, 0, 0, 0]) # w, x, y, z
         self.w = np.zeros(3)
         self.F_W = np.zeros(3)
 
@@ -22,7 +22,7 @@ class StateClass:
         self.t = -1
         self.p = np.zeros(3)
         self.v = np.zeros(3)
-        self.q = np.array([0, 0, 0, 1]) # x, y, z, w
+        self.q = np.array([1, 0, 0, 0]) # w, x, y, z
         self.w = np.zeros(3)
 
 class GoalClass:
@@ -55,8 +55,8 @@ class ControlLogClass:
         self.a_fb = np.zeros(3)
         self.j_ff = np.zeros(3)
         self.j_fb = np.zeros(3)
-        self.q = np.array([0, 0, 0, 1]) # x, y, z, w
-        self.q_ref = np.array([0, 0, 0, 1]) # x, y, z, w
+        self.q = np.array([1, 0, 0, 0]) # w, x, y, z
+        self.q_ref = np.array([1, 0, 0, 0]) # w, x, y, z
         self.w = np.zeros(3)
         self.w_ref = np.zeros(3)
         self.F_W = np.zeros(3)  # total desired force [N], expr in world frame
