@@ -130,14 +130,7 @@ void OuterLoopROS::cntrlCb(const ros::TimerEvent& e)
   // so this should be called before computeAttitudeCommand.
   olcntrl_->updateLog(state_);
 
-  //
-  // Flight Sequence State Machine
-  //
-
-  if (mode_ == Mode::Preflight) {
-
-    if (goalmsg_.power) {
-      mode_ = Mode::SpinningUp;
+  //msg
       t_start_ = t_now;
     }
 

@@ -2,7 +2,7 @@ print("  importing bar_fn, baz_fn from simon_pythonsubpackage1")
 from .helpers import point_msg_to_array, vector_msg_to_array, quaternion_msg_to_quaternion, point_array_to_msg, vector_array_to_msg, quaternion_array_to_msg
 from .outer_loop import OuterLoop
 from .simon_pythonsubpackage1 import bar_fn, baz_fn
-from .structs import AttCmdClass, GoalClass, ParametersClass, StateClass
+from .structs import AttCmdClass, GoalClass, ModeClass, ParametersClass, StateClass
 print("  imported bar_fn, baz_fn from simon_pythonsubpackage1")
 import numpy as np
 # import quaternion
@@ -20,11 +20,16 @@ class OuterLoopROS:
         self.spinup_thrust_ = 0.0
         self.alt_limit_ = 0.0
 
+        self.safety_kill_reason = ""
+
         # Load ROS parameters
         self.p = self.load_parameters()
 
         self.state_ = StateClass()
         self.goal_ = GoalClass()
+
+        self.statemsg_ = State()
+        self.goalmsg_ = Goal()
 
         self.olcntrl_ = OuterLoop(self.p)
 
@@ -85,7 +90,7 @@ class OuterLoopROS:
 
     # state callback function
     def state_cb(self, msg):
-        statemsg_ = msg
+        self.statemsg_ = msg
 
         self.state_.t = msg.header.stamp.to_sec()
         self.state_.p = point_msg_to_array(msg.pos)
@@ -95,7 +100,7 @@ class OuterLoopROS:
 
     # goal callback function
     def goal_cb(self, msg):
-        goalmsg_ = msg
+        self.goalmsg_ = msg
 
         self.goal_.t = msg.header.stamp.to_sec()
         self.goal_.p = point_msg_to_array(msg.p)
@@ -119,7 +124,46 @@ class OuterLoopROS:
         if t_now.is_zero():
             return
 
-        # Publilsh command via ROS
+        # If high-level planner doesn't allow power, set mode to Preflight
+        if not self.goalmsg_.power:
+            self.mode = ModeClass.Preflight
+
+        # Passthrough the current state and goal to keep log up to date
+        self.olcntrl_.update_log(self.state_)
+
+        # Flight Sequence State Machine
+        if self.mode == ModeClass.Preflight:
+            if self.goalmsg_.power:
+                self.mode = ModeClass.SpinningUp
+                self.t_start = rospy.get_time()
+
+            if not self.do_preflight_checks_pass():
+                self.mode = ModeClass.Preflight
+
+        elif self.mode == ModeClass.SpinningUp:
+            if rospy.get_time() < self.t_start + self.Tspinup_:
+                cmd.q = self.state_.q
+                cmd.w = np.zeros(3)
+                cmd.F_W = self.spinup_thrust_ * np.array([0.0, 0.0, 1.0])
+            else:
+                self.olcntrl_.reset()
+                self.mode = ModeClass.Flying
+                rospy.logwarn_throttle(0.5, "Spinning up motors.")
+
+        elif self.mode == ModeClass.Flying:
+            cmd = self.olcntrl_.compute_attitude_command(rospy.get_time(), self.state_, self.goal_)
+
+            # Safety checks
+            if not self.do_safety_checks_pass():
+                self.mode = ModeClass.EmergencyStop
+
+        elif self.mode == ModeClass.EmergencyStop:
+            cmd.q = self.state_.q
+            cmd.w = np.zeros(3)
+            cmd.F_W = np.zeros(3)
+            rospy.logwarn_throttle(0.5, "Emergency stop.")
+
+        # Publish command via ROS
         attmsg = AttitudeCommand()
         attmsg.header.stamp = t_now
         attmsg.power = 0
@@ -128,6 +172,34 @@ class OuterLoopROS:
         attmsg.F_W = vector_array_to_msg(cmd.F_W)
 
         self.pub_att_cmd_.publish(attmsg)
+
+    def do_preflight_checks_pass(self):
+        return self.check_state()
+
+    def check_state(self):
+        if self.state_.t == -1:
+            rospy.logwarn_throttle(0.5, "Preflight checks --- waiting on state data from autopilot. "
+                                        "Is IMU calibration complete?")
+            return False
+
+        return True
+
+    def do_safety_checks_pass(self):
+        return self.check_altitude() and self.check_comms()
+
+    def check_altitude(self):
+        if self.state_.p[2] > self.alt_limit:
+            rospy.logerr(f"Safety --- Altitude check failed ({self.state_.p[2]} > {self.alt_limit_}).")
+            self.safety_kill_reason += "ALT "
+            return False
+
+        return True
+
+    def check_comms(self):
+        if False:  # Replace with actual communication check
+            self.safety_kill_reason += "COMM "
+
+        return True
 
 def main():
     OuterLoopROS()

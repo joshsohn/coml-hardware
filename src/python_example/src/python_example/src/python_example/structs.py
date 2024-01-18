@@ -62,3 +62,9 @@ class ControlLogClass:
         self.F_W = np.zeros(3)  # total desired force [N], expr in world frame
         self.mode_xy = GoalClass.Mode.POS_CTRL
         self.mode_z = GoalClass.Mode.POS_CTRL
+
+class ModeClass(Enum):
+    Preflight = 0
+    SpinningUp = 1
+    Flying = 2
+    EmergencyStop = 3

@@ -14,6 +14,13 @@ class OuterLoop:
         self.a_fb_last_ = np.zeros(3)
         self.j_fb_last_ = np.zeros(3)
         self.t_last_ = 0
+    
+    def update_log(self, state):
+        self.log_ = ControlLogClass()
+        self.log_.p = state.p
+        self.log_.v = state.v
+        self.log_.q = state.q
+        self.log_.w = state.w
 
     def compute_attitude_command(self, t, state, goal):
         dt = 1e-2 if self.t_last == 0 else t - self.t_last
@@ -31,3 +38,9 @@ class OuterLoop:
         cmd.q = q_ref
         cmd.w = w_ref
         cmd.F_W = F_W
+
+    def get_force(self, dt, state, goal):
+
+    def get_attitude(self, state, goal, F_W):
+
+    def get_rates(self, state, goal, F_W, a_fb, q_ref):
