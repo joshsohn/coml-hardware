@@ -61,10 +61,12 @@ class OuterLoop:
 
         F_W = self.get_force(dt, state, goal)
         q_ref = self.get_attitude(state, goal, F_W)
+        # q_ref = np.array([1, 0, 0, 0])
         w_ref = self.get_rates(dt, state, goal, F_W, self.log_.a_fb, q_ref)
+        # w_ref = np.array([0, 0, 0])
 
         cmd = AttCmdClass()
-        print('q_ref:', q_ref)
+        # print('q_ref:', q_ref)
         cmd.q = q_ref
         cmd.w = w_ref
         cmd.F_W = F_W
@@ -72,7 +74,8 @@ class OuterLoop:
         return cmd
 
     def get_force(self, dt, state, goal):
-        e = goal.p - state.p
+        # e = goal.p - state.p
+        e = np.array([0, 0, 1]) - state.p
         edot = goal.v - state.v
 
         # Saturate error so it isn't too much for control gains
@@ -116,9 +119,12 @@ class OuterLoop:
         # Compute feedback acceleration via PID, eq (2.9)
         eint = np.array([self.Ix_.value(), self.Iy_.value(), self.Iz_.value()])
         a_fb = np.multiply(self.params_.Kp, e) + np.multiply(self.params_.Ki, eint) + np.multiply(self.params_.Kd, edot)
+        # a_fb = np.multiply(self.params_.Kp, e) + np.multiply(self.params_.Kd, edot)
+
 
         # Compute total desired force (expressed in world frame), eq (2.12)
-        F_W = self.params_.mass * (goal.a + a_fb - self.GRAVITY)
+        # F_W = self.params_.mass * (goal.a + a_fb - self.GRAVITY)
+        F_W = self.params_.mass * (a_fb - self.GRAVITY)
 
         # Log control signals for debugging and inspection
         self.log_.p = state.p
@@ -134,9 +140,6 @@ class OuterLoop:
 
         # Return total desired force expressed in world frame
         return F_W
-
-    # def get_attitude(self, state, goal, F_W):
-
 
     def get_attitude(self, state, goal, F_W):
         xi = F_W / self.params_.mass  # Eq. 26

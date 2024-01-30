@@ -1,0 +1,8 @@
+/logs
+
+**/.catkin_tools/
+**/.vscode/
+
+**.log
+**.pyc
+*.db

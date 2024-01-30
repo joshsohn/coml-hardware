@@ -6,20 +6,6 @@
 
 #IncludeRegexTransform: 
 
-/home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.cpp
-SnapdragonDebugPrint.h
-/home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
-stdarg.h
--
-stdint.h
--
-stdio.h
--
-string.h
--
-chrono
--
-
 /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
 
 /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/structs.h
@@ -30,16 +16,6 @@ cstdint
 math.h
 -
 pthread.h
--
-
-/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.cpp
-SnapdragonControllerManager.hpp
-/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.hpp
-SnapdragonUtils.hpp
-/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonUtils.hpp
-SnapdragonDebugPrint.h
-/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonDebugPrint.h
-iostream
 -
 
 /home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.hpp
@@ -115,10 +91,6 @@ SnapdragonEscManager.hpp
 /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonEscManager.hpp
 structs.h
 /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/structs.h
-
-/home/raphaelpeabody/r/simulation_ws/src/snap/src/utils/SnapdragonUtils.cpp
-SnapdragonUtils.hpp
-/home/raphaelpeabody/r/simulation_ws/src/snap/src/utils/SnapdragonUtils.hpp
 
 /home/raphaelpeabody/r/simulation_ws/src/snap/src/utils/SnapdragonUtils.hpp
 structs.h

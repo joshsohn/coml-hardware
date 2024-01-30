@@ -37,9 +37,9 @@ class OuterLoopROS:
         # Subscribe and publish
         rospy.Subscriber('state', State, self.state_cb)
         rospy.Subscriber('goal', Goal, self.goal_cb)
-
+ 
         self.pub_att_cmd_ = rospy.Publisher('attcmd', AttitudeCommand, queue_size=1)
-        self.pub_log_ = rospy.Publisher('log', ControlLog, queue_size=1)
+        self.pub_log_ = rospy.Publisher('log',ControlLog, queue_size=1)
 
         rospy.Timer(rospy.Duration(self.control_dt_), self.cntrl_cb)
 
@@ -134,7 +134,7 @@ class OuterLoopROS:
 
         # Flight Sequence State Machine
         if self.mode_ == ModeClass.Preflight:
-            print('preflight')
+            # print('preflight')
             if self.goalmsg_.power:
                 self.mode_ = ModeClass.SpinningUp
                 self.t_start = rospy.get_time()
@@ -143,7 +143,7 @@ class OuterLoopROS:
                 self.mode_ = ModeClass.Preflight
 
         elif self.mode_ == ModeClass.SpinningUp:
-            print('spinning up')
+            # print('spinning up')
             if rospy.get_time() < self.t_start + self.Tspinup_:
                 cmd.q = self.state_.q
                 cmd.w = np.zeros(3)
@@ -154,7 +154,7 @@ class OuterLoopROS:
                 rospy.logwarn_throttle(0.5, "Spinning up motors.")
 
         elif self.mode_ == ModeClass.Flying:
-            print('flying')
+            # print('flying')
             cmd = self.olcntrl_.compute_attitude_command(rospy.get_time(), self.state_, self.goal_)
 
             # Safety checks
@@ -162,7 +162,7 @@ class OuterLoopROS:
                 self.mode_ = ModeClass.EmergencyStop
 
         elif self.mode_ == ModeClass.EmergencyStop:
-            print('emergency stop')
+            # print('emergency stop')
             cmd.q = self.state_.q
             cmd.w = np.zeros(3)
             cmd.F_W = np.zeros(3)
@@ -171,8 +171,7 @@ class OuterLoopROS:
         # Publish command via ROS
         attmsg = AttitudeCommand()
         attmsg.header.stamp = t_now
-        attmsg.power = 0
-        print(cmd.q)
+        attmsg.power = 1
         attmsg.q = quaternion_array_to_msg(cmd.q)
         attmsg.w = vector_array_to_msg(cmd.w)
         attmsg.F_W = vector_array_to_msg(cmd.F_W)

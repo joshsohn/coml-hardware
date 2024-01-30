@@ -13,8 +13,10 @@ ground_effect: 0 #[-55.3516, 181.8265, -203.9874, 85.3735, -7.6619]
 # Note that the clockwise and counter-clockwise propellers may have different curves.
 # These curves are the "inverse" relationship as that in the autopilot (snap), which
 # maps desired forces and torques to throttle commands.
-inverse_thrust_curve_cw:  [3.5, 0.0]
-inverse_thrust_curve_ccw: [3.5, 0.0]
+# inverse_thrust_curve_cw:  [3.5, 0.0]
+inverse_thrust_curve_cw:  [7.69, 0.0]
+# inverse_thrust_curve_ccw: [3.5, 0.0]
+inverse_thrust_curve_ccw: [7.69, 0.0]
 inverse_torque_curve_cw:  [0.2, 0.0]
 inverse_torque_curve_ccw: [0.2, 0.0]
 tau_spin_up: 0.01 # motor/prop spin-up time constant

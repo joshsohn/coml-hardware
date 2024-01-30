@@ -1,9 +1,0 @@
-Building snap for software-in-the-loop simulation
-[31m[1mCMake Error[0m at /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake:146 (message):
-  Could NOT find Curses (missing: CURSES_LIBRARY CURSES_INCLUDE_PATH)
-[36mCall Stack (most recent call first):[0m
-  /usr/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake:393 (_FPHSA_FAILURE_MESSAGE)
-  /usr/share/cmake-3.16/Modules/FindCurses.cmake:258 (FIND_PACKAGE_HANDLE_STANDARD_ARGS)
-  CMakeLists.txt:59 (find_package)
-
-
