@@ -9,9 +9,6 @@
   <!-- external pose source (i.e., 'world' for mocap) -->
   <arg name="extpose" default="world" />
 
-  <!-- "true" if using time filter -->
-  <arg name="time_filter" default="true" />    
-
   <node ns="$(arg veh)$(arg num)" name="snap" pkg="snap" type="snap" output="screen" clear_params="true">
     <rosparam file="$(find snap)/cfg/params.yaml" command="load"/>
     <rosparam file="$(find snap)/cfg/$(arg veh).yaml" command="load"/>
@@ -19,9 +16,6 @@
 
     <!-- should snap stack broadcast tf of veh w.r.t vicon -->
     <param name="broadcast_tf" value="false" />
-
-    <!-- use time filter? -->
-    <param name="time_filter" value="$(arg time_filter)" />
 
     <remap from="~pose" to="$(arg extpose)"/>
     <remap from="~attcmd" to="attcmd"/>
@@ -31,7 +25,6 @@
     <remap from="~odometry" to="odometry"/>
     <remap from="~motors" to="motors"/>
     <remap from="~smc" to="smc"/>
-    <remap from="~timefilter" to="timefilter"/>
 
     <remap from="~battery/voltage" to="battery/voltage"/>
     <remap from="~battery/current" to="battery/current"/>

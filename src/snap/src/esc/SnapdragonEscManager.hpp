@@ -32,13 +32,10 @@
 
 #pragma once
 
-#include <array>
-#include <cstdint>
-#include <memory>
 #include <mutex>
 #include <string>
 
-#include <snap_ipc/client.h>
+#include <esc_interface/esc_interface.h>
 
 namespace Snapdragon {
 
@@ -48,18 +45,19 @@ namespace Snapdragon {
         ~EscManager();
 
         int32_t Initialize();
-        void update(const std::array<float, 6>& throttle);
+        void update(float f[8]);
         int32_t Terminate();
 
         // hooks into esc lib
         bool arm();
         bool disarm();
         bool isArmed();
+
+        static constexpr uint8_t NUM_PWMS = 8;
     private:
         std::string vehname_; ///< vehicle name
-        std::unique_ptr<acl::snapipc::Client> client_;
+        acl::ESCInterface * escs = nullptr;
         std::mutex mutex_; ///< prevent pwm updates while arming/disarming
-        bool armed_ = false;
 };
 
 } // ns Snapdragon

@@ -36,12 +36,12 @@ OuterLoopROS::OuterLoopROS(const ros::NodeHandle& nh, const ros::NodeHandle& nhp
   nhp_.param<double>("spinup/time", Tspinup_, 1.0);
   nhp_.param<double>("spinup/thrust_gs", spinup_thrust_gs_, 0.5);
   nhp_.param<double>("mass", p.mass, 1.0);
-  nhp_.param<double>("Kp/xy", kp_xy, 1.0);
-  nhp_.param<double>("Ki/xy", ki_xy, 0.0);
-  nhp_.param<double>("Kd/xy", kd_xy, 0.0);
-  nhp_.param<double>("Kp/z", kp_z, 1.0);
-  nhp_.param<double>("Ki/z", ki_z, 0.0);
-  nhp_.param<double>("Kd/z", kd_z, 0.0);
+  nhp_.param<double>("Kp_xy", kp_xy, 1.0);
+  nhp_.param<double>("Ki_xy", ki_xy, 0.0);
+  nhp_.param<double>("Kd_xy", kd_xy, 0.0);
+  nhp_.param<double>("Kp_z", kp_z, 1.0);
+  nhp_.param<double>("Ki_z", ki_z, 0.0);
+  nhp_.param<double>("Kd_z", kd_z, 0.0);
   nhp_.param<double>("maxPosErr/xy", maxPosErr_xy, 1.0);
   nhp_.param<double>("maxPosErr/z", maxPosErr_z, 1.0);
   nhp_.param<double>("maxVelErr/xy", maxVelErr_xy, 1.0);
@@ -91,6 +91,13 @@ OuterLoopROS::OuterLoopROS(const ros::NodeHandle& nh, const ros::NodeHandle& nhp
 
   pub_att_cmd_ = nh_.advertise<snapstack_msgs::AttitudeCommand>("attcmd", 1);
   pub_log_ = nh_.advertise<snapstack_msgs::ControlLog>("log", 1);
+
+  // 
+  // ROS dynamic reconfigure
+  //
+  dynamic_reconfigure::Server<::outer_loop::OuterLoopConfig>::CallbackType f;
+  f = boost::bind(&OuterLoopROS::dynamicReconfigurePidParamsCb, this, _1, _2);
+  server_.setCallback(f);
 }
 
 // ----------------------------------------------------------------------------
@@ -103,6 +110,13 @@ OuterLoopROS::~OuterLoopROS()
 // ----------------------------------------------------------------------------
 // Private Methods
 // ----------------------------------------------------------------------------
+
+void OuterLoopROS::dynamicReconfigurePidParamsCb(::outer_loop::OuterLoopConfig& cfg, uint32_t level)
+{
+  ROS_INFO_STREAM("Reconfigure request received.\n");
+  olcntrl_->setHorizontalPositionPidParams(cfg.Kp_xy, cfg.Ki_xy, cfg.Kd_xy);
+  olcntrl_->setAltitudePidParams(cfg.Kp_z, cfg.Ki_z, cfg.Kd_z);
+}
 
 void OuterLoopROS::cntrlCb(const ros::TimerEvent& e)
 {

@@ -10,6 +10,8 @@
 #include <string>
 
 #include <ros/ros.h>
+#include <outer_loop/OuterLoopConfig.h>
+#include <dynamic_reconfigure/server.h>
 #include <tf2/utils.h>
 #include <Eigen/Dense>
 
@@ -36,6 +38,7 @@ namespace outer_loop {
     ros::Subscriber sub_state_, sub_goal_;
     ros::Publisher pub_att_cmd_, pub_log_;
     ros::Timer tim_cntrl_;
+    dynamic_reconfigure::Server<::outer_loop::OuterLoopConfig> server_;
 
     /// \brief Data members
     enum class Mode { Preflight, SpinningUp, Flying, EmergencyStop };
@@ -60,6 +63,7 @@ namespace outer_loop {
     void cntrlCb(const ros::TimerEvent& e);
     void stateCb(const snapstack_msgs::State& msg);
     void goalCb(const snapstack_msgs::Goal& msg);
+    void dynamicReconfigurePidParamsCb(::outer_loop::OuterLoopConfig& cfg, uint32_t level);
 
     /// \brief Helper methods
     void publishLog(const snapstack_msgs::AttitudeCommand& attmsg);

@@ -158,9 +158,31 @@ namespace outer_loop {
     void updateLog(const State& state);
     const ControlLog& getLog() const { return log_; }
 
+    /**
+     * @brief      Set/update the parameters at runtime for the PID controller
+     *             on the x-y axes in the Inertial frame.
+     *
+     * @param[in]  kp    Proportional gain.
+     * @param[in]  ki    Integral gain.
+     * @param[in]  kd    Derivative gain.  
+     *
+     */
+    void setHorizontalPositionPidParams(const double kp, const double ki, const double kd);
+
+    /**
+     * @brief      Set/update the parameters at runtime for the PID controller
+     *             on the z axis in the Inertial frame.
+     *
+     * @param[in]  kp    Proportional gain.
+     * @param[in]  ki    Integral gain.
+     * @param[in]  kd    Derivative gain.  
+     *
+     */
+    void setAltitudePidParams(const double kp, const double ki, const double kd);
+
   private:
     const Eigen::Vector3d GRAVITY = (Eigen::Vector3d() << 0, 0, -9.80665).finished();
-    const Parameters params_;
+    Parameters params_;
     ControlLog log_;
     Goal::Mode mode_xy_last_, mode_z_last_; ///< used to detect mode change
     Eigen::Vector3d a_fb_last_; ///< last accel feedback value

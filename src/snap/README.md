@@ -1,7 +1,7 @@
 Snap Autopilot
 ==============
 
-`snap` is a customizable flight stack for multirotors equipped with one of Qualcomm's Snapdragon Flight board ([original](https://docs.px4.io/v1.9.0/en/flight_controller/snapdragon_flight.html) or [Pro](https://developer.qualcomm.com/hardware/qualcomm-flight-pro)). The position, velocity, attitude, and IMU biases are estimated by fusing propogated IMU measurments with an external measurement (e.g., mocap, VIO, etc.) via an observer. Attitude control is achieved with a quaternion-based controller. `snap` uses [`libsnap_io`](https://gitlab.com/mit-acl/fsw/snap-stack/snapio/libsnap_io) via the [`snap_ipc`](https://gitlab.com/mit-acl/fsw/snap-stack/snapio/snap_ipc) shared library to enable communication with hardware, including the IMU and PWM ESCs.
+`snap` is a customizable flight stack for multirotors equipped with one of Qualcomm's Snapdragon Flight board ([original](https://docs.px4.io/v1.9.0/en/flight_controller/snapdragon_flight.html) or [Pro](https://developer.qualcomm.com/hardware/qualcomm-flight-pro)). The position, velocity, attitude, and IMU biases are estimated by fusing propogated IMU measurments with an external measurement (e.g., mocap, VIO, etc.) via an observer. Attitude control is achieved with a quaternion-based controller. `snap` uses the [`esc_interface`](https://gitlab.com/mit-acl/fsw/snap-stack/esc_interface) shared library that enables the Snapdragon to interface with many commerically available ESCs via PWM.
 
 ## Getting Started
 
@@ -9,7 +9,11 @@ The Snapdragon Flight board contains a CPU and a DSP. The DSP is used to interfa
 
 ### Development Environment
 
-Please follow the instructions and guidelines in [`voxl-dev`](https://gitlab.com/mit-acl/fsw/snap-stack/voxl-dev).
+Setup your development environment following instructions in either [`sf-dev`](https://gitlab.com/mit-acl/fsw/snap-stack/sf-dev) or [`sfpro-dev`](https://gitlab.com/mit-acl/fsw/snap-stack/sfpro-dev) depending on your version of the Snapdragon board.
+
+For the new snapdragon, you must use the `sfpro-dev` to compile CPU and DSP code.
+
+For the old snapdragon, `sf-dev` is only necessary for compiling DSP code. CPU code can be built as normal onboard the snapdragon via SSH/adb. Create a Catkin workspace (prefer `catkin build` over `catkin_make`) to clone this project and its dependencies into.
 
 ### Dependencies
 
@@ -24,9 +28,11 @@ simulation_ws
     └── snapstack_msgs
 ```
 
-### Building
+In addition, ensure that `libncurses5-dev` is installed (`sudo apt install`).
 
-***Note**: See `voxl-dev` for more info about the `snapros` docker, in which all ROS packages should be built.*
+Make sure to install the dependencies' dependencies as well!
+
+### Building
 
 Build with `catkin build`. Source your workspace with `source devel/setup.bash`.
 
@@ -37,8 +43,7 @@ In separate snapdragon terminals:
 1. Start the IMU driver
 
     ```bash
-    # imu_app -s 2   # 500 Hz
-    systemctl status imu.service # should already be running, but can check with this
+    imu_app -s 2   # 500 Hz
     ```
 
 2. Start the autopilot

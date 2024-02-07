@@ -8,6 +8,7 @@
  */
 
 #include "snap_sim/rigid_body.h"
+#include <iostream>
 
 namespace acl {
 namespace snap_sim {
@@ -20,6 +21,8 @@ RigidBody::RigidBody(const State& state0, double mass, const Inertia& J)
 : state_(state0), mass_(mass), J_(J), grounded_(false),
   current_wrench_(Wrench::Zero()), floorPlane_(0.0)
 {
+  //std::cout << "rigid body state_0: " << state0.q.w() << std::endl;
+  //std::cout << "rigid body state: " << state_.q.w() << std::endl;
   checkFloorCollision();
 }
 
@@ -27,6 +30,7 @@ RigidBody::RigidBody(const State& state0, double mass, const Inertia& J)
 
 void RigidBody::simulate(double dt, double t)
 {
+  //std::cout << "state_ bfr rk: " << state_.q.w() << std::endl;
   const auto& y0 = fromState(state_);
 
   // get total wrench acting on body (expressed in body frame)
@@ -41,6 +45,7 @@ void RigidBody::simulate(double dt, double t)
                             wrench));
 
   state_ = toState(y1);
+  //std::cout << "state_ aftr rk: " << state_.q.w() << std::endl;
   state_.t = t;
 
   checkFloorCollision();
@@ -185,7 +190,7 @@ void RigidBody::checkFloorCollision()
       // state_.q = Eigen::AngleAxisd(yaw, Eigen::Vector3d::UnitZ());
 
       // always land with identity orientation
-      state_.q = Eigen::Quaterniond::Identity();
+      //state_.q = Eigen::Quaterniond::Identity();
 
       state_.w.x() = 0;
       state_.w.y() = 0;

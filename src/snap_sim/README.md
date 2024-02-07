@@ -46,8 +46,6 @@ roslaunch snap_sim sim.launch
 
 ## Visualization
 
-***Note:** rviz automatically runs - take a look at `sim.launch` to see how.*
-
 To see the simulated vehicle, run `rviz`. Make sure to add the `TF` visualization widget and change the **Fixed Frame** global option to `world`.
 
 To visualize a mesh (a quadrotor mesh is included by default), add a `Marker` widget (hint: try adding **By Topic**). If you would like a different mesh, you can supply the URI via launch file.
@@ -55,8 +53,6 @@ To visualize a mesh (a quadrotor mesh is included by default), add a `Marker` wi
 <div align="center"><img src=".gitlab/snap_sim_rviz.png" alt="rviz screenshot" /></div>
 
 ## Controlling
-
-***Note:** you can automatically start the joy node and control the keyboard by appending `key:=true` to the launch command*
 
 To control the simulation you will need to use a high-level trajectory generator! This is what you create when you want to test some fancy algorithm in simulation.
 
@@ -82,7 +78,7 @@ The wind simulation assumes a Dryden wind turbulence model. The code used can be
     - The snap stack uses the first 1000 IMU samples for calibrating the IMU. Until the IMU is calibrated, arming is not possible.
 
 3. How does the SIL work?
-    - The snap stack interfaces with hardware (e.g., IMU and ESCs) via [`snapio`](https://gitlab.com/mit-acl/fsw/snap-stack/snapio). In order to make the SIL work, hardware devices need to be simulated. This is accomplished using shared library magic. On the snapdragon, the snap stack expects the [`snapio`](https://gitlab.com/mit-acl/fsw/snap-stack/snapio/snap_ipc) shared library to be available. When running the snap stack on a desktop, we spoof this shared library with a simulation shim---an implementation amenable to simulation. The `snap_sim` node then talks to these shared libraries (which are linked to `snap`) via shared memory.
+    - The snap stack interfaces with two hardware components: ESCs and IMU. In order to make the SIL work, these two devices need to be simulated. This is accomplished using shared library magic. On the snapdragon, the snap stack expects the [`esc_interface`](https://gitlab.com/mit-acl/fsw/snap-stack/esc_interface) shared library to be available. Likewise, the snap stack expects the `sensor-imu` (Qualcomm proprietary) to be available. When running the snap stack on a desktop, we spoof these shared libraries with a simulation shim---an implementation amenable to simulation. The `snap_sim` node then talks to these shared libraries (which are linked to `snap`) via shared memory.
 
 4. What exactly is being simulated?
     - `snap_sim` simulates the dynamics of a multirotor rigid body given motor commands. Additionally, `snap_sim` generates the same topics that running the [`mocap`](https://gitlab.com/mit-acl/fsw/mocap) node would in hardware. In this way, *all* the hardware components are being simulated.
@@ -99,6 +95,5 @@ The wind simulation assumes a Dryden wind turbulence model. The code used can be
 8. What's with the `s` appended to my vehicle's name?
     - The `s` is for *simulated*. This way there is no chance of cross-talk with hardware so that all signalling remains simulated. To make other things talk to the simulated version of your vehicle simply add an `s` to the end of the vehicle number, e.g., `num:=01s`.
 
-9. I am getting strange errors when trying to start the simulator.
-
-    - This is likely due to shared memory problems. Take a look at `ipcs`. Anything that does not have `dest` in the last column and is around 100-200 bytes of memory is likely left over shared memory from a failed (or improperly terminated) process. Use `ipcrm -m <shmid>` to destroy that block of shared memory.
+9. I changed the environment variable SFPRO to `true` because I want to simulate the Snapdragon Flight Pro, but the vehicle goes crazy. Why?
+    - The Snapdragon Flight Pro uses a different axes convention for the imu messages, which the `snap_sim` does not consider. Since this convention is internal to the `snap` package, you can change the environment variable to `false` and your simulations should be valid even for the Snapdragon Flight Pro.

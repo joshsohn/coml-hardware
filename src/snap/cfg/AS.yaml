@@ -16,7 +16,14 @@ cd: 0.02
 
 # Thrust curve for single motor, [an ...a1 a0].
 # Maps thrust (N) to throttle (normalized [0, 1])
-thrust_curve: [0.0, 0.13, 0.0] # 3300mAh 4s
+thrust_curve_cw: [0.0, 0.13, 0.0]   # For clockwise props, 2200mAh 4s
+thrust_curve_ccw: [0.0, 0.13, 0.0]  # For counterclockwise props, 2200mAh 4s
+
+# Spinning direction of propellers. -1: clockwise, +1: counterclockwise
+motor_spin: [-1, 1, -1, 1]
+
+# Center of mass ofter in body frame (m)
+com: [0.0, 0.0, 0.0]
 
 mixer: "QUADX"
 

@@ -45,7 +45,6 @@ Snapdragon::RosNode::SND::SND( ros::NodeHandle nh ) : nh_(nh)
   pub_odom_  = nh_.advertise<nav_msgs::Odometry>("odometry",1);
   pub_motor_ = nh_.advertise<snapstack_msgs::Motors>("motors",1);
   pub_smc_   = nh_.advertise<snapstack_msgs::SMCData>("smc",1);
-  pub_time_filter_  = nh_.advertise<snapstack_msgs::TimeFilter>("timefilter",1);
 
   sub_pose_   = nh_.subscribe("pose", 1, &Snapdragon::RosNode::SND::poseCB, this);
   sub_attCmd_ = nh_.subscribe("attcmd", 1, &Snapdragon::RosNode::SND::goalCB, this);
@@ -157,7 +156,6 @@ void Snapdragon::RosNode::SND::PublishIMUData(const Snapdragon::ObserverManager:
   imu_msg.gyro.x = imu_data.ang_vel[0];
   imu_msg.gyro.y = imu_data.ang_vel[1];
   imu_msg.gyro.z = imu_data.ang_vel[2];
-  imu_msg.loop_time = imu_data.loop_time;
 
   pub_imu_.publish(imu_msg);
 }
@@ -204,20 +202,19 @@ void Snapdragon::RosNode::SND::PublishOdometryData(const Snapdragon::ObserverMan
     pub_odom_.publish(odom_msg);
 }
 
-void Snapdragon::RosNode::SND::PublishMotorCommands(const std::array<float, 6>& throttles)
-{
+void Snapdragon::RosNode::SND::PublishMotorCommands(const Snapdragon::ControllerManager::motorThrottles& throttles ){
   static int count = 0;
   snapstack_msgs::Motors motor_msg;
   motor_msg.header.stamp = ros::Time::now();
   motor_msg.header.seq = count;
-  motor_msg.m1 = throttles[0];
-  motor_msg.m2 = throttles[1];
-  motor_msg.m3 = throttles[2];
-  motor_msg.m4 = throttles[3];
-  motor_msg.m5 = throttles[4];
-  motor_msg.m6 = throttles[5];
-  motor_msg.m7 = 0;
-  motor_msg.m8 = 0;
+  motor_msg.m1 = throttles.throttle[0];
+  motor_msg.m2 = throttles.throttle[1];
+  motor_msg.m3 = throttles.throttle[2];
+  motor_msg.m4 = throttles.throttle[3];
+  motor_msg.m5 = throttles.throttle[4];
+  motor_msg.m6 = throttles.throttle[5];
+  motor_msg.m7 = throttles.throttle[6];
+  motor_msg.m8 = throttles.throttle[7];
   
   pub_motor_.publish(motor_msg);
   count++;
@@ -235,18 +232,6 @@ void Snapdragon::RosNode::SND::PublishSMCData(const Snapdragon::ControllerManage
   vec2ROS(msg.s,data.s);
 
   pub_smc_.publish(msg);
-}
-
-void Snapdragon::RosNode::SND::PublishTimeFilterData(const Snapdragon::ObserverManager::TimeFilterData& tfd ) {
-  snapstack_msgs::TimeFilter msg;
-  msg.header.stamp = ros::Time::now();
-  msg.dt      = tfd.dt;
-  msg.delayed_dt  = tfd.ros_dt; 
-  msg.skipped = tfd.skipped;
-  msg.upper   = tfd.upper;
-  msg.lower   = tfd.lower;
-
-  pub_time_filter_.publish(msg);
 }
 
 void Snapdragon::RosNode::SND::BroadcastTF (const Snapdragon::ObserverManager::State& state ){
@@ -274,10 +259,7 @@ void Snapdragon::RosNode::SND::poseCB(const geometry_msgs::PoseStamped& msg) {
     ROS2vec(pos,msg.pose.position);
     ROS2quat(q,msg.pose.orientation);
     uint64_t timestamp_us = static_cast<uint64_t>(msg.header.stamp.sec*1e6 + msg.header.stamp.nsec*1e-3);
-    uint64_t ros_timestamp_us = static_cast<uint64_t>(ros::Time::now().toSec()*1e6);
-    uint32_t current_seq = static_cast<uint32_t>(msg.header.seq);
-    observer_man_.updateState(observer_man_.state_, pos, q, timestamp_us, ros_timestamp_us, current_seq);
-    PublishTimeFilterData(observer_man_.time_filter_data_); // everytime time filter related data is updated in updataState, we publsih its data
+    observer_man_.updateState(observer_man_.state_, pos, q, timestamp_us);
   }
 }
 
@@ -293,8 +275,7 @@ void Snapdragon::RosNode::SND::goalCB(const snapstack_msgs::AttitudeCommand& msg
   }
 }
 
-void Snapdragon::RosNode::SND::getParams(Snapdragon::ObserverManager::InitParams& Params, Snapdragon::ControllerManager::InitParams& SmcParams)
-{
+void Snapdragon::RosNode::SND::getParams(Snapdragon::ObserverManager::InitParams& Params, Snapdragon::ControllerManager::InitParams& SmcParams){
   // Filter params
   double theta;
   double kAtt;
@@ -302,34 +283,32 @@ void Snapdragon::RosNode::SND::getParams(Snapdragon::ObserverManager::InitParams
   double kAccelBias;
   double DT;
   double controlDT;
-  std::vector<double> polyF;
+  std::vector<double> polyF_cw, polyF_ccw;
+  std::vector<int> motor_spin;
   std::string mixer;
   std::vector<double> Kr;
   std::vector<double> Komega;
   std::vector<double> Jdiag;
+  std::vector<double> com; 
   double l, cd;
-  bool sfpro;
-  bool time_filter;
-  float upper_bound;
-  float lower_bound;
   
   safeGetParam(nh_, "theta", theta);
   safeGetParam(nh_, "kAtt", kAtt);
   safeGetParam(nh_, "kGyroBias", kGyroBias);
   safeGetParam(nh_, "kAccelBias", kAccelBias);
   safeGetParam(nh_, "controlDT", controlDT);
-  safeGetParam(nh_, "thrust_curve", polyF);
+  safeGetParam(nh_, "thrust_curve_cw", polyF_cw);
+  safeGetParam(nh_, "thrust_curve_ccw", polyF_ccw);
+  safeGetParam(nh_, "motor_spin", motor_spin);
   safeGetParam(nh_, "cd", cd);
   safeGetParam(nh_, "mixer", mixer);
   safeGetParam(nh_, "broadcast_tf", broadcast_tf_);// should we broadcast a tf?
-  safeGetParam(nh_, "sfpro", sfpro);
+  safeGetParam(nh_, "sfpro", Params.sfpro);
   safeGetParam(nh_, "Kr", Kr);
   safeGetParam(nh_, "Komega", Komega);
   safeGetParam(nh_, "Jdiag", Jdiag);
   safeGetParam(nh_, "l", l);
-  safeGetParam(nh_, "time_filter", time_filter);
-  safeGetParam(nh_, "upper_bound", upper_bound);
-  safeGetParam(nh_, "lower_bound", lower_bound);
+  safeGetParam(nh_, "com", com);
 
   //Smc Params
   SmcParams.Kr = Eigen::Vector3d(Kr[0], Kr[1], Kr[2])/1000.0;
@@ -338,7 +317,10 @@ void Snapdragon::RosNode::SND::getParams(Snapdragon::ObserverManager::InitParams
   SmcParams.l = l;
   SmcParams.cd = cd;
   SmcParams.controlDT = controlDT;
-  SmcParams.polyF = polyF;
+  SmcParams.polyF_cw = polyF_cw;
+  SmcParams.polyF_ccw = polyF_ccw;
+  SmcParams.motor_spin = motor_spin;
+  SmcParams.com = com;
 
   // make case insensitive
   std::transform(mixer.begin(), mixer.end(), mixer.begin(),
@@ -352,7 +334,7 @@ void Snapdragon::RosNode::SND::getParams(Snapdragon::ObserverManager::InitParams
     ROS_ERROR("Invalid Mixer");
   }
 
-  ROS_WARN_STREAM((sfpro?"sfpro":"sf") << " board");
+  ROS_WARN_STREAM((Params.sfpro?"sfpro":"sf") << " board");
 
   // filter coeffs for a critically damped g-h filter with discount factor theta
   // "Tracking and Kalman Filtering Made Easy" (Eli Brookner, p. 52)
@@ -374,10 +356,6 @@ void Snapdragon::RosNode::SND::getParams(Snapdragon::ObserverManager::InitParams
   ros::param::param<int>("~anotch/Q", Params.anotch_params.Q, 360);
   ros::param::param<int>("~anotch/min_hz", Params.anotch_params.min_hz, 60);
   ros::param::param<int>("~anotch/max_hz", Params.anotch_params.max_hz, 200);
-
-  // Update time_filter value
-  observer_man_.initializeTimeFilter(time_filter, upper_bound, lower_bound);
-  if (!time_filter) ROS_WARN_STREAM("Time filter is not used");
 }
 
 void Snapdragon::RosNode::SND::vec2ROS(geometry_msgs::Vector3& vros, const Vector& v){

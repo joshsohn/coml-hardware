@@ -36,34 +36,29 @@
 namespace Snapdragon {
 
 EscManager::EscManager(const std::string& vehname)
-: vehname_(vehname), armed_(false)
+: vehname_(vehname)
 {
 #ifdef SNAP_SIM
-    client_.reset(new acl::snapipc::Client(vehname));
+    escs = new acl::ESCInterface(vehname, NUM_PWMS);
 #else
-    client_.reset(new acl::snapipc::Client());
+    escs = new acl::ESCInterface(NUM_PWMS);
 #endif
-
-    // send a valid 'off' signal
-    disarm();
 }
 
 // ----------------------------------------------------------------------------
 
 EscManager::~EscManager()
 {
-    // turn off the motors on the way out
-    disarm();
+    delete escs;
+    escs = nullptr;
 }
 
 // ----------------------------------------------------------------------------
 
 int32_t EscManager::Initialize()
 {
-    // bool success = escs->init();
-    // if (!success) return -1;
-
-    disarm();
+    bool success = escs->init();
+    if (!success) return -1;
 
     return 0;
 }
@@ -72,19 +67,24 @@ int32_t EscManager::Initialize()
 
 int32_t EscManager::Terminate()
 {
-    // escs->close();
-    disarm();
-    return 0;
+    escs->close();
 }
 
 // ----------------------------------------------------------------------------
 
-void EscManager::update(const std::array<float, 6>& throttle)
+void EscManager::update(float f[NUM_PWMS])
 {
-    if (!armed_) return;
+    static constexpr uint16_t PWM_MAX = acl::ESCInterface::PWM_MAX_PULSE_WIDTH;
+    static constexpr uint16_t PWM_MIN = acl::ESCInterface::PWM_MIN_PULSE_WIDTH;
+
+    // Convert motor force to PWM
+    uint16_t f_pwm[NUM_PWMS];
+    for (uint8_t i=0; i<NUM_PWMS; ++i) {
+        f_pwm[i] = (uint16_t) (PWM_MAX - PWM_MIN)*f[i] + PWM_MIN;
+    }
 
     std::lock_guard<std::mutex> lock(mutex_);
-    client_->set_motors(throttle);
+    escs->update(f_pwm, NUM_PWMS);
 }
 
 // ----------------------------------------------------------------------------
@@ -92,8 +92,7 @@ void EscManager::update(const std::array<float, 6>& throttle)
 bool EscManager::arm()
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    armed_ = true;
-    return true;
+    return escs->arm();
 }
 
 // ----------------------------------------------------------------------------
@@ -101,12 +100,7 @@ bool EscManager::arm()
 bool EscManager::disarm()
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    std::array<float, 6> throttle;
-    throttle.fill(0.0f);
-    client_->set_motors(throttle);
-    armed_ = false;
-    return true;
-
+    return escs->disarm();
 }
 
 // ----------------------------------------------------------------------------
@@ -114,7 +108,7 @@ bool EscManager::disarm()
 bool EscManager::isArmed()
 {
     std::lock_guard<std::mutex> lock(mutex_);
-    return armed_;
+    return escs->is_armed();
 }
 
 } // ns Snapdragon

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 2.8.3)
 project(snap)
 
 ## Compile as C++11, supported in ROS Indigo and newer
@@ -10,9 +10,6 @@ if (NOT CMAKE_BUILD_TYPE)
 #    set(CMAKE_BUILD_TYPE "Release")
 endif()
 set(CMAKE_BUILD_TYPE "Debug")  # See issue #1
-
-# Setup cmake paths
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -39,24 +36,26 @@ if(snap_sim_FOUND)
   # rest of the libs via INTERFACE_LINK_LIBRARIES
   list(GET snap_sim_LIBRARIES 0 FIRST)
 
-  add_library(snap_ipc SHARED IMPORTED)
-  set_property(TARGET snap_ipc PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${snap_sim_INCLUDE_DIRS})
-  set_property(TARGET snap_ipc PROPERTY IMPORTED_LOCATION ${FIRST})
-  set_property(TARGET snap_ipc PROPERTY INTERFACE_LINK_LIBRARIES ${snap_sim_LIBRARIES})
+  add_library(esc_interface SHARED IMPORTED)
+  set_property(TARGET esc_interface PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${snap_sim_INCLUDE_DIRS})
+  set_property(TARGET esc_interface PROPERTY IMPORTED_LOCATION ${FIRST})
+  set_property(TARGET esc_interface PROPERTY INTERFACE_LINK_LIBRARIES ${snap_sim_LIBRARIES})
+
+  add_library(sensor_imu SHARED IMPORTED)
+  set_property(TARGET sensor_imu PROPERTY INTERFACE_INCLUDE_DIRECTORIES ${snap_sim_INCLUDE_DIRS})
+  set_property(TARGET sensor_imu PROPERTY IMPORTED_LOCATION ${FIRST})
+  set_property(TARGET sensor_imu PROPERTY INTERFACE_LINK_LIBRARIES ${snap_sim_LIBRARIES})
 
   # add macro definitions so that targets that link to these targets know we are in SIL
-  set_property(TARGET snap_ipc APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS SNAP_SIM)
-else()
-  # Download snap_ipc library
-  set(SNAP_IPC_DIR ${CMAKE_CURRENT_BINARY_DIR}/snap_ipc-download)
-  configure_file("${CMAKE_MODULE_PATH}/snap_ipc.cmake.in" "${SNAP_IPC_DIR}/CMakeLists.txt" IMMEDIATE @ONLY)
-  execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" . WORKING_DIRECTORY ${SNAP_IPC_DIR} )
-  execute_process(COMMAND ${CMAKE_COMMAND} --build . WORKING_DIRECTORY ${SNAP_IPC_DIR})
-  add_subdirectory(${SNAP_IPC_DIR}/src ${SNAP_IPC_DIR}/build)
+  set_property(TARGET esc_interface APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS SNAP_SIM)
+  set_property(TARGET sensor_imu APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS SNAP_SIM)
 endif()
 
 ## System dependencies are found with CMake's conventions
 find_package(Curses REQUIRED)
+
+# Setup cmake paths
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 # Download adaptnotch library
 set(ADAPTNOTCH_DIR ${CMAKE_CURRENT_BINARY_DIR}/adaptnotch-download)
@@ -170,12 +169,14 @@ include_directories(include include/nodes ${catkin_INCLUDE_DIRS} ${CURSES_INCLUD
 add_library(snap
   src/common/SnapdragonDebugPrint.cpp
   src/utils/SnapdragonUtils.cpp
+  src/imu/SnapdragonImuManager.cpp
   src/observer/SnapdragonObserverManager.cpp
   src/control/SnapdragonControllerManager.cpp
   src/esc/SnapdragonEscManager.cpp
 )
 
 target_include_directories(snap PUBLIC
+  src/imu
   src/common
   src/observer
   src/control
@@ -190,7 +191,7 @@ if( snap_apm_FOUND )
   add_definitions(-DSNAP_APM)
   target_link_libraries(snap snap_apm)
 endif()
-target_link_libraries(snap pthread adaptnotch snap_ipc ${catkin_LIBRARIES})
+target_link_libraries(snap sensor_imu esc_interface pthread adaptnotch)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

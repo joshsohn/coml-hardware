@@ -11,10 +11,10 @@
 WSDIR=$1
 CPU=$2
 
-cp $WSDIR/snapio/build/$CPU/libsnapio.so /usr/lib/
-touch -r $WSDIR/snapio/build/$CPU/libsnapio.so /usr/lib/libsnapio.so
+cp $WSDIR/esc_interface/build/$CPU/libesc_interface.so /usr/lib/
+touch -r $WSDIR/esc_interface/build/$CPU/libesc_interface.so /usr/lib/libesc_interface.so
 
-ROOT=$WSDIR/snapio/include/snapio*
+ROOT=$WSDIR/esc_interface/include/esc_interface
 TRGT=/usr/include
 BASE=
 cp -r $ROOT $TRGT

@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     geometry_msgs
     snapstack_msgs
+    dynamic_reconfigure
 )
 
 ## System dependencies are found with CMake's conventions
@@ -96,10 +97,10 @@ message(STATUS "Eigen Version: ${EIGEN3_VERSION_STRING} (${EIGEN3_DIR})")
 ##     and list every .cfg file to be processed
 
 ## Generate dynamic reconfigure parameters in the 'cfg' folder
-# generate_dynamic_reconfigure_options(
-#   cfg/DynReconf1.cfg
+generate_dynamic_reconfigure_options(
+  cfg/OuterLoop.cfg
 #   cfg/DynReconf2.cfg
-# )
+)
 
 ###################################
 ## catkin specific configuration ##
@@ -146,7 +147,7 @@ set_target_properties(outer_loop_node PROPERTIES OUTPUT_NAME outer_loop PREFIX "
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
-add_dependencies(outer_loop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(outer_loop_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_gencfg)
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(outer_loop_node ${catkin_LIBRARIES} outer_loop)

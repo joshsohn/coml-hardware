@@ -40,8 +40,7 @@
 
 #include <adaptnotch/adaptnotch.h>
 
-#include <snap_ipc/imu.h>
-
+#include "SnapdragonImuManager.hpp"
 #include "SnapdragonControllerManager.hpp"
 #include "SnapdragonEscManager.hpp"
 
@@ -55,8 +54,7 @@ namespace Snapdragon {
 }
 
 
-class Snapdragon::ObserverManager
-{
+class Snapdragon::ObserverManager : public Snapdragon::Imu_IEventListener {
 public:
 
   // Filter gains struct
@@ -68,7 +66,7 @@ public:
     float Kgb; // Gyro bias Kalman gain
     double fc_acc_xy, fc_acc_z; // cut-off freq for accelerometer LPF
     double fc_gyr; // cut-off freq for gyro LPF
-    std::string snapio_port; ///< which port/uart to use for snapio comms
+    bool sfpro; // sfpro 820 (8096) has a different IMU to body transform (for SPI 1 IMU)
 
     bool anotch_enable; ///< should we use the adaptive gyro notch filter?
     adaptnotch::AdaptiveNotch::Params anotch_params; ///< adaptive notch parameters
@@ -80,7 +78,6 @@ public:
     float lin_accel[3], ang_vel[3];
     uint32_t sequence_number;
     uint64_t current_timestamp_ns;
-    float loop_time; ///< period [sec] at which imu cb is called
   } Data;
 
   // Filter state
@@ -100,16 +97,6 @@ public:
       q.w = qu.w; q.x = qu.x; q.y = qu.y; q.z = qu.z;
     }
   } ;
-
-  // Time filter state
-  struct TimeFilterData
-  {
-    float dt;
-    float ros_dt;
-    bool skipped;
-    float upper;
-    float lower;
-  };
 
   /**
    * Constructor
@@ -151,11 +138,17 @@ public:
   int32_t Stop();
 
   /**
-     * The IMU callback handler to process the accel/gyro data.
-     * @param imu_samples
-     *  The IMU samples to be processed.
-     **/
-    void imu_cb(const std::vector<acl::snapipc::IMU::Data>& imu_samples);
+   * The IMU callback handler to process the accel/gyro data.
+   * @param samples
+   *  The IMU samples to be processed.
+   * @param count
+   *  The number of samples in the buffer.
+   * @return int32_t
+   *  0 = success;
+   * otherwise = false;
+   **/
+  int32_t Imu_IEventListener_ProcessSamples( sensor_imu* samples, uint32_t count );
+
 
   /**
    * Propagate IMU data to get vehicle's full state.
@@ -178,7 +171,7 @@ public:
    *   0 = success
    *  otherwise = failure;
    **/
-  int32_t updateState(Snapdragon::ObserverManager::State& state, Vector pos, Quaternion q, uint64_t timestamp_us, uint64_t ros_timestamp_us, uint32_t current_seq);
+  int32_t updateState(Snapdragon::ObserverManager::State& state, Vector pos, Quaternion q, uint64_t timestamp_us);
 
   /**
    * Update desired state of attitude controller.
@@ -202,9 +195,6 @@ public:
 
   bool isCalibrated() const { return calibrated_; }
 
-  void initializeTimeFilter(bool time_filter, float upper_bound, float lower_bound); // update if_time_filter_, upper_bound_, and lower_bound_
-  void updateTimeFilter(bool time_filter, float upper_bound, float lower_bound); // update if_time_filter_, upper_bound_, and lower_bound_
-
   /**
    * Destructor
    **/
@@ -212,24 +202,18 @@ public:
 
   Snapdragon::ObserverManager::Data           imu_data_;
   Snapdragon::ObserverManager::State          state_;
-  std::array<float, 6>                        smc_motors_;
+  Snapdragon::ControllerManager::motorThrottles  smc_motors_;
   Snapdragon::ControllerManager::controlData  smc_data_;
-  Snapdragon::ObserverManager::TimeFilterData     time_filter_data_;
   std::atomic<bool>                           calibrated_;
 
 private:
   std::atomic<bool> initialized_, got_pose_;
   Snapdragon::ObserverManager::InitParams observer_params_;
-  std::unique_ptr<acl::snapipc::IMU> imu_;
+  Snapdragon::ImuManager*            imu_man_ptr_;
   Snapdragon::ControllerManager*     smc_man_ptr_;
   Snapdragon::EscManager*            esc_man_ptr_;
   std::mutex                         sync_mutex_;
   uint64_t last_pose_update_us_; ///< timestamp of last external pose measurement
-  uint64_t last_ros_update_us_;
-  std::atomic<bool> time_filter_initialized_; ///< indicates if the time filter is initialized or not
-  std::atomic<bool> if_time_filter_;
-  float upper_bound_;
-  float lower_bound_;
 
   double alpha_accel_xy_, alpha_accel_z_, alpha_gyro_; ///< RC LPF gains
 

@@ -12,12 +12,12 @@ alt_limit: 400.0         # Alititude limit (m) before killing motors
 
 # Control parameters
 # Gains
-Kp/xy: 6.0
-Ki/xy: 4.5
-Kd/xy: 4.5
-Kp/z: 7.0
-Ki/z: 0.5
-Kd/z: 5.0
+Kp_xy: 6.0
+Ki_xy: 4.5
+Kd_xy: 4.5
+Kp_z: 7.0
+Ki_z: 0.5
+Kd_z: 5.0
 
 # Max allowable errors
 maxPosErr/xy: 2.0

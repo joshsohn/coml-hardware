@@ -24,9 +24,3 @@ anotch:
   Q: 360                        # quality factor. Higher --> tighter bandwidth
   min_hz: 60                    # lower bound of peak detection
   max_hz: 200                   # upper bound of peak detection
-
-# Time Filter
-# upper bound of time filter (if the data comes later than upper_bound * exp_dt [s], then the filter discards Vicon msgs)
-upper_bound: 1.3 # larger, less msgs the filter discards. should be >= 1.0 
-# lower bound of time filter (if the data comes sooner than lower_bound * exp_dt [s], then the filter discards Vicon msgs)
-lower_bound: 0.7 # smaller, less msgs the filter discards. should be =< 1.0

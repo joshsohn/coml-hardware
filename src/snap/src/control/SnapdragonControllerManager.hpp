@@ -31,8 +31,6 @@
  ****************************************************************************/
 
 #pragma once
-
-#include <array>
 #include <atomic>
 #include <mutex>
 #include <cstdint>
@@ -64,7 +62,10 @@ public:
     Eigen::Matrix<double,3,3> J = 0.01*Eigen::Matrix<double,3,3>::Identity(); //Inertia matrix in body frame
     double l    = 0.15; //arm length
 
-    std::vector<double> polyF;
+    std::vector<double> polyF_cw, polyF_ccw;
+	std::vector<int> motor_spin;
+	std::vector<double> com; // Center of mass offset in body frame. 
+
 
     double cd; // Drag coefficient of each propeller. It is such that the
                // moment created by one motor **around the motor axis** is M=cd*f,
@@ -73,6 +74,22 @@ public:
     // Parameter to choose between motor allocation on different vehicles
     Mixer mixer = Mixer::INVALID;
 	} InitParams;
+
+
+	typedef struct {
+	    float throttle[8] = {0.,0.,0.,0.,0.,0.,0.,0.};
+
+	    void setAllZero(){
+			throttle[0] = 0.;
+			throttle[1] = 0.;
+			throttle[2] = 0.;
+			throttle[3] = 0.;
+			throttle[4] = 0.;
+			throttle[5] = 0.;
+			throttle[6] = 0.;
+			throttle[7] = 0.;
+	    }
+	} motorThrottles;
 
 	struct controlData {
 	    Quaternion q_des ;
@@ -104,7 +121,7 @@ public:
 
 	void updateDesiredAttState( desiredAttState &desState, desiredAttState newdesState);
 	void updateAttState( attState &attState, Quaternion q, Vector w);
-	void updateMotorCommands (double dt, std::array<float, 6> &throttles, desiredAttState desState, attState attState );
+	void updateMotorCommands (double dt, Snapdragon::ControllerManager::motorThrottles &throttles, desiredAttState desState, attState attState );
 
   /**
    * @brief      Uses a polynomial thrust curve to map thrust to throttle
@@ -116,11 +133,15 @@ public:
    *
    *             NOTE: The thrust curve is per motor
    *
-   * @param[in]  thrust  Desired thrust [N]
+   * @param[in]  thrust  	Desired thrust [N]
+   * @param[in]  motor_id  	Motor_id: (0, num. motors - 1), used with motor_spin
+   * 						to identify the spinning direction and apply the 
+   * 						clocwise or counter-clocwise thrust-to-normalized PWM 
+   * 						curve. 
    *
    * @return     Throttle value, \in [0, 1]
    */
-	double f2Throttle(double thrust_per_motor);
+	double f2Throttle(double thrust_per_motor, size_t motor_id);
 
 	/**
    * @brief      Evaluates a polynomial y = a_n*x^n + ... + a_0
@@ -140,7 +161,7 @@ public:
 
 	desiredAttState  smc_des_;
 	attState         smc_state_;
-	std::array<float, 6> throttles_;
+	Snapdragon::ControllerManager::motorThrottles  throttles_;
 	Snapdragon::ControllerManager::controlData	   smc_data_;
 
 private:

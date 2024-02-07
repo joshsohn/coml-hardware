@@ -9,18 +9,12 @@ angvel_drag: 0.0001
 ground_effect: 0 #[-55.3516, 181.8265, -203.9874, 85.3735, -7.6619]
 
 # Propulsion properties (esc + motor + propeller)
-# The following curves map throttle commands in [0, 1] to thrust [N] or torque [Nm].
-# Note that the clockwise and counter-clockwise propellers may have different curves.
-# These curves are the "inverse" relationship as that in the autopilot (snap), which
-# maps desired forces and torques to throttle commands.
-# inverse_thrust_curve_cw:  [3.5, 0.0]
-inverse_thrust_curve_cw:  [7.69, 0.0]
-# inverse_thrust_curve_ccw: [3.5, 0.0]
-inverse_thrust_curve_ccw: [7.69, 0.0]
-inverse_torque_curve_cw:  [0.2, 0.0]
-inverse_torque_curve_ccw: [0.2, 0.0]
-tau_spin_up: 0.01 # motor/prop spin-up time constant
-tau_spin_down: 0.05 # motor/prop spin-down time constant
+inverse_thrust_curve_cw: [3.5, 0.0]  # Maps normalized PWM commands [-] (from 0 to 1) to thrust force [N] for clockwise spinning motors. Inverse relationship of "thrust_curve" in snap.
+inverse_thrust_curve_ccw: [3.5, 0.0] # Maps normalized PWM commands [-] (from 0 to 1) to thrust force [N] for counter-clockwise spinning motors. Inverse relationship of "thrust_curve" in snap.
+torque_curve_cw: [0.2, 0.0]
+torque_curve_ccw: [0.2, 0.0]
+tau_spin_up: 0.01
+tau_spin_down: 0.05
 min_thrust: 0.0 # Newtons, per motor
 max_thrust: 12.95 # Newtons, per motor
 min_torque: 0.0 # Nm, per motor

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-  <arg name="veh" default="$(optenv VEHTYPE SQ)" />
-  <arg name="num" default="$(optenv VEHNUM 01)" />
+  <arg name="veh" default="HX" />
+  <arg name="num" default="14" />
 
-  <group ns="$(arg veh)$(arg num)">
+  <group ns="$(arg veh)$(arg num)s">
     <!-- Position / trajectory tracking -->
     <node name="cntrl" pkg="outer_loop" type="outer_loop" output="screen" clear_params="true">
       <!-- Load vehicle type parameters -->

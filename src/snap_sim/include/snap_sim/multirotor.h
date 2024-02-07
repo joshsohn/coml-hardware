@@ -32,7 +32,7 @@ namespace snap_sim {
   {
   public:
 
-    static constexpr size_t NUM_PWM = 6;
+    static constexpr size_t NUM_PWM = 8;
     using MotorCmds = std::array<double, NUM_PWM>;
 
     /**
@@ -40,7 +40,7 @@ namespace snap_sim {
      */
     struct Rotor {
       std::vector<double> polyF; ///< poly coeffs: map normalized pwm to force
-      std::vector<double> polyT; ///< poly coeffs: map normalized pwm to drag torque
+      std::vector<double> polyT; ///< poly coeffs: map pwm usec to drag torque
       double minF, maxF; ///< minimum / maximum achievable force [N]
       double minT, maxT; ///< minimum / maximum achievable torque [Nm]
       double tauUp; ///< time constant for first-order motor spin up response

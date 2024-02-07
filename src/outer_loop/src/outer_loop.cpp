@@ -46,6 +46,35 @@ void OuterLoop::updateLog(const State& state)
 
 // ----------------------------------------------------------------------------
 
+void OuterLoop::setHorizontalPositionPidParams(const double kp, const double ki, const double kd){
+  // P gain on x-y (Inertial frame)
+  params_.Kp(0) = kp;
+  params_.Kp(1) = kp;
+
+  // I gain on x-y (Inertial frame)
+  params_.Ki(0) = ki;
+  params_.Ki(1) = ki;
+
+  // D-gain on x-y (Inertial frame)
+  params_.Kd(0) = kd;
+  params_.Kd(1) = kd;
+}
+
+// ----------------------------------------------------------------------------
+
+void OuterLoop::setAltitudePidParams(const double kp, const double ki, const double kd){
+  // P gain on z (Inertial frame)
+  params_.Kp(2) = kp;
+
+  // I gain on z (Inertial frame)
+  params_.Ki(2) = ki;
+
+  // D-gain on z (Inertial frame)
+  params_.Kd(2) = kd;
+}
+
+// ----------------------------------------------------------------------------
+
 AttCmd OuterLoop::computeAttitudeCommand(double t, const State& state,
                                          const Goal& goal)
 {

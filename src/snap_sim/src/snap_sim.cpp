@@ -80,8 +80,19 @@ void SnapSim::init()
   nhp_.param<double>("init/x", state.p.x(), 0.0);
   nhp_.param<double>("init/y", state.p.y(), 0.0);
   nhp_.param<double>("init/z", state.p.z(), 0.0);
+  nhp_.param<double>("init/q_x", state.q.x(), 0.0);
+  nhp_.param<double>("init/q_y", state.q.y(), 0.0);
+  nhp_.param<double>("init/q_z", state.q.z(), 0.0);
+  nhp_.param<double>("init/q_w", state.q.w(), 1.0);
+  //std::cout << "state.q.w: " <<  state.q.w() << std::endl;
+  const double eps = 1e-2;
+  if (state.q.norm() > eps){
+    state.q.normalize();
+  } else {
+    ROS_ERROR("Init attitude quaternion has norm() < %f. Using identity quaternion.", eps);
+    state.q = Eigen::Quaterniond::Identity();
+  } 
   state.v = Eigen::Vector3d::Zero();
-  state.q = Eigen::Quaterniond::Identity();
   state.w = Eigen::Vector3d::Zero();
 
   // physical vehicle parameters
@@ -100,8 +111,8 @@ void SnapSim::init()
   Multirotor::Rotor rotor, rotor_cw, rotor_ccw;
   nhp_.getParam("inverse_thrust_curve_cw", rotor_cw.polyF);
   nhp_.getParam("inverse_thrust_curve_ccw", rotor_ccw.polyF);
-  nhp_.getParam("inverse_torque_curve_cw", rotor_cw.polyT);
-  nhp_.getParam("inverse_torque_curve_ccw", rotor_ccw.polyT);
+  nhp_.getParam("torque_curve_cw", rotor_cw.polyT);
+  nhp_.getParam("torque_curve_ccw", rotor_ccw.polyT);
   nhp_.param<double>("tau_spin_up", rotor.tauUp, 0.0);
   nhp_.param<double>("tau_spin_down", rotor.tauDn, 0.0);
   nhp_.param<double>("min_thrust", rotor.minF, 0.0);
@@ -125,13 +136,13 @@ void SnapSim::init()
   for (size_t i=0; i<params.motors.size(); ++i) {
     auto& motor = params.motors[i];
 
-    // assumption: motors differ only in thrust curve according to spinning direction. 
+    // assumption: motors differ only in thrust/torque curve according to spinning direction. 
     motor.rotor = rotor;
-    if (motor_spin[i] < 0) {
+    if (motor_spin[i] < 0){
       // Clockwise spinning rotor
       motor.rotor.polyF = rotor_cw.polyF;
       motor.rotor.polyT = rotor_cw.polyT;
-    } else {
+    }else{
       // Counter-clockwise spinning rotor
       motor.rotor.polyF = rotor_ccw.polyF;
       motor.rotor.polyT = rotor_ccw.polyT;
@@ -172,8 +183,8 @@ void SnapSim::init()
   const size_t esckey = acl::ipc::createKeyFromStr(name_, "esc");
 
   // unique key is used to access the same shmem location
-  imuserver_.reset(new acl::ipc::Server<snapipc::IMU::Data>(imukey));
-  escclient_.reset(new acl::ipc::Client<throttle_commands>(esckey));
+  imuserver_.reset(new acl::ipc::Server<sensor_imu>(imukey));
+  escclient_.reset(new acl::ipc::Client<esc_commands>(esckey));
 
   //
   // ESC Commands thread
@@ -218,13 +229,16 @@ void SnapSim::armThread()
 
 void SnapSim::escReadThread()
 {
+  static constexpr uint16_t PWM_MAX = acl::ESCInterface::PWM_MAX_PULSE_WIDTH;
+  static constexpr uint16_t PWM_MIN = acl::ESCInterface::PWM_MIN_PULSE_WIDTH;
+
   while (ros::ok()) {
-    throttle_commands thrcmds;
-    bool rcvd = escclient_->read(&thrcmds);
+    esc_commands esccmds;
+    bool rcvd = escclient_->read(&esccmds);
 
     std::lock_guard<std::mutex> lck(escmtx_);
     for (size_t i=0; i<Multirotor::NUM_PWM; ++i)
-      motorcmds_[i] = static_cast<double>(thrcmds.throttle[i]);
+      motorcmds_[i] = static_cast<double>(esccmds.pwm[i] - PWM_MIN) / (PWM_MAX - PWM_MIN);
   }
 }
 
@@ -254,16 +268,16 @@ void SnapSim::simStepCb(const ros::TimerEvent& e)
   Eigen::Vector3d acc, gyr;
   double imu_time = multirotor_->readIMU(acc, gyr);
 
-  imu_.usec = static_cast<uint64_t>(imu_time*1e6);
-  imu_.seq++;
+  imu_.timestamp_in_us = static_cast<uint64_t>(imu_time*1e6);
+  imu_.sequence_number++;
   // Rotate the measurements so that they correspond to the IMU orientation
   // of the sf board (eagle8074). Further, note that IMU measures in g's.
-  imu_.acc_x =   acc.x() / GRAVITY.norm();
-  imu_.acc_y = - acc.y() / GRAVITY.norm();
-  imu_.acc_z = - acc.z() / GRAVITY.norm();
-  imu_.gyr_x =   gyr.x();
-  imu_.gyr_y = - gyr.y();
-  imu_.gyr_z = - gyr.z();
+  imu_.linear_acceleration[0] =   acc.x() / GRAVITY.norm();
+  imu_.linear_acceleration[1] = - acc.y() / GRAVITY.norm();
+  imu_.linear_acceleration[2] = - acc.z() / GRAVITY.norm();
+  imu_.angular_velocity[0] =   gyr.x();
+  imu_.angular_velocity[1] = - gyr.y();
+  imu_.angular_velocity[2] = - gyr.z();
   imuserver_->send(imu_);
 }
 

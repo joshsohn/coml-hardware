@@ -29,23 +29,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  ****************************************************************************/
-
-#include <chrono>
-#include <functional>
-
 #include "SnapdragonObserverManager.hpp"
 #include "SnapdragonUtils.hpp"
 #include "SnapdragonDebugPrint.h"
 
 Snapdragon::ObserverManager::ObserverManager()
 {
+  imu_man_ptr_ = nullptr;
   smc_man_ptr_ = nullptr;
   esc_man_ptr_ = nullptr;
   initialized_ = false;
   calibrated_ = false;
   got_pose_ = false;
-  time_filter_initialized_ = false;
-  if_time_filter_ = false;
 }
 
 Snapdragon::ObserverManager::~ObserverManager()
@@ -56,8 +51,13 @@ Snapdragon::ObserverManager::~ObserverManager()
 int32_t Snapdragon::ObserverManager::CleanUp()
 {
   // stop the imu manager
-  if (imu_ != nullptr) imu_.reset();
-
+  if (imu_man_ptr_ != nullptr)
+  {
+    imu_man_ptr_->RemoveHandler(this);
+    imu_man_ptr_->Terminate();
+    delete imu_man_ptr_;
+    imu_man_ptr_ = nullptr;
+  }
   // stop the attitude control manager
   if (smc_man_ptr_ != nullptr)
   {
@@ -87,13 +87,17 @@ int32_t Snapdragon::ObserverManager::Initialize(const std::string& vehname,
 
   if (rc == 0)
   {
-    // initialize imu
-#ifdef SNAP_SIM
-    imu_.reset(new acl::snapipc::IMU(vehname));
-#else
-    imu_.reset(new acl::snapipc::IMU("imu0"));
-#endif
-
+    // initialize the Imu Manager.
+    imu_man_ptr_ = new Snapdragon::ImuManager(vehname);
+    if (imu_man_ptr_ != nullptr)
+    {
+      rc = imu_man_ptr_->Initialize();
+      imu_man_ptr_->AddHandler(this);
+    }
+    else
+    {
+      rc = -1;
+    }
     // initialize the Controller Manager
     smc_man_ptr_ = new Snapdragon::ControllerManager();
     smc_man_ptr_->Initialize(smcparams);
@@ -117,12 +121,11 @@ int32_t Snapdragon::ObserverManager::Initialize(const std::string& vehname,
 
 int32_t Snapdragon::ObserverManager::Start()
 {
-  using namespace std::placeholders;
   int32_t rc = 0;
   if (initialized_)
   {
-    // connect the imu callback
-    imu_->register_imu_cb(std::bind(&ObserverManager::imu_cb, this, _1));
+    // start the IMU
+    rc = imu_man_ptr_->Start();
   }
   else
   {
@@ -138,20 +141,13 @@ int32_t Snapdragon::ObserverManager::Stop()
   return 0;
 }
 
-void Snapdragon::ObserverManager::imu_cb(const std::vector<acl::snapipc::IMU::Data>& imu_samples)
-{
+int32_t Snapdragon::ObserverManager::Imu_IEventListener_ProcessSamples( sensor_imu* imu_samples, uint32_t sample_count ) {
   static constexpr size_t CALIB_SAMPLES = 1000;
   static double Ts = 0; // estimated sample period [sec]
 
-  static std::chrono::time_point<std::chrono::high_resolution_clock> t1 = std::chrono::high_resolution_clock::now();
-  const auto t2 = std::chrono::high_resolution_clock::now();
-  const auto duration = std::chrono::duration<double>(t2 - t1);
-  imu_data_.loop_time = duration.count();
-  t1 = std::chrono::high_resolution_clock::now();
-
-  for (int ii = 0; ii < imu_samples.size(); ++ii)
+  for (int ii = 0; ii < sample_count; ++ii)
   {
-    uint64_t current_timestamp_ns = imu_samples[ii].usec * 1000;
+    uint64_t current_timestamp_ns = imu_samples[ii].timestamp_in_us * 1000;
 
     // make sure we didn't skip too big of a gap in IMU measurements
     static uint64_t last_timestamp = current_timestamp_ns;
@@ -164,34 +160,47 @@ void Snapdragon::ObserverManager::imu_cb(const std::vector<acl::snapipc::IMU::Da
     last_timestamp = current_timestamp_ns;
 
     float lin_acc[3], ang_vel[3];
+    static constexpr float kNormG = 9.80665f;
 
-    // Convert from imu (frd) to body (flu)
-    lin_acc[0] =  imu_samples[ii].acc_x;
-    lin_acc[1] = -imu_samples[ii].acc_y;
-    lin_acc[2] = -imu_samples[ii].acc_z;
-    ang_vel[0] =  imu_samples[ii].gyr_x;
-    ang_vel[1] = -imu_samples[ii].gyr_y;
-    ang_vel[2] = -imu_samples[ii].gyr_z;
+    if (observer_params_.sfpro)
+    {  // Excelsior 8096
+      // sfpro imu has x coming out the right side, y coming out the front, with z up.
+      // Convert from sfpro-imu to body-flu
+      lin_acc[0] =  imu_samples[ii].linear_acceleration[1] * kNormG;
+      lin_acc[1] = -imu_samples[ii].linear_acceleration[0] * kNormG;
+      lin_acc[2] =  imu_samples[ii].linear_acceleration[2] * kNormG;
+      ang_vel[0] =  imu_samples[ii].angular_velocity[1];
+      ang_vel[1] = -imu_samples[ii].angular_velocity[0];
+      ang_vel[2] =  imu_samples[ii].angular_velocity[2];
+    }
+    else
+    {  // Eagle 8074
+      // Convert from sf-imu (frd) to body (flu)
+      lin_acc[0] =  imu_samples[ii].linear_acceleration[0] * kNormG;
+      lin_acc[1] = -imu_samples[ii].linear_acceleration[1] * kNormG;
+      lin_acc[2] = -imu_samples[ii].linear_acceleration[2] * kNormG;
+      ang_vel[0] =  imu_samples[ii].angular_velocity[0];
+      ang_vel[1] = -imu_samples[ii].angular_velocity[1];
+      ang_vel[2] = -imu_samples[ii].angular_velocity[2];
+    }
 
     static uint32_t sequence_number_last = 0;
     int num_dropped_samples = 0;
     if (sequence_number_last != 0)
     {
       // The diff should be 1, anything greater means we dropped samples
-      num_dropped_samples = imu_samples[ii].seq - sequence_number_last - 1;
+      num_dropped_samples = imu_samples[ii].sequence_number - sequence_number_last - 1;
       if (num_dropped_samples > 0)
       {
-        WARN_PRINT("Current IMU sample = %u, last IMU sample = %u", imu_samples[ii].seq,
+        WARN_PRINT("Current IMU sample = %u, last IMU sample = %u", imu_samples[ii].sequence_number,
                    sequence_number_last);
       }
     }
-    sequence_number_last = imu_samples[ii].seq;
+    sequence_number_last = imu_samples[ii].sequence_number;
 
     static int count = 0;
 
     if (!calibrated_) {
-      static constexpr float kNormG = 9.80665f;
-
       // Update accel and gyro bias initialization
       count++;
       state_.accel_bias.x += lin_acc[0];
@@ -267,12 +276,14 @@ void Snapdragon::ObserverManager::imu_cb(const std::vector<acl::snapipc::IMU::Da
     smc_man_ptr_->updateMotorCommands(dt, smc_man_ptr_->throttles_, smc_man_ptr_->smc_des_, smc_man_ptr_->smc_state_);
 
     // write out to PWM ESCs
-    esc_man_ptr_->update(smc_man_ptr_->throttles_);
+    esc_man_ptr_->update(smc_man_ptr_->throttles_.throttle);
 
     // Copy new motor commands to kf public variable
-    smc_motors_ = smc_man_ptr_->throttles_;
+    std::copy(std::begin(smc_man_ptr_->throttles_.throttle), std::end(smc_man_ptr_->throttles_.throttle), std::begin(smc_motors_.throttle));
     smc_data_ = smc_man_ptr_->smc_data_;
   }
+
+  return 0;
 }
 
 int32_t Snapdragon::ObserverManager::propagateState(Snapdragon::ObserverManager::State& state,
@@ -322,7 +333,7 @@ int32_t Snapdragon::ObserverManager::propagateState(Snapdragon::ObserverManager:
 }
 
 int32_t Snapdragon::ObserverManager::updateState(Snapdragon::ObserverManager::State& state, Vector pos, Quaternion q,
-                                                 uint64_t timestamp_us, uint64_t ros_timestamp_us, uint32_t current_seq)
+                                                 uint64_t timestamp_us)
 {
   // Lock thread to prevent state from being accessed by PropagateState
   std::lock_guard<std::mutex> lock(sync_mutex_);
@@ -333,66 +344,12 @@ int32_t Snapdragon::ObserverManager::updateState(Snapdragon::ObserverManager::St
     // with the external pose measurement.
     state.updateState(pos, q);
     got_pose_ = true;
-  } 
-  else {
-
-    float dt = (timestamp_us - last_pose_update_us_) * 1e-6; //timestamps_us and last_pose_update_us_ are both in microseconds and dt is in seconds
-    float ros_dt = (ros_timestamp_us - last_ros_update_us_) * 1e-6;
-    bool skipped = false;
-    static float exp_dt = 0;
-
-    // Time filter
-    if (if_time_filter_){
-
-      // TIME FILTER: after communication outage, we tend to receive clumped state data and need to get rid of them
-      // TODO: we may wanna keep the last data in the clump but right now we all toss away all the clumped data
-
-      static constexpr size_t TIME_FILTER_CALIB_SAMPLES = 1000; // how many data we use to calibrate the time filter
-      static int time_filter_count = 0;
-      
-      if (!time_filter_initialized_) { // if the time filter is not initialized, then find the average dt to find an expected ros_dt
-
-        if (time_filter_count < TIME_FILTER_CALIB_SAMPLES){ // still calibrating
-          exp_dt += dt;
-        }
-        else {// once we have enough samples
-          exp_dt /= TIME_FILTER_CALIB_SAMPLES;
-          WARN_PRINT("exp_dt is found: exp_dt = %f seconds",exp_dt);
-          time_filter_initialized_ = true;
-          WARN_PRINT("Time filter calibration complete");
-        }
-
-        time_filter_count++;
-
-      } else {// once the time filter is initialed, snap starts throwing away clumped data
-
-        // no longer used since we initialize exp_dt in the above if-statement 
-        // float exp_dt = 10*1e-3; //in case of 100Hz
-        // flatt exp_dt = 5*1e-3; //in case of 200Hz
-      
-        if (ros_dt > upper_bound_ * exp_dt || ros_dt < lower_bound_ * exp_dt)
-        { //the heart of time filter
-          // std::cout << "comm outage " << std::endl;
-          // std::cout << "we throw away seq num " << current_seq << std::endl;
-          // std::cout << "dt is " << dt << std::endl; 
-          // std::cout << "ros_dt is " << ros_dt << std::endl; 
-          last_pose_update_us_ = timestamp_us;
-          last_ros_update_us_ = ros_timestamp_us;
-          skipped = true;
-        }
-      }
-    } 
-
-    // update time filter related data
-    time_filter_data_.dt = dt;
-    time_filter_data_.ros_dt = ros_dt;
-    time_filter_data_.skipped = skipped;
-    time_filter_data_.upper = upper_bound_ * exp_dt;
-    time_filter_data_.lower = lower_bound_ * exp_dt;
-
-    if (skipped) return -1;
-
-    if (dt <= 1e-3) return -1;
+  }
+  else
+  {
+    float dt = (timestamp_us - last_pose_update_us_) * 1e-6;
+    if (dt <= 0)
+      return -1;
 
     Quaternion qe, qa, qu;
     qa.w = state.q.w;
@@ -447,7 +404,6 @@ int32_t Snapdragon::ObserverManager::updateState(Snapdragon::ObserverManager::St
   }
 
   last_pose_update_us_ = timestamp_us;
-  last_ros_update_us_ = ros_timestamp_us;
   return 0;
 }
 
@@ -458,6 +414,7 @@ int32_t Snapdragon::ObserverManager::updateSMCState(desiredAttState newDesState)
 
   return 0;
 }
+
 
 void Snapdragon::ObserverManager::filter(Data& imu, const float accel[3], const float gyro[3])
 {
@@ -481,11 +438,4 @@ void Snapdragon::ObserverManager::filter(Data& imu, const float accel[3], const 
     smc_man_ptr_->smc_data_.s.y = anotch_gyr_[1]->peakFreq();
     smc_man_ptr_->smc_data_.s.z = anotch_gyr_[2]->peakFreq();
   }
-
-}
-
-void Snapdragon::ObserverManager::initializeTimeFilter(bool time_filter, float upper_bound, float lower_bound){ // initialize if_time_filter_
-  if_time_filter_ = time_filter;
-  upper_bound_ = upper_bound;
-  lower_bound_ = lower_bound;
 }

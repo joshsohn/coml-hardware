@@ -57,7 +57,6 @@
 #include <snapstack_msgs/State.h>
 #include <snapstack_msgs/SMCData.h>
 #include <snapstack_msgs/Motors.h>
-#include <snapstack_msgs/TimeFilter.h>
 
 #include "SnapdragonObserverManager.hpp"
 
@@ -134,9 +133,8 @@ private:
   void   PublishIMUData(const Snapdragon::ObserverManager::Data& ukf_data );
   void   PublishStateData(const Snapdragon::ObserverManager::State& ukf_state );
   void   PublishOdometryData(const Snapdragon::ObserverManager::State& ukf_state );
-  void   PublishMotorCommands(const std::array<float, 6>& throttles);
+  void   PublishMotorCommands (const Snapdragon::ControllerManager::motorThrottles& throttles );
   void   PublishSMCData(const Snapdragon::ControllerManager::controlData& data );
-  void   PublishTimeFilterData(const Snapdragon::ObserverManager::TimeFilterData& tfd );
   void   BroadcastTF (const Snapdragon::ObserverManager::State& ukf_state );
   void   poseCB(const geometry_msgs::PoseStamped& msg);
   void   goalCB(const snapstack_msgs::AttitudeCommand& msg);
@@ -160,7 +158,6 @@ private:
   ros::Publisher    pub_odom_;
   ros::Publisher    pub_motor_;
   ros::Publisher    pub_smc_;
-  ros::Publisher    pub_time_filter_;
   ros::Subscriber   sub_pose_;
   ros::Subscriber   sub_attCmd_;
   ros::Timer        pubDataTimer_ ;

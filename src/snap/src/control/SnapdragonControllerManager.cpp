@@ -83,10 +83,12 @@ void Snapdragon::ControllerManager::Initialize(const Snapdragon::ControllerManag
 		const double lsa2 = l * std::sin(a / 2.);
 		const double lca2 = l * std::cos(a / 2.);
 		const double cd = smc_params_.cd;
+		const double rx = smc_params_.com.at(0);
+		const double ry = smc_params_.com.at(1);
 
     f2wrench_ << 1.,    1.,   1.,     1.,    1.,   1.,
-                 lsa2,  l,    lsa2,  -lsa2, -l,   -lsa2,
-                -lca2,  0.,   lca2,   lca2,  0.,  -lca2,
+                 lsa2 - ry,  l - ry,    lsa2 - ry,  -lsa2 - ry, -l - ry,   -lsa2 - ry,
+                -lca2 + rx,  0. + rx,   lca2 + rx,   lca2 + rx,  0. + rx,  -lca2 + rx,
                  cd,   -cd,   cd,    -cd,    cd,  -cd;
 
 		// It´s an undertermined system (i.e., many solutions). Let us choose the option that minimizes ||f||,
@@ -113,7 +115,7 @@ void Snapdragon::ControllerManager::updateAttState(attState &attState, Quaternio
   	attState.w = w;
 }
 
-void Snapdragon::ControllerManager::updateMotorCommands(double dt, std::array<float, 6>& throttles, desiredAttState desState, attState attState ) {
+void Snapdragon::ControllerManager::updateMotorCommands(double dt, Snapdragon::ControllerManager::motorThrottles &throttles, desiredAttState desState, attState attState ) {
 	if (desState.power && initialized_) {
 		// Lock thread
   	std::lock_guard<std::mutex> lock( sync_mutex_ );
@@ -125,7 +127,7 @@ void Snapdragon::ControllerManager::updateMotorCommands(double dt, std::array<fl
   	const Eigen::Matrix3d R = Eigen::Quaterniond(attState.q.w, attState.q.x, attState.q.y, attState.q.z).toRotationMatrix();
   	const Eigen::Matrix3d Rd = Eigen::Quaterniond(desState.q.w, desState.q.x, desState.q.y, desState.q.z).toRotationMatrix();
   	const Eigen::Vector3d Omega = Eigen::Vector3d(attState.w.x, attState.w.y, attState.w.z); // current angular velocity of the UAV's c.o.m. in the BODY frame
-  	const Eigen::Vector3d Omegad = Eigen::Vector3d(desState.w.x, desState.w.y, desState.w.z); // desired angular velocity of the UAV's c.o.m. in the BODY frame
+  	const Eigen::Vector3d Omegad = Eigen::Vector3d::Zero(); //Eigen::Vector3d(desState.w.x, desState.w.y, desState.w.z); // desired angular velocity of the UAV's c.o.m. in the BODY frame
 
     // numerically differentiate. TODO: could be avoided if we had snap
     Eigen::Vector3d Omegad_dot = (Omegad - Omegad_last_) / dt;
@@ -138,6 +140,8 @@ void Snapdragon::ControllerManager::updateMotorCommands(double dt, std::array<fl
 		// save for next time
 		Omegad_dot_last_ = Omegad_dot;
 		Omegad_last_ = Omegad;
+
+	Omegad_dot = Eigen::Vector3d::Zero();
 
   	// compute error in rotation
   	const Eigen::Vector3d eR = 0.5 * Vee(Rd.transpose() * R - R.transpose() * Rd); // Eq. 10
@@ -162,12 +166,12 @@ void Snapdragon::ControllerManager::updateMotorCommands(double dt, std::array<fl
 		// TODO: one possible improvement is to saturate it such that Mx, My have the highest priority, then T, and then Mz. 
 		// See https://www.ifi.uzh.ch/dam/jcr:5f3668fe-1d4e-4c2b-a190-8f5608f40cf3/RAL17_Faessler.pdf
 		for(size_t i=0; i<f.size(); i++) {
-      throttles[i] = saturate(f2Throttle(f[i]), 0., 1.);
+      		throttles.throttle[i] = saturate(f2Throttle(f[i], i), 0., 1.);
 		}
 
 		// The rest of the f will be zero
-		for(size_t i=f.size(); i<=throttles.size(); i++){
-			throttles[i] = 0.0f;
+		for(size_t i=f.size(); i<=7; i++){
+			throttles.throttle[i] = 0.0;
 		}
 
 		// Update smc_data struct
@@ -181,17 +185,24 @@ void Snapdragon::ControllerManager::updateMotorCommands(double dt, std::array<fl
 		smc_data_.w_act = attState.w;
 		smc_data_.w_err.x = eOmega[0]; smc_data_.w_err.y = eOmega[1]; smc_data_.w_err.z = eOmega[2];
 	} else {
-		throttles.fill(0.0f);
+		throttles.setAllZero();
 	}
 
 }
 
 
 // converts f (in N) to throttle
-double Snapdragon::ControllerManager::f2Throttle(double thrust_per_motor)
+double Snapdragon::ControllerManager::f2Throttle(double thrust_per_motor, size_t motor_id)
 {
-  // Use a polynomial model to map thrust_per_motor to throttle_per_motor. 
-  const double throttle_per_motor = evalPoly(smc_params_.polyF, thrust_per_motor);
+  // Use a polynomial model to map thrust_per_motor to throttle_per_motor.
+  double throttle_per_motor  = 0.0;
+  if (smc_params_.motor_spin.at(motor_id) < 0){
+    // Clockwise spinning rotor
+	throttle_per_motor = evalPoly(smc_params_.polyF_cw, thrust_per_motor);
+  }else{
+	// Counter-clockwise spinning rotor
+	throttle_per_motor = evalPoly(smc_params_.polyF_ccw, thrust_per_motor);
+  } 
   return throttle_per_motor;
 }
 

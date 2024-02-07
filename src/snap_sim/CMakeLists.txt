@@ -117,7 +117,7 @@ message(STATUS "Eigen Version: ${EIGEN3_VERSION_STRING} (${EIGEN3_DIR})")
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
  INCLUDE_DIRS include/shims include/wind-dynamics
- LIBRARIES snap_ipc
+ LIBRARIES esc_interface sensor_imu
 #  CATKIN_DEPENDS other_catkin_pkg
 #  DEPENDS system_lib
 )
@@ -131,7 +131,8 @@ catkin_package(
 include_directories(include include/shims include/wind-dynamics ${catkin_INCLUDE_DIRS} ${EIGEN3_INCLUDE_DIRS})
 
 ## Declare a C++ library
-add_library(snap_ipc src/shims/snap_ipc/client.cpp src/shims/snap_ipc/imu.cpp)
+add_library(esc_interface src/shims/esc_interface/esc_interface.cpp)
+add_library(sensor_imu src/shims/sensor-imu/sensor_imu.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries

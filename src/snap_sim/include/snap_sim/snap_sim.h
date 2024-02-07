@@ -25,11 +25,12 @@
 #include "snap_sim/physics_engine.h"
 #include "snap_sim/multirotor.h"
 
-#include "ipc/client.h"
-#include "ipc/server.h"
-#include "ipc/common.h"
-#include "snap_ipc/imu.h"
-#include "snap_ipc/client.h"
+#include "client.h"
+#include "server.h"
+#include "ipc_common.h"
+#include "sensor-imu/sensor_datatypes.h"
+#include "esc_interface/esc_datatypes.h"
+#include "esc_interface/esc_interface.h"
 
 namespace acl {
 namespace snap_sim {
@@ -57,14 +58,14 @@ namespace snap_sim {
     double mocap_dt_; ///< period at which to broadcast simulated mocap
 
     /// \brief Internal state
-    snapipc::IMU::Data imu_; ///< imu data message
-    Multirotor::MotorCmds motorcmds_; ///< throttle commands in [0,1]
+    sensor_imu imu_; ///< imu data message
+    Multirotor::MotorCmds motorcmds_; ///< pwm commands btwn 1000 and 2000 usec
 
     /// \brief Components
     PhysicsEngine physics_; ///< physics world to simulate rigid bodies
     MultirotorPtr multirotor_; ///< multirotor geometry, dynamics, and actuator
-    std::unique_ptr<ipc::Server<snapipc::IMU::Data>> imuserver_;
-    std::unique_ptr<ipc::Client<throttle_commands>> escclient_;
+    std::unique_ptr<ipc::Server<sensor_imu>> imuserver_;
+    std::unique_ptr<ipc::Client<esc_commands>> escclient_;
 
     /// \brief Thread for reading esc data
     std::thread escthread_;
