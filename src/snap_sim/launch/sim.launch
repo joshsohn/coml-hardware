@@ -54,6 +54,11 @@
     <arg name="num" value="$(arg num)s" />
   </include> -->
 
+  <include file="$(find python_example)/launch/launch.launch">
+    <arg name="veh" value="$(arg veh)" />
+    <arg name="num" value="$(arg num)s" />
+  </include>
+
   <!-- snap stack autopilot -->
   <include file="$(find snap)/launch/snap.launch">
     <arg name="veh" value="$(arg veh)" />

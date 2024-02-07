@@ -18,6 +18,16 @@ math.h
 pthread.h
 -
 
+/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.cpp
+SnapdragonControllerManager.hpp
+/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.hpp
+SnapdragonUtils.hpp
+/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonUtils.hpp
+SnapdragonDebugPrint.h
+/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonDebugPrint.h
+iostream
+-
+
 /home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.hpp
 array
 -
