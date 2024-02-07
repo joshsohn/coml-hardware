@@ -222,7 +222,25 @@ yaml-cpp/yaml.h
 vector
 -
 
+/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/multirotor.cpp
+snap_sim/multirotor.h
+/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/multirotor.h
+
+/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/rigid_body.cpp
+snap_sim/rigid_body.h
+/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/rigid_body.h
+iostream
+-
+
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim.cpp
+snap_sim/snap_sim.h
+/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/snap_sim.h
+
+/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim_node.cpp
+iostream
+-
+ros/ros.h
+-
 snap_sim/snap_sim.h
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/snap_sim.h
 

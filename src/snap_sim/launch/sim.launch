@@ -61,14 +61,14 @@
   </group>
 
   <!-- Position / trajectory tracking -->
-  <!-- <include file="$(find outer_loop)/launch/cntrl.launch">
-    <arg name="veh" value="$(arg veh)" />
-    <arg name="num" value="$(arg num)s" />
-  </include> -->
-  <include file="$(find python_example)/launch/launch.launch">
+  <include file="$(find outer_loop)/launch/cntrl.launch">
     <arg name="veh" value="$(arg veh)" />
     <arg name="num" value="$(arg num)s" />
   </include>
+  <!-- <include file="$(find python_example)/launch/launch.launch">
+    <arg name="veh" value="$(arg veh)" />
+    <arg name="num" value="$(arg num)s" />
+  </include> -->
   <!--include file="$(find mav_compressed_mpc)/launch/compressed_mpc.launch"/-->
 
   <!--include file="$(find mav_compressed_mpc)/launch/visualization.launch"/-->
