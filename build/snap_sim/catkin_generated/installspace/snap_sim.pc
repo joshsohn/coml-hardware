@@ -4,5 +4,5 @@ Name: snap_sim
 Description: Description of snap_sim
 Version: 0.0.0
 Cflags: -I${prefix}/include
-Libs: -L${prefix}/lib -lsnap_ipc
+Libs: -L${prefix}/lib -lesc_interface -lsensor_imu
 Requires: 

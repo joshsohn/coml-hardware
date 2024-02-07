@@ -7,19 +7,20 @@ CMakeFiles/snap_node.dir/src/nodes/SnapdragonRosNode.cpp.o
  /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/Motors.h
  /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/SMCData.h
  /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/State.h
- /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/TimeFilter.h
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/structs.h
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.hpp
+ /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/nodes/SnapdragonRosNode.cpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/nodes/SnapdragonRosNode.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/utils/SnapdragonUtils.hpp
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/client.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/server.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/client.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/imu.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_datatypes.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_interface.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_datatypes.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_imu_api.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/server.h
  /opt/ros/noetic/include/geometry_msgs/Point.h
  /opt/ros/noetic/include/geometry_msgs/PointStamped.h
  /opt/ros/noetic/include/geometry_msgs/Pose.h
@@ -345,17 +346,18 @@ CMakeFiles/snap_node.dir/src/nodes/SnapdragonRosNode_main.cpp.o
  /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/Motors.h
  /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/SMCData.h
  /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/State.h
- /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/TimeFilter.h
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/structs.h
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.hpp
+ /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/nodes/SnapdragonRosNode.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/nodes/SnapdragonRosNode_main.cpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.hpp
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/client.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/server.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/client.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/imu.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_datatypes.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_interface.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_datatypes.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_imu_api.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/server.h
  /opt/ros/noetic/include/geometry_msgs/Point.h
  /opt/ros/noetic/include/geometry_msgs/PointStamped.h
  /opt/ros/noetic/include/geometry_msgs/Pose.h

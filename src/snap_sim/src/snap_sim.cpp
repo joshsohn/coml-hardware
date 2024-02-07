@@ -67,7 +67,7 @@ void SnapSim::init()
   //
 
   nhp_.param<bool>("viz_mesh", viz_mesh_, true);
-  nhp_.param<std::string>("mesh_uri", mesh_uri_, "package://snap_sim/meshes/quadrotor.dae");
+  nhp_.param<std::string>("mesh_uri", mesh_uri_, "package://snap_sim/meshes/hexarotor.dae");
   nhp_.param<double>("mesh_scale", mesh_scale_, 0.75);
   if (viz_mesh_) pub_vizmesh_ = nh_.advertise<visualization_msgs::Marker>("viz_mesh", 1);
 

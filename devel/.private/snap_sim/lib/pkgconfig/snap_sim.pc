@@ -4,5 +4,5 @@ Name: snap_sim
 Description: Description of snap_sim
 Version: 0.0.0
 Cflags: -I/home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims -I/home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/wind-dynamics
-Libs: -L${prefix}/lib -lsnap_ipc
+Libs: -L${prefix}/lib -lesc_interface -lsensor_imu
 Requires: 

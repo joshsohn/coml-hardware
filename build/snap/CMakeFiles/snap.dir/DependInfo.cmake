@@ -7,6 +7,7 @@ set(CMAKE_DEPENDS_CHECK_CXX
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.cpp" "/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles/snap.dir/src/common/SnapdragonDebugPrint.cpp.o"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.cpp" "/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.cpp" "/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o"
+  "/home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.cpp" "/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.cpp" "/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/utils/SnapdragonUtils.cpp" "/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles/snap.dir/src/utils/SnapdragonUtils.cpp.o"
   )
@@ -29,6 +30,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/opt/ros/noetic/include"
   "/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/usr/include/eigen3"
+  "/home/raphaelpeabody/r/simulation_ws/src/snap/src/imu"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/common"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/observer"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/control"

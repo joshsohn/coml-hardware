@@ -25,6 +25,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/opt/ros/noetic/include"
   "/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"
   "/usr/include/eigen3"
+  "/home/raphaelpeabody/r/simulation_ws/src/snap/src/imu"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/common"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/observer"
   "/home/raphaelpeabody/r/simulation_ws/src/snap/src/control"

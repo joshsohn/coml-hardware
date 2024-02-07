@@ -4,10 +4,13 @@
   <arg name="num" default="14"/>
   <arg name="room" default="vicon" />
 
+  <arg name="rviz" default="true" /> <!-- show rviz? -->
+  <arg name="key" default="false" /> <!-- use acl_joy/vimfly? -->
+
   <!-- Init position-->
-  <arg name="x" default="1.0" />  <!-- +1.0-->
-  <arg name="y" default="-3.5" /> <!-- -1.0  -->
-  <arg name="z" default="1.0" />
+  <arg name="x" default="0" />  <!-- +1.0-->
+  <arg name="y" default="0" /> <!-- -1.0  -->
+  <arg name="z" default="0" />
   
   <!-- Init attitude quaternion (maps vector in B to I)-->
   <arg name="q_x" default="0.0" />
@@ -33,7 +36,7 @@
         <param name="mocap_tf_parent_frame" value="world" />
         <param name="mocap_tf_broadcast" value="true" />
         <param name="viz_mesh" value="true" />
-        <param name="mesh_uri" value="package://snap_sim/meshes/quadrotor.dae" />
+        <param name="mesh_uri" value="package://snap_sim/meshes/hexarotor.dae" />
         <param name="mesh_scale" value="0.75" />
         <param name="autoarm" value="true" />
         
@@ -58,10 +61,10 @@
   </group>
 
   <!-- Position / trajectory tracking -->
-  <!--include file="$(find outer_loop)/launch/cntrl.launch">
+  <include file="$(find outer_loop)/launch/cntrl.launch">
     <arg name="veh" value="$(arg veh)" />
     <arg name="num" value="$(arg num)s" />
-  </include-->
+  </include>
   <!--include file="$(find mav_compressed_mpc)/launch/compressed_mpc.launch"/-->
 
   <!--include file="$(find mav_compressed_mpc)/launch/visualization.launch"/-->
@@ -81,5 +84,16 @@
     z_min:  0.0
     z_max:  2.0
   </rosparam>
+
+  <group if="$(arg rviz)" ns="$(arg veh)$(arg num)s">
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find snap_sim)/rviz/default.rviz" />
+  </group>
+
+  <group if="$(arg key)">
+    <include file="$(find acl_joy)/launch/key.launch">
+      <arg name="veh" value="$(arg veh)" />
+      <arg name="num" value="$(arg num)s" />
+    </include>
+  </group>
 
 </launch>

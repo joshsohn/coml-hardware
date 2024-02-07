@@ -1067,6 +1067,33 @@ src/esc/SnapdragonEscManager.cpp.s:
 	$(MAKE) -f CMakeFiles/snap.dir/build.make CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.s
 .PHONY : src/esc/SnapdragonEscManager.cpp.s
 
+src/imu/SnapdragonImuManager.o: src/imu/SnapdragonImuManager.cpp.o
+
+.PHONY : src/imu/SnapdragonImuManager.o
+
+# target to build an object file
+src/imu/SnapdragonImuManager.cpp.o:
+	$(MAKE) -f CMakeFiles/snap.dir/build.make CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o
+.PHONY : src/imu/SnapdragonImuManager.cpp.o
+
+src/imu/SnapdragonImuManager.i: src/imu/SnapdragonImuManager.cpp.i
+
+.PHONY : src/imu/SnapdragonImuManager.i
+
+# target to preprocess a source file
+src/imu/SnapdragonImuManager.cpp.i:
+	$(MAKE) -f CMakeFiles/snap.dir/build.make CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.i
+.PHONY : src/imu/SnapdragonImuManager.cpp.i
+
+src/imu/SnapdragonImuManager.s: src/imu/SnapdragonImuManager.cpp.s
+
+.PHONY : src/imu/SnapdragonImuManager.s
+
+# target to generate assembly for a file
+src/imu/SnapdragonImuManager.cpp.s:
+	$(MAKE) -f CMakeFiles/snap.dir/build.make CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.s
+.PHONY : src/imu/SnapdragonImuManager.cpp.s
+
 src/nodes/SnapdragonRosNode.o: src/nodes/SnapdragonRosNode.cpp.o
 
 .PHONY : src/nodes/SnapdragonRosNode.o
@@ -1287,6 +1314,9 @@ help:
 	@echo "... src/esc/SnapdragonEscManager.o"
 	@echo "... src/esc/SnapdragonEscManager.i"
 	@echo "... src/esc/SnapdragonEscManager.s"
+	@echo "... src/imu/SnapdragonImuManager.o"
+	@echo "... src/imu/SnapdragonImuManager.i"
+	@echo "... src/imu/SnapdragonImuManager.s"
 	@echo "... src/nodes/SnapdragonRosNode.o"
 	@echo "... src/nodes/SnapdragonRosNode.i"
 	@echo "... src/nodes/SnapdragonRosNode.s"

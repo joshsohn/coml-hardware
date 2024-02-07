@@ -18,6 +18,7 @@ set(CMAKE_TARGET_DEFINITIONS_CXX
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
+  "/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/include"
   "/home/raphaelpeabody/r/simulation_ws/src/outer_loop/include"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include"
   "/opt/ros/noetic/include"

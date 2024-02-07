@@ -220,20 +220,29 @@ CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o: /usr/include/
 CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
 CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.cpp
 CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.hpp
-CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/server.h
-CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/client.h
+CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_datatypes.h
+CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_interface.h
+CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/server.h
+
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.cpp
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.hpp
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_datatypes.h
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_imu_api.h
 
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/structs.h
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.hpp
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.hpp
+CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.hpp
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.cpp
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.hpp
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/utils/SnapdragonUtils.hpp
-CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/client.h
-CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/server.h
-CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/client.h
-CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/imu.h
+CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_datatypes.h
+CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_interface.h
+CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_datatypes.h
+CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_imu_api.h
+CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/server.h
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /usr/include/eigen3/Eigen/Cholesky
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /usr/include/eigen3/Eigen/Core
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /usr/include/eigen3/Eigen/Dense

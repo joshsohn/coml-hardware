@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(outer_loop_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT "/home/raphaelpeabody/r/simulation_ws/src/outer_loop/include " STREQUAL " ")
+if(NOT "/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/include;/home/raphaelpeabody/r/simulation_ws/src/outer_loop/include " STREQUAL " ")
   set(outer_loop_INCLUDE_DIRS "")
-  set(_include_dirs "/home/raphaelpeabody/r/simulation_ws/src/outer_loop/include")
+  set(_include_dirs "/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/include;/home/raphaelpeabody/r/simulation_ws/src/outer_loop/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -177,7 +177,7 @@ foreach(library ${libraries})
   endif()
 endforeach()
 
-set(outer_loop_EXPORTED_TARGETS "")
+set(outer_loop_EXPORTED_TARGETS "outer_loop_gencfg")
 # create dummy targets for exported code generation targets to make life of users easier
 foreach(t ${outer_loop_EXPORTED_TARGETS})
   if(NOT TARGET ${t})

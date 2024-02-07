@@ -181,17 +181,30 @@ snap_sim_node/fast:
 .PHONY : snap_sim_node/fast
 
 #=============================================================================
-# Target rules for targets named snap_ipc
+# Target rules for targets named sensor_imu
 
 # Build rule for target.
-snap_ipc: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 snap_ipc
-.PHONY : snap_ipc
+sensor_imu: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 sensor_imu
+.PHONY : sensor_imu
 
 # fast build rule for target.
-snap_ipc/fast:
-	$(MAKE) -f CMakeFiles/snap_ipc.dir/build.make CMakeFiles/snap_ipc.dir/build
-.PHONY : snap_ipc/fast
+sensor_imu/fast:
+	$(MAKE) -f CMakeFiles/sensor_imu.dir/build.make CMakeFiles/sensor_imu.dir/build
+.PHONY : sensor_imu/fast
+
+#=============================================================================
+# Target rules for targets named outer_loop_gencfg
+
+# Build rule for target.
+outer_loop_gencfg: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 outer_loop_gencfg
+.PHONY : outer_loop_gencfg
+
+# fast build rule for target.
+outer_loop_gencfg/fast:
+	$(MAKE) -f CMakeFiles/outer_loop_gencfg.dir/build.make CMakeFiles/outer_loop_gencfg.dir/build
+.PHONY : outer_loop_gencfg/fast
 
 #=============================================================================
 # Target rules for targets named nav_msgs_generate_messages_py
@@ -701,6 +714,19 @@ roscpp_generate_messages_nodejs/fast:
 .PHONY : roscpp_generate_messages_nodejs/fast
 
 #=============================================================================
+# Target rules for targets named esc_interface
+
+# Build rule for target.
+esc_interface: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 esc_interface
+.PHONY : esc_interface
+
+# fast build rule for target.
+esc_interface/fast:
+	$(MAKE) -f CMakeFiles/esc_interface.dir/build.make CMakeFiles/esc_interface.dir/build
+.PHONY : esc_interface/fast
+
+#=============================================================================
 # Target rules for targets named std_srvs_generate_messages_py
 
 # Build rule for target.
@@ -1106,59 +1132,59 @@ src/rigid_body.cpp.s:
 	$(MAKE) -f CMakeFiles/snap_sim_node.dir/build.make CMakeFiles/snap_sim_node.dir/src/rigid_body.cpp.s
 .PHONY : src/rigid_body.cpp.s
 
-src/shims/snap_ipc/client.o: src/shims/snap_ipc/client.cpp.o
+src/shims/esc_interface/esc_interface.o: src/shims/esc_interface/esc_interface.cpp.o
 
-.PHONY : src/shims/snap_ipc/client.o
-
-# target to build an object file
-src/shims/snap_ipc/client.cpp.o:
-	$(MAKE) -f CMakeFiles/snap_ipc.dir/build.make CMakeFiles/snap_ipc.dir/src/shims/snap_ipc/client.cpp.o
-.PHONY : src/shims/snap_ipc/client.cpp.o
-
-src/shims/snap_ipc/client.i: src/shims/snap_ipc/client.cpp.i
-
-.PHONY : src/shims/snap_ipc/client.i
-
-# target to preprocess a source file
-src/shims/snap_ipc/client.cpp.i:
-	$(MAKE) -f CMakeFiles/snap_ipc.dir/build.make CMakeFiles/snap_ipc.dir/src/shims/snap_ipc/client.cpp.i
-.PHONY : src/shims/snap_ipc/client.cpp.i
-
-src/shims/snap_ipc/client.s: src/shims/snap_ipc/client.cpp.s
-
-.PHONY : src/shims/snap_ipc/client.s
-
-# target to generate assembly for a file
-src/shims/snap_ipc/client.cpp.s:
-	$(MAKE) -f CMakeFiles/snap_ipc.dir/build.make CMakeFiles/snap_ipc.dir/src/shims/snap_ipc/client.cpp.s
-.PHONY : src/shims/snap_ipc/client.cpp.s
-
-src/shims/snap_ipc/imu.o: src/shims/snap_ipc/imu.cpp.o
-
-.PHONY : src/shims/snap_ipc/imu.o
+.PHONY : src/shims/esc_interface/esc_interface.o
 
 # target to build an object file
-src/shims/snap_ipc/imu.cpp.o:
-	$(MAKE) -f CMakeFiles/snap_ipc.dir/build.make CMakeFiles/snap_ipc.dir/src/shims/snap_ipc/imu.cpp.o
-.PHONY : src/shims/snap_ipc/imu.cpp.o
+src/shims/esc_interface/esc_interface.cpp.o:
+	$(MAKE) -f CMakeFiles/esc_interface.dir/build.make CMakeFiles/esc_interface.dir/src/shims/esc_interface/esc_interface.cpp.o
+.PHONY : src/shims/esc_interface/esc_interface.cpp.o
 
-src/shims/snap_ipc/imu.i: src/shims/snap_ipc/imu.cpp.i
+src/shims/esc_interface/esc_interface.i: src/shims/esc_interface/esc_interface.cpp.i
 
-.PHONY : src/shims/snap_ipc/imu.i
+.PHONY : src/shims/esc_interface/esc_interface.i
 
 # target to preprocess a source file
-src/shims/snap_ipc/imu.cpp.i:
-	$(MAKE) -f CMakeFiles/snap_ipc.dir/build.make CMakeFiles/snap_ipc.dir/src/shims/snap_ipc/imu.cpp.i
-.PHONY : src/shims/snap_ipc/imu.cpp.i
+src/shims/esc_interface/esc_interface.cpp.i:
+	$(MAKE) -f CMakeFiles/esc_interface.dir/build.make CMakeFiles/esc_interface.dir/src/shims/esc_interface/esc_interface.cpp.i
+.PHONY : src/shims/esc_interface/esc_interface.cpp.i
 
-src/shims/snap_ipc/imu.s: src/shims/snap_ipc/imu.cpp.s
+src/shims/esc_interface/esc_interface.s: src/shims/esc_interface/esc_interface.cpp.s
 
-.PHONY : src/shims/snap_ipc/imu.s
+.PHONY : src/shims/esc_interface/esc_interface.s
 
 # target to generate assembly for a file
-src/shims/snap_ipc/imu.cpp.s:
-	$(MAKE) -f CMakeFiles/snap_ipc.dir/build.make CMakeFiles/snap_ipc.dir/src/shims/snap_ipc/imu.cpp.s
-.PHONY : src/shims/snap_ipc/imu.cpp.s
+src/shims/esc_interface/esc_interface.cpp.s:
+	$(MAKE) -f CMakeFiles/esc_interface.dir/build.make CMakeFiles/esc_interface.dir/src/shims/esc_interface/esc_interface.cpp.s
+.PHONY : src/shims/esc_interface/esc_interface.cpp.s
+
+src/shims/sensor-imu/sensor_imu.o: src/shims/sensor-imu/sensor_imu.cpp.o
+
+.PHONY : src/shims/sensor-imu/sensor_imu.o
+
+# target to build an object file
+src/shims/sensor-imu/sensor_imu.cpp.o:
+	$(MAKE) -f CMakeFiles/sensor_imu.dir/build.make CMakeFiles/sensor_imu.dir/src/shims/sensor-imu/sensor_imu.cpp.o
+.PHONY : src/shims/sensor-imu/sensor_imu.cpp.o
+
+src/shims/sensor-imu/sensor_imu.i: src/shims/sensor-imu/sensor_imu.cpp.i
+
+.PHONY : src/shims/sensor-imu/sensor_imu.i
+
+# target to preprocess a source file
+src/shims/sensor-imu/sensor_imu.cpp.i:
+	$(MAKE) -f CMakeFiles/sensor_imu.dir/build.make CMakeFiles/sensor_imu.dir/src/shims/sensor-imu/sensor_imu.cpp.i
+.PHONY : src/shims/sensor-imu/sensor_imu.cpp.i
+
+src/shims/sensor-imu/sensor_imu.s: src/shims/sensor-imu/sensor_imu.cpp.s
+
+.PHONY : src/shims/sensor-imu/sensor_imu.s
+
+# target to generate assembly for a file
+src/shims/sensor-imu/sensor_imu.cpp.s:
+	$(MAKE) -f CMakeFiles/sensor_imu.dir/build.make CMakeFiles/sensor_imu.dir/src/shims/sensor-imu/sensor_imu.cpp.s
+.PHONY : src/shims/sensor-imu/sensor_imu.cpp.s
 
 src/snap_sim.o: src/snap_sim.cpp.o
 
@@ -1226,7 +1252,8 @@ help:
 	@echo "... edit_cache"
 	@echo "... test"
 	@echo "... snap_sim_node"
-	@echo "... snap_ipc"
+	@echo "... sensor_imu"
+	@echo "... outer_loop_gencfg"
 	@echo "... nav_msgs_generate_messages_py"
 	@echo "... tf2_msgs_generate_messages_cpp"
 	@echo "... std_msgs_generate_messages_cpp"
@@ -1267,6 +1294,7 @@ help:
 	@echo "... std_msgs_generate_messages_nodejs"
 	@echo "... snapstack_msgs_generate_messages_cpp"
 	@echo "... roscpp_generate_messages_nodejs"
+	@echo "... esc_interface"
 	@echo "... std_srvs_generate_messages_py"
 	@echo "... rosgraph_msgs_generate_messages_eus"
 	@echo "... visualization_msgs_generate_messages_eus"
@@ -1302,12 +1330,12 @@ help:
 	@echo "... src/rigid_body.o"
 	@echo "... src/rigid_body.i"
 	@echo "... src/rigid_body.s"
-	@echo "... src/shims/snap_ipc/client.o"
-	@echo "... src/shims/snap_ipc/client.i"
-	@echo "... src/shims/snap_ipc/client.s"
-	@echo "... src/shims/snap_ipc/imu.o"
-	@echo "... src/shims/snap_ipc/imu.i"
-	@echo "... src/shims/snap_ipc/imu.s"
+	@echo "... src/shims/esc_interface/esc_interface.o"
+	@echo "... src/shims/esc_interface/esc_interface.i"
+	@echo "... src/shims/esc_interface/esc_interface.s"
+	@echo "... src/shims/sensor-imu/sensor_imu.o"
+	@echo "... src/shims/sensor-imu/sensor_imu.i"
+	@echo "... src/shims/sensor-imu/sensor_imu.s"
 	@echo "... src/snap_sim.o"
 	@echo "... src/snap_sim.i"
 	@echo "... src/snap_sim.s"

@@ -83,9 +83,22 @@ CMakeFiles/snap.dir/src/utils/SnapdragonUtils.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/snap.dir/src/utils/SnapdragonUtils.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/raphaelpeabody/r/simulation_ws/src/snap/src/utils/SnapdragonUtils.cpp -o CMakeFiles/snap.dir/src/utils/SnapdragonUtils.cpp.s
 
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o: CMakeFiles/snap.dir/flags.make
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o -c /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.cpp
+
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.cpp > CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.i
+
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.cpp -o CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.s
+
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: CMakeFiles/snap.dir/flags.make
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o -c /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.cpp
 
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.i: cmake_force
@@ -98,7 +111,7 @@ CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.s: cmake_force
 
 CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o: CMakeFiles/snap.dir/flags.make
 CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o -c /home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.cpp
 
 CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.i: cmake_force
@@ -111,7 +124,7 @@ CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.s: cmake_force
 
 CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: CMakeFiles/snap.dir/flags.make
 CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o"
 	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o -c /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.cpp
 
 CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.i: cmake_force
@@ -126,6 +139,7 @@ CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.s: cmake_force
 snap_OBJECTS = \
 "CMakeFiles/snap.dir/src/common/SnapdragonDebugPrint.cpp.o" \
 "CMakeFiles/snap.dir/src/utils/SnapdragonUtils.cpp.o" \
+"CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o" \
 "CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o" \
 "CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o" \
 "CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o"
@@ -135,38 +149,18 @@ snap_EXTERNAL_OBJECTS =
 
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: CMakeFiles/snap.dir/src/common/SnapdragonDebugPrint.cpp.o
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: CMakeFiles/snap.dir/src/utils/SnapdragonUtils.cpp.o
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: CMakeFiles/snap.dir/build.make
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /home/raphaelpeabody/r/simulation_ws/devel/.private/snap_sim/lib/libesc_interface.so
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /home/raphaelpeabody/r/simulation_ws/devel/.private/snap_sim/lib/libesc_interface.so
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: adaptnotch-download/build/libadaptnotch.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /home/raphaelpeabody/r/simulation_ws/devel/.private/snap_sim/lib/libsnap_ipc.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/liborocos-kdl.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/liborocos-kdl.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/libtf2_ros.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/libactionlib.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/libmessage_filters.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/libroscpp.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/libpthread.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/libboost_chrono.so.1.71.0
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.71.0
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/librosconsole.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/librosconsole_log4cxx.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/librosconsole_backend_interface.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/liblog4cxx.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/libboost_regex.so.1.71.0
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/libxmlrpcpp.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/libtf2.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/libroscpp_serialization.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/librostime.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /opt/ros/noetic/lib/libcpp_common.so
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.71.0
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /usr/lib/x86_64-linux-gnu/libconsole_bridge.so.0.4
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /home/raphaelpeabody/r/simulation_ws/devel/.private/snap_sim/lib/libsnap_ipc.so
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /home/raphaelpeabody/r/simulation_ws/devel/.private/snap_sim/lib/libesc_interface.so
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: /home/raphaelpeabody/r/simulation_ws/devel/.private/snap_sim/lib/libsensor_imu.so
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so: CMakeFiles/snap.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX shared library /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snap/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Linking CXX shared library /home/raphaelpeabody/r/simulation_ws/devel/.private/snap/lib/libsnap.so"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/snap.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

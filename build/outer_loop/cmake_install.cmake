@@ -129,6 +129,22 @@ file(INSTALL DESTINATION "/home/raphaelpeabody/r/simulation_ws/install" TYPE FIL
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/outer_loop" TYPE FILE FILES "/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/include/outer_loop/OuterLoopConfig.h")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages/outer_loop" TYPE FILE FILES "/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/lib/python3/dist-packages/outer_loop/__init__.py")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  execute_process(COMMAND "/usr/bin/python3" -m compileall "/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/lib/python3/dist-packages/outer_loop/cfg")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/python3/dist-packages/outer_loop" TYPE DIRECTORY FILES "/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/lib/python3/dist-packages/outer_loop/cfg")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/raphaelpeabody/r/simulation_ws/build/outer_loop/catkin_generated/installspace/outer_loop.pc")
 endif()
 

@@ -116,7 +116,7 @@ if(NOT "/home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims;/home/ra
   endforeach()
 endif()
 
-set(libraries "snap_ipc")
+set(libraries "esc_interface;sensor_imu")
 foreach(library ${libraries})
   # keep build configuration keywords, target names and absolute libraries as-is
   if("${library}" MATCHES "^(debug|optimized|general)$")

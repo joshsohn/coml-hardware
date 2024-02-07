@@ -221,20 +221,29 @@ CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.cpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.hpp
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/server.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/client.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_datatypes.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_interface.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/server.h
+CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o
+ /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.cpp
+ /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.hpp
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_datatypes.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_imu_api.h
 CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/SnapdragonDebugPrint.h
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/common/structs.h
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/control/SnapdragonControllerManager.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/esc/SnapdragonEscManager.hpp
+ /home/raphaelpeabody/r/simulation_ws/src/snap/src/imu/SnapdragonImuManager.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.cpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/observer/SnapdragonObserverManager.hpp
  /home/raphaelpeabody/r/simulation_ws/src/snap/src/utils/SnapdragonUtils.hpp
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/client.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/ipc/server.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/client.h
- /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/snap_ipc/imu.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_datatypes.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_interface.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_datatypes.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/sensor-imu/sensor_imu_api.h
+ /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/server.h
  /usr/include/eigen3/Eigen/Cholesky
  /usr/include/eigen3/Eigen/Core
  /usr/include/eigen3/Eigen/Dense

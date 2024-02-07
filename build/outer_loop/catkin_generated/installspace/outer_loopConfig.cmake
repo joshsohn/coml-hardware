@@ -177,7 +177,7 @@ foreach(library ${libraries})
   endif()
 endforeach()
 
-set(outer_loop_EXPORTED_TARGETS "")
+set(outer_loop_EXPORTED_TARGETS "outer_loop_gencfg")
 # create dummy targets for exported code generation targets to make life of users easier
 foreach(t ${outer_loop_EXPORTED_TARGETS})
   if(NOT TARGET ${t})

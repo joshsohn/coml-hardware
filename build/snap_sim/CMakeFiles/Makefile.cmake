@@ -249,7 +249,8 @@ set(CMAKE_MAKEFILE_PRODUCTS
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/snap_sim_node.dir/DependInfo.cmake"
-  "CMakeFiles/snap_ipc.dir/DependInfo.cmake"
+  "CMakeFiles/sensor_imu.dir/DependInfo.cmake"
+  "CMakeFiles/outer_loop_gencfg.dir/DependInfo.cmake"
   "CMakeFiles/nav_msgs_generate_messages_py.dir/DependInfo.cmake"
   "CMakeFiles/tf2_msgs_generate_messages_cpp.dir/DependInfo.cmake"
   "CMakeFiles/std_msgs_generate_messages_cpp.dir/DependInfo.cmake"
@@ -289,6 +290,7 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/std_msgs_generate_messages_nodejs.dir/DependInfo.cmake"
   "CMakeFiles/snapstack_msgs_generate_messages_cpp.dir/DependInfo.cmake"
   "CMakeFiles/roscpp_generate_messages_nodejs.dir/DependInfo.cmake"
+  "CMakeFiles/esc_interface.dir/DependInfo.cmake"
   "CMakeFiles/std_srvs_generate_messages_py.dir/DependInfo.cmake"
   "CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/DependInfo.cmake"
   "CMakeFiles/visualization_msgs_generate_messages_eus.dir/DependInfo.cmake"

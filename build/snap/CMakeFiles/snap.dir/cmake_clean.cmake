@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/snap.dir/src/common/SnapdragonDebugPrint.cpp.o"
   "CMakeFiles/snap.dir/src/control/SnapdragonControllerManager.cpp.o"
   "CMakeFiles/snap.dir/src/esc/SnapdragonEscManager.cpp.o"
+  "CMakeFiles/snap.dir/src/imu/SnapdragonImuManager.cpp.o"
   "CMakeFiles/snap.dir/src/observer/SnapdragonObserverManager.cpp.o"
   "CMakeFiles/snap.dir/src/utils/SnapdragonUtils.cpp.o"
 )

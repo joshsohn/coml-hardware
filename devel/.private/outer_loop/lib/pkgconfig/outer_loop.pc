@@ -3,6 +3,6 @@ prefix=/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop
 Name: outer_loop
 Description: Description of outer_loop
 Version: 0.0.0
-Cflags: -I/home/raphaelpeabody/r/simulation_ws/src/outer_loop/include
+Cflags: -I/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/include -I/home/raphaelpeabody/r/simulation_ws/src/outer_loop/include
 Libs: -L${prefix}/lib -louter_loop
 Requires: snapstack_msgs

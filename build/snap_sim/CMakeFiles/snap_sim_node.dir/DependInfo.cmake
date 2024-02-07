@@ -25,6 +25,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "/home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims"
   "/home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/wind-dynamics"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include"
+  "/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/include"
   "/home/raphaelpeabody/r/simulation_ws/src/outer_loop/include"
   "/opt/ros/noetic/include"
   "/opt/ros/noetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp"

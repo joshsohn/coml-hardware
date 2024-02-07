@@ -155,7 +155,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
      NOT IS_SYMLINK "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libsnap.so")
     file(RPATH_CHANGE
          FILE "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libsnap.so"
-         OLD_RPATH "/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/build:/home/raphaelpeabody/r/simulation_ws/devel/.private/snap_sim/lib:/opt/ros/noetic/lib:"
+         OLD_RPATH "/home/raphaelpeabody/r/simulation_ws/devel/.private/snap_sim/lib:/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/build:"
          NEW_RPATH "")
     if(CMAKE_INSTALL_DO_STRIP)
       execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/libsnap.so")
