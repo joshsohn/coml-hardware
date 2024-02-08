@@ -54,7 +54,7 @@
     <arg name="num" value="$(arg num)s" />
   </include> -->
 
-  <include file="$(find python_example)/launch/launch.launch">
+  <include file="$(find outer_loop_python)/launch/cntrl.launch">
     <arg name="veh" value="$(arg veh)" />
     <arg name="num" value="$(arg num)s" />
   </include>

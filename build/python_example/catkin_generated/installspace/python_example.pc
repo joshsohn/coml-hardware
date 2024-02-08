@@ -1,8 +1,0 @@
-prefix=/home/raphaelpeabody/r/simulation_ws/install
-
-Name: python_example
-Description: Description of python_example
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

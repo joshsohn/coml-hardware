@@ -1,1 +1,0 @@
-/home/raphaelpeabody/r/simulation_ws/devel/.private/python_example/lib/pkgconfig/python_example.pc
