@@ -1,3 +1,4 @@
+from turtle import shape
 import numpy as np
 from .structs import AttCmdClass, ControlLogClass, GoalClass
 from .helpers import quaternion_multiply
@@ -116,7 +117,7 @@ class OuterLoop:
 
         # Compute feedback acceleration via PID, eq (2.9)
         eint = np.array([self.Ix_.value(), self.Iy_.value(), self.Iz_.value()])
-        a_fb = np.multiply(self.params_.Kp, e) + np.multiply(self.params_.Ki, eint) + np.multiply(self.params_.Kd, edot)
+        a_fb = np.matmul(np.diag(self.params_.Kp), e) + np.matmul(np.diag(self.params_.Ki), eint) + np.matmul(np.diag(self.params_.Kd), edot)
 
         # Compute total desired force (expressed in world frame), eq (2.12)
         F_W = self.params_.mass * (goal.a + a_fb - self.GRAVITY)

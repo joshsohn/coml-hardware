@@ -11,19 +11,19 @@ safety:
 
 # Control parameters
 # Gains
-# Kp_xy: 2.0
-# Ki_xy: 0.0 #5.5
-# Kd_xy: 3.0
-# Kp_z: 2.0
-# Ki_z: 0.0 #3.5
-# Kd_z: 3.0
+Kp/xy: 2.0
+Ki/xy: 0.0 #5.5
+Kd/xy: 3.0
+Kp/z: 2.0
+Ki/z: 0.0 #3.5
+Kd/z: 3.0
 
-Kp_xy: 200.0
-Ki_xy: 200.0
-Kd_xy: 300.0
-Kp_z: 200.0
-Ki_z: 100.0
-Kd_z: 300.0
+# Kp/xy: 200.0
+# Ki/xy: 0.0
+# Kd/xy: 300.0
+# Kp/z: 200.0
+# Ki/z: 0.0
+# Kd/z: 300.0
 
 # Max allowable errors
 maxPosErr/xy: 1.0

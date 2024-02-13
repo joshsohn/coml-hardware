@@ -22,13 +22,14 @@ cd: 0.02
 # default: [0.0, 0.13, 0.0]
 # 1st order: [0.1209039864, 0.0] # From https://wikis.mit.edu/confluence/display/acl/RCbenchmark+Thrust+Stand
 # 2nd order poly: [-0.0071291, 0.17022, 0.0] # From https://wikis.mit.edu/confluence/display/acl/RCbenchmark+Thrust+Stand
-thrust_curve_cw:  [0.192133, 0.0] #[0.16, 0.0]  # For clockwise props, 2200mAh 4s
-thrust_curve_ccw: [0.147567, 0.0] #[0.16, 0.0]  # For counterclockwise props, 2200mAh 4s
+thrust_curve_cw:  [0.180002, 0.0] #[0.16, 0.0]  # For clockwise props, 2200mAh 4s
+thrust_curve_ccw: [0.140000, 0.0] #[0.16, 0.0]  # For counterclockwise props, 2200mAh 4s
 
 # Spinning direction of propellers. -1: clockwise, +1: counterclockwise
 motor_spin: [-1, 1, -1, 1, -1, 1]
 
 # Center of mass ofter in body frame (m)
-com: [0.002060, -0.000043, 0.0]
+# com: [0.002060, -0.000043, 0.0]
+com: [0.0, 0.0, 0.0]
 
 mixer: "HEX"
