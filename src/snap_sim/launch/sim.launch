@@ -100,4 +100,9 @@
     </include>
   </group>
 
+  <include file="$(find trajectory_generator_python)/launch/onboard.launch">
+    <arg name="veh" value="$(arg veh)" />
+    <arg name="num" value="$(arg num)s" />
+  </include>
+
 </launch>

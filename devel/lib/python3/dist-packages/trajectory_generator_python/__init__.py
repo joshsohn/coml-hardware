@@ -1,0 +1,1 @@
+/home/raphaelpeabody/r/simulation_ws/devel/.private/trajectory_generator_python/lib/python3/dist-packages/trajectory_generator_python/__init__.py

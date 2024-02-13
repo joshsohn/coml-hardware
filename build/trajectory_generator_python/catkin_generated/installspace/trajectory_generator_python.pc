@@ -1,0 +1,8 @@
+prefix=/home/raphaelpeabody/r/simulation_ws/install
+
+Name: trajectory_generator_python
+Description: Description of trajectory_generator_python
+Version: 0.1.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
