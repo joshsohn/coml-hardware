@@ -22,14 +22,14 @@ pub_freq: 150  # Hz
 # line_accel: 1.5
 # line_decel: 1.0  # should be smaller for safety
 
-# # Other params
-# vel_initpos: 0.4  # m/s horizontal speed towards initial point
-# vel_take: 0.3  # m/s of vertical speed
-# vel_land_fast: 0.35
-# vel_land_slow: 0.04
-# vel_yaw: 0.2
+# Other params
+vel_initpos: 0.4  # m/s horizontal speed towards initial point
+vel_take: 0.3  # m/s of vertical speed
+vel_land_fast: 0.35
+vel_land_slow: 0.04
+vel_yaw: 0.2
 
-# dist_thresh: 0.1  # m
-# yaw_thresh: 0.2  # rad
+dist_thresh: 0.1  # m
+yaw_thresh: 0.2  # rad
 
-# margin_takeoff_outside_bounds: 0.05  # m
+margin_takeoff_outside_bounds: 0.05  # m

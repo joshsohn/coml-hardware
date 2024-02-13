@@ -7,31 +7,47 @@ import jax
 import jax.numpy as jnp
 import math
 from utils import spline, random_ragged_spline
-from geometry_msgs.msg import Pose, Quaternion
+from geometry_msgs.msg import Pose, Quaternion, Vector3
+from helpers import quat2yaw, saturate, wrap
 from snapstack_msgs.msg import State, Goal, QuadFlightMode, ControlLog
+from structs import FlightMode
 
 class TrajectoryGenerator:
     def __init__(self):
         # Initialize the ROS node with the default name 'my_node_name' (will be overwritten by launch file)
         rospy.init_node('my_node_name')
 
-        alt_ = rospy.get_param('~alt', default=None)
-        if alt_ is None:
-            rospy.logerr("Parameter 'alt' not found!")
+        self.alt_ = rospy.get_param('~alt', default=None)
+        self.freq = rospy.get_param('~pub_freq', default=None)
+        self.dt_ = 1.0 / self.freq
 
-        freq = rospy.get_param('~pub_freq', default=None)
-        if freq is None:
-            rospy.logerr("Parameter 'pub_freq' not found!")
-        dt_ = 1.0 / freq
+        self.vel_initpos_ = rospy.get_param("~vel_initpos")
+        self.vel_take_ = rospy.get_param("~vel_take")
+        self.vel_land_fast_ = rospy.get_param("~vel_land_fast")
+        self.vel_land_slow_ = rospy.get_param("~vel_land_slow")
+        self.vel_yaw_ = rospy.get_param("~vel_yaw")
 
-        self.traj_goals_full = self.generate_trajectory()
-        self.index_msgs_full = []  # Initialize as needed
+        self.dist_thresh_ = rospy.get_param("~dist_thresh")
+        self.yaw_thresh_ = rospy.get_param("~yaw_thresh")
+
+        self.margin_takeoff_outside_bounds_ = rospy.get_param("~margin_takeoff_outside_bounds")
+
+        # Room bounds
+        self.xmin_ = rospy.get_param("~/room_bounds/x_min")
+        self.xmax_ = rospy.get_param("~/room_bounds/x_max")
+        self.ymin_ = rospy.get_param("~/room_bounds/y_min")
+        self.ymax_ = rospy.get_param("~/room_bounds/y_max")
+        self.zmin_ = rospy.get_param("~/room_bounds/z_min")
+        self.zmax_ = rospy.get_param("~/room_bounds/z_max")
+
+        self.traj_goals_full_ = self.generate_trajectory()
+        self.index_msgs_full_ = []  # Initialize as needed
 
         # Subscribe and publish
         rospy.Subscriber('/globalflightmode', QuadFlightMode, self.mode_cb)
         rospy.Subscriber('state', State, self.state_cb)
  
-        self.pub_timer_ = rospy.Timer(rospy.Duration(dt_), self.pub_cb)
+        self.pub_timer_ = rospy.Timer(rospy.Duration(self.dt_), self.pub_cb)
         self.pub_goal_ = rospy.Publisher('goal',Goal, queue_size=1)
 
         rospy.sleep(1.0)  # To ensure that the state has been received
@@ -39,6 +55,7 @@ class TrajectoryGenerator:
         self.flight_mode_ = "GROUND"
         self.pose_ = Pose()
         self.goal_ = Goal()
+        self.init_pos_ = Vector3()
 
         self.reset_goal()
         self.goal_.p.x = self.pose_.position.x
@@ -49,9 +66,95 @@ class TrajectoryGenerator:
         rospy.spin()
 
         rospy.loginfo("Successfully launched trajectory generator node.")
+        
     
     def mode_cb(self, msg):
-        return
+    # FSM transitions:
+    # Any state        --ESTOP--> [kill motors] and switch to ground mode
+    # On the ground    --START--> Take off and then hover
+    # Hovering         --START--> Go to init pos of the trajectory
+    # Init pos of traj --START--> follow the generated trajectory
+    # Init pos of traj --END--> switch to hovering where the drone currently is
+    # Traj following   --END--> change the traj goals vector to a braking trajectory and then switch to hovering
+    # Hovering         --END--> Go to the initial position, land, and then switch to ground mode
+
+    # Behavior selector button to mode mapping
+    # START -> GO   (4)
+    # END   -> LAND (2)
+    # ESTOP -> KILL (6)
+        if msg.mode == FlightMode.KILL:
+            self.goal_.power = False
+            self.goal_.header.stamp = rospy.Time.now()
+            self.pub_goal_.publish(self.goal_)
+            self.flight_mode_ = FlightMode.GROUND
+            self.reset_goal()
+            rospy.loginfo("Motors killed, switched to GROUND mode.")
+            return
+        elif self.flight_mode_ == FlightMode.GROUND and msg.mode == FlightMode.GO:
+            # Check inside safety bounds, and don't let the takeoff happen if outside them
+            xmin = self.xmin_ - self.margin_takeoff_outside_bounds_
+            ymin = self.ymin_ - self.margin_takeoff_outside_bounds_
+            xmax = self.xmax_ + self.margin_takeoff_outside_bounds_
+            ymax = self.ymax_ + self.margin_takeoff_outside_bounds_
+            if self.pose_.position.x < xmin or self.pose_.position.x > xmax or \
+            self.pose_.position.y < ymin or self.pose_.position.y > ymax:
+                rospy.logwarn("Can't take off: the vehicle is outside the safety bounds.")
+                return
+
+            # Takeoff initializations
+            self.init_pos_.x = self.pose_.position.x
+            self.init_pos_.y = self.pose_.position.y
+            self.init_pos_.z = self.pose_.position.z
+            # set the goal to our current position + yaw
+            self.reset_goal()
+            self.goal_.p.x = self.init_pos_.x
+            self.goal_.p.y = self.init_pos_.y
+            self.goal_.p.z = self.init_pos_.z
+            self.goal_.psi = quat2yaw(self.pose_.orientation)
+
+            # Take off
+            self.flight_mode_ = FlightMode.TAKING_OFF
+            rospy.loginfo("Taking off...")
+            # then it will switch automatically to HOVERING
+
+            # switch on motors after flight_mode changes, to avoid timer callback setting power to false
+            self.goal_.power = True
+        elif self.flight_mode_ == FlightMode.HOVERING and msg.mode == FlightMode.GO:
+            self.traj_goals_ = self.traj_goals_full_
+            self.index_msgs_ = self.index_msgs_full_
+            self.flight_mode_ = FlightMode.INIT_POS_TRAJ
+            rospy.loginfo("Going to the initial position of the generated trajectory...")
+        elif self.flight_mode_ == FlightMode.INIT_POS_TRAJ and msg.mode == FlightMode.GO:
+            # Start following the generated trajectory if close to the init pos (in 2D)
+            dist_to_init = math.sqrt(pow(self.traj_goals_[0].p.x - self.pose_.position.x, 2) +
+                                    pow(self.traj_goals_[0].p.y - self.pose_.position.y, 2))
+            delta_yaw = self.traj_goals_[0].psi - quat2yaw(self.pose_.orientation)
+            delta_yaw = wrap(delta_yaw)
+            if dist_to_init > self.dist_thresh_ or abs(delta_yaw) > self.yaw_thresh_:
+                rospy.loginfo("Can't switch to the generated trajectory following mode, too far from the init pos")
+                return
+            self.pub_index_ = 0
+            self.flight_mode_ = FlightMode.TRAJ_FOLLOWING
+            rospy.loginfo("Following the generated trajectory...")
+        elif self.flight_mode_ == FlightMode.INIT_POS_TRAJ and msg.mode == FlightMode.LAND:
+            # Change mode to hover wherever the robot was when we clicked "END"
+            # Need to send a current goal with 0 vel bc we could be moving to the init pos of traj
+            self.reset_goal()
+            self.goal_.p.x = self.pose_.position.x
+            self.goal_.p.y = self.pose_.position.y
+            self.goal_.p.z = self.alt_
+            self.goal_.psi = quat2yaw(self.pose_.orientation)
+            self.goal_.header.stamp = rospy.Time.now()
+            self.pub_goal_.publish(self.goal_)
+            self.flight_mode_ = FlightMode.HOVERING
+            rospy.loginfo("Switched to HOVERING mode")
+        elif self.flight_mode_ == FlightMode.TRAJ_FOLLOWING and msg.mode == FlightMode.LAND:
+            # Generate a braking trajectory. Then, we will automatically switch to hover when done
+            self.traj_.generateStopTraj(self.traj_goals_, self.index_msgs_, self.pub_index_)
+        elif self.flight_mode_ == FlightMode.HOVERING and msg.mode == FlightMode.LAND:
+            # go to the initial position
+            self.flight_mode_ = FlightMode.INIT_POS
+            rospy.loginfo("Switched to INIT_POS mode")
     
     def state_cb(self, msg):
         self.pose_.position.x = msg.pos.x
@@ -85,7 +188,6 @@ class TrajectoryGenerator:
         for r_i, dr_i, ddr_i in zip(r, dr, ddr):
             goals.append(self.create_goal(r_i, dr_i, ddr_i))
         
-        print(goals)
         return goals
 
     def create_goal(self, r_i, dr_i, ddr_i):
@@ -119,17 +221,12 @@ class TrajectoryGenerator:
         self.goal_.a.x, self.goal_.a.y, self.goal_.a.z = 0, 0, 0
         self.goal_.j.x, self.goal_.j.y, self.goal_.j.z = 0, 0, 0
         #self.goal_.s.x, self.goal_.s.y, self.goal_.s.z = 0, 0, 0
-        self.goal_.psi = self.quat2yaw(self.pose_.orientation)
+        self.goal_.psi = quat2yaw(self.pose_.orientation)
         self.goal_.dpsi = 0
         # self.goal_.power = False
         # reset_xy_int and  reset_z_int are not used
         self.goal_.mode_xy = Goal.MODE_POSITION_CONTROL
         self.goal_.mode_z = Goal.MODE_POSITION_CONTROL
-    
-    def quat2yaw(self, q) -> float:
-        yaw = math.atan2(2 * (q.w * q.z + q.x * q.y),
-                        1 - 2 * (q.y * q.y + q.z * q.z))
-        return yaw
 
 def main():
     TrajectoryGenerator()

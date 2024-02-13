@@ -1,8 +1,0 @@
-prefix=/home/raphaelpeabody/r/simulation_ws/devel/.private/simontest
-
-Name: simontest
-Description: Description of simontest
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

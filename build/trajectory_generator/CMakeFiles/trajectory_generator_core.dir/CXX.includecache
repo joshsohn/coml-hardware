@@ -132,6 +132,14 @@ Eigen/Core
 eigen3/Eigen/Eigen
 -
 
+/home/raphaelpeabody/r/simulation_ws/src/trajectory_generator/src/trajectories/Circle.cpp
+trajectory_generator/trajectories/Circle.hpp
+/home/raphaelpeabody/r/simulation_ws/src/trajectory_generator/src/trajectories/trajectory_generator/trajectories/Circle.hpp
+
+/home/raphaelpeabody/r/simulation_ws/src/trajectory_generator/src/trajectories/Line.cpp
+trajectory_generator/trajectories/Line.hpp
+/home/raphaelpeabody/r/simulation_ws/src/trajectory_generator/src/trajectories/trajectory_generator/trajectories/Line.hpp
+
 /opt/ros/noetic/include/geometry_msgs/Point.h
 string
 -

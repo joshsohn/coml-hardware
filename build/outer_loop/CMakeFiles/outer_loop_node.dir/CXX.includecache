@@ -196,6 +196,14 @@ snapstack_msgs/ControlLog.h
 outer_loop/outer_loop.h
 -
 
+/home/raphaelpeabody/r/simulation_ws/src/outer_loop/src/outer_loop_node.cpp
+iostream
+-
+ros/ros.h
+-
+outer_loop/outer_loop_ros.h
+-
+
 /home/raphaelpeabody/r/simulation_ws/src/outer_loop/src/outer_loop_ros.cpp
 outer_loop/outer_loop_ros.h
 -

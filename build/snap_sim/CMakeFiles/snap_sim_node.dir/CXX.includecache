@@ -226,6 +226,10 @@ vector
 snap_sim/multirotor.h
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/multirotor.h
 
+/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/physics_engine.cpp
+snap_sim/physics_engine.h
+/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/physics_engine.h
+
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/rigid_body.cpp
 snap_sim/rigid_body.h
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/rigid_body.h

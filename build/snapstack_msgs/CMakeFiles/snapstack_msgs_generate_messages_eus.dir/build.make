@@ -69,24 +69,24 @@ CMakeFiles/snapstack_msgs_generate_messages_eus: /home/raphaelpeabody/r/simulati
 
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/ControlLog.l: /opt/ros/noetic/lib/geneus/gen_eus.py
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/ControlLog.l: /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/ControlLog.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/ControlLog.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/ControlLog.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/ControlLog.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snapstack_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating EusLisp code from snapstack_msgs/ControlLog.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg -Isnapstack_msgs:/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p snapstack_msgs -o /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg
 
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/AttitudeCommand.l: /opt/ros/noetic/lib/geneus/gen_eus.py
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/AttitudeCommand.l: /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/AttitudeCommand.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/AttitudeCommand.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/AttitudeCommand.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/AttitudeCommand.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/AttitudeCommand.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snapstack_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating EusLisp code from snapstack_msgs/AttitudeCommand.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg -Isnapstack_msgs:/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p snapstack_msgs -o /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg
 
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/Goal.l: /opt/ros/noetic/lib/geneus/gen_eus.py
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/Goal.l: /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/Goal.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/Goal.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/Goal.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/Goal.l: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snapstack_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating EusLisp code from snapstack_msgs/Goal.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg -Isnapstack_msgs:/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p snapstack_msgs -o /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg
@@ -99,9 +99,9 @@ CMakeFiles/snapstack_msgs_generate_messages_eus: /home/raphaelpeabody/r/simulati
 
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/State.l: /opt/ros/noetic/lib/geneus/gen_eus.py
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/State.l: /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/State.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/State.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/State.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/State.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/State.l: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snapstack_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Generating EusLisp code from snapstack_msgs/State.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg -Isnapstack_msgs:/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p snapstack_msgs -o /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg
@@ -121,9 +121,9 @@ CMakeFiles/snapstack_msgs_generate_messages_eus: /home/raphaelpeabody/r/simulati
 
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/SMCData.l: /opt/ros/noetic/lib/geneus/gen_eus.py
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/SMCData.l: /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/SMCData.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/SMCData.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/SMCData.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/SMCData.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/SMCData.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snapstack_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Generating EusLisp code from snapstack_msgs/SMCData.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg -Isnapstack_msgs:/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p snapstack_msgs -o /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg
 
@@ -135,11 +135,11 @@ CMakeFiles/snapstack_msgs_generate_messages_eus: /home/raphaelpeabody/r/simulati
 
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/lib/geneus/gen_eus.py
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/geometry_msgs/msg/Twist.msg
-/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/geometry_msgs/msg/Vector3.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/geometry_msgs/msg/Pose.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/geometry_msgs/msg/Quaternion.msg
 /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l: /opt/ros/noetic/share/geometry_msgs/msg/Point.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/raphaelpeabody/r/simulation_ws/build/snapstack_msgs/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Generating EusLisp code from snapstack_msgs/VioFilterState.msg"
 	catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg -Isnapstack_msgs:/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg -Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg -Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg -p snapstack_msgs -o /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg
