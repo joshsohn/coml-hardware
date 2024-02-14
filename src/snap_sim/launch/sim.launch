@@ -93,12 +93,12 @@
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find snap_sim)/rviz/default.rviz" />
   </group>
 
-  <!-- <group if="$(arg key)">
+  <group if="$(arg key)">
     <include file="$(find acl_joy)/launch/key.launch">
       <arg name="veh" value="$(arg veh)" />
       <arg name="num" value="$(arg num)s" />
     </include>
-  </group> -->
+  </group>
 
   <!-- <include file="$(find trajectory_generator)/launch/onboard.launch">
     <arg name="veh" value="$(arg veh)" />

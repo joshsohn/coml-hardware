@@ -43,6 +43,11 @@ class TrajectoryGenerator:
         self.traj_goals_full_ = self.generate_trajectory()
         self.index_msgs_full_ = []  # Initialize as needed
 
+        self.flight_mode_ = FlightMode.GROUND
+        self.pose_ = Pose()
+        self.goal_ = Goal()
+        self.init_pos_ = Vector3()
+
         # Subscribe and publish
         rospy.Subscriber('/globalflightmode', QuadFlightMode, self.mode_cb)
         rospy.Subscriber('state', State, self.state_cb)
@@ -51,11 +56,6 @@ class TrajectoryGenerator:
         self.pub_goal_ = rospy.Publisher('goal',Goal, queue_size=1)
 
         rospy.sleep(1.0)  # To ensure that the state has been received
-
-        self.flight_mode_ = FlightMode.GROUND
-        self.pose_ = Pose()
-        self.goal_ = Goal()
-        self.init_pos_ = Vector3()
 
         self.reset_goal()
         self.goal_.p.x = self.pose_.position.x
