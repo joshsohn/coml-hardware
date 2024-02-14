@@ -8,7 +8,7 @@ import jax.numpy as jnp
 import math
 from utils import spline, random_ragged_spline
 from geometry_msgs.msg import Pose, Quaternion, Vector3
-from helpers import quat2yaw, saturate, wrap
+from helpers import quat2yaw, saturate, simpleInterpolation, wrap
 from snapstack_msgs.msg import State, Goal, QuadFlightMode, ControlLog
 from structs import FlightMode
 
@@ -52,7 +52,7 @@ class TrajectoryGenerator:
 
         rospy.sleep(1.0)  # To ensure that the state has been received
 
-        self.flight_mode_ = "GROUND"
+        self.flight_mode_ = FlightMode.GROUND
         self.pose_ = Pose()
         self.goal_ = Goal()
         self.init_pos_ = Vector3()
@@ -163,7 +163,83 @@ class TrajectoryGenerator:
         self.pose_.orientation = msg.quat
     
     def pub_cb(self, event):
-        return
+        # Always publish a goal to avoid ramps in comm_monitor
+        if self.flight_mode_ == FlightMode.GROUND:
+            self.goal_.power = False  # Not needed but just in case, for safety
+
+        # if taking off, increase alt until we reach
+        elif self.flight_mode_ == FlightMode.TAKING_OFF:
+            # TODO: spinup time
+
+            takeoff_alt = self.alt_  # Don't add init alt bc the traj is generated with z = alt_
+            # If close to the takeoff_alt, switch to HOVERING
+            if abs(takeoff_alt - self.pose_.position.z) < 0.10 and self.goal_.p.z >= takeoff_alt:
+                self.flight_mode_ = FlightMode.HOVERING
+                print("Take off completed")
+            else:
+                # Increment the z cmd each timestep for a smooth takeoff.
+                # This is essentially saturating tracking error so actuation is low.
+                self.goal_.p.z = saturate(self.goal_.p.z + self.vel_take_ * self.dt_, 0.0, takeoff_alt)
+
+        # else if(flight_mode_ == HOVERING) <- just publish current goal
+        elif self.flight_mode_ == FlightMode.INIT_POS_TRAJ:
+            finished = False
+            self.goal_ = simpleInterpolation(self.goal_, self.traj_goals_[0], self.traj_goals_[0].psi,
+                                            self.vel_initpos_, self.vel_yaw_, self.dist_thresh_,
+                                            self.yaw_thresh_, self.dt_, finished)
+            # If finished, switch to traj following mode? No, prefer to choose when
+
+        elif self.flight_mode_ == FlightMode.TRAJ_FOLLOWING:
+            self.goal_ = self.traj_goals_[self.pub_index_]
+            if self.pub_index_ in self.index_msgs_:
+                print(self.index_msgs_[self.pub_index_])
+            self.pub_index_ += 1
+            if self.pub_index_ == len(self.traj_goals_):
+                # Switch to HOVERING mode after finishing the trajectory
+                self.resetGoal()
+                self.goal_.p.x = self.pose_.position.x
+                self.goal_.p.y = self.pose_.position.y
+                self.goal_.p.z = self.alt_
+                self.goal_.psi = self.quat2yaw(self.pose_.orientation)
+                self.pub_goal_.publish(self.goal_)
+                self.flight_mode_ = FlightMode.HOVERING
+                print("Trajectory finished. Switched to HOVERING mode")
+
+        elif self.flight_mode_ == FlightMode.INIT_POS:
+            # Go to init_pos_ but with altitude alt_ and current yaw
+            finished = False
+            dest = self.init_pos_
+            dest.z = self.alt_
+            self.goal_ = simpleInterpolation(self.goal_, dest, self.goal_.psi, self.vel_initpos_,
+                                            self.vel_yaw_, self.dist_thresh_, self.yaw_thresh_,
+                                            self.dt_, finished)
+            if finished:  # land when close to the init pos
+                self.flight_mode_ = FlightMode.LANDING
+                print("Landing...")
+
+        # If landing, decrease alt until we reach ground (and switch to ground)
+        # The goal was already set to our current position + yaw when hovering
+        elif self.flight_mode_ == FlightMode.LANDING:
+            # Choose between fast and slow landing
+            vel_land = self.vel_land_fast_ if self.pose_.position.z > (self.init_pos_.z + 0.4) else self.vel_land_slow_
+            self.goal_.p.z -= vel_land * self.dt_
+
+            if self.goal_.p.z < 0:  # Don't use init alt here. It's safer to try to land to the ground
+                # Landed, kill motors
+                self.goal_.power = False
+                self.flight_mode_ = FlightMode.GROUND
+                print("Landed")
+
+        # Apply safety bounds
+        self.goal_.p.x = saturate(self.goal_.p.x, self.xmin_, self.xmax_)  # val, low, high
+        self.goal_.p.y = saturate(self.goal_.p.y, self.ymin_, self.ymax_)
+        self.goal_.p.z = saturate(self.goal_.p.z, self.zmin_, self.zmax_)
+
+        self.goal_.header.stamp = rospy.Time.now()  # Set current time
+
+        # Goals should only be published here because this is the only place where we
+        # apply safety bounds. Exceptions: when killing the drone and when clicking END at init pos traj
+        self.pub_goal_.publish(self.goal_)
     
     def generate_trajectory(self):
         start_point = np.array([0, 0, 1])
