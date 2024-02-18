@@ -16,7 +16,7 @@ def wrap(val):
         val += 2.0 * math.pi
     return val
 
-def simpleInterpolation(self, current, dest_pos, dest_yaw, vel, vel_yaw,
+def simpleInterpolation(current, dest_pos, dest_yaw, vel, vel_yaw,
                             dist_thresh, yaw_thresh, dt, finished):
     goal = Goal()  # Assuming Goal is a class representing snapstack_msgs::Goal
 
@@ -25,7 +25,7 @@ def simpleInterpolation(self, current, dest_pos, dest_yaw, vel, vel_yaw,
     dist = math.sqrt(Dx * Dx + Dy * Dy)
 
     delta_yaw = dest_yaw - current.psi
-    delta_yaw = self.wrap(delta_yaw)
+    delta_yaw = wrap(delta_yaw)
 
     dist_far = dist > dist_thresh
     yaw_far = abs(delta_yaw) > yaw_thresh

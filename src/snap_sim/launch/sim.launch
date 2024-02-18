@@ -6,6 +6,7 @@
 
   <arg name="rviz" default="true" /> <!-- show rviz? -->
   <arg name="key" default="false" /> <!-- use acl_joy/vimfly? -->
+  <arg name="behavior_gui" default="true" /> <!-- use acl_joy/vimfly? -->
 
   <!-- Init position-->
   <arg name="x" default="0" />  <!-- +1.0-->
@@ -99,6 +100,12 @@
       <arg name="num" value="$(arg num)s" />
     </include>
   </group>
+
+  <group if="$(arg behavior_gui)">
+    <include file="$(find behavior_selector)/launch/gui.launch">
+    </include>
+  </group>
+  
 
   <!-- <include file="$(find trajectory_generator)/launch/onboard.launch">
     <arg name="veh" value="$(arg veh)" />

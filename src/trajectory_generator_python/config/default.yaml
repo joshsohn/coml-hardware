@@ -1,5 +1,5 @@
 # Main params
-# alt: 2.0  # absolute alt, m
+alt: 1.0  # absolute alt, m
 pub_freq: 150  # Hz
 
 # # Type of trajectory
