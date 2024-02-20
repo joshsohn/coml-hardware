@@ -1,11 +1,3 @@
-"""
-TODO description.
-
-Author: Spencer M. Richards
-        Autonomous Systems Lab (ASL), Stanford
-        (GitHub: spenrich)
-"""
-
 if __name__ == "__main__":
     import pickle
     from functools import partial
@@ -19,7 +11,7 @@ if __name__ == "__main__":
     key = jax.random.PRNGKey(seed)
 
     # Generate smooth trajectories
-    num_traj = 500
+    num_traj = 1
     T = 30
     num_knots = 6
     poly_orders = (9, 9, 6)
@@ -91,6 +83,10 @@ if __name__ == "__main__":
     t = jnp.arange(0, T + dt, dt)  # same times for each trajectory
     # print('t_knots outside: ', t_knots.shape)
     r, dr, ddr = simulate(t, t_knots, coefs)
+
+    r = r[0]
+    dr = dr[0]
+    ddr = ddr[0]
 
     print('r: ', r.shape)
     print('dr: ', dr.shape)

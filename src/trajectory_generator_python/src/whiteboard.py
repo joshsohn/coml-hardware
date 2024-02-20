@@ -16,11 +16,3 @@ time_array = np.linspace(0, total_time, num=3000)  # 3000 timesteps
 r = np.outer(time_array, velocity) + np.tile(start_point, (len(time_array), 1))
 dr = np.tile(velocity, (len(time_array), 1))
 ddr = np.zeros_like(r)
-
-# Print the matrices (optional)
-print("Position Matrix:")
-print(r)
-print("\nVelocity Matrix:")
-print(dr)
-print("\nAcceleration Matrix:")
-print(ddr.shape)

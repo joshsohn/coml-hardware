@@ -197,11 +197,11 @@ class TrajectoryGenerator:
             self.pub_index_ += 1
             if self.pub_index_ == len(self.traj_goals_):
                 # Switch to HOVERING mode after finishing the trajectory
-                self.resetGoal()
+                self.reset_goal()
                 self.goal_.p.x = self.pose_.position.x
                 self.goal_.p.y = self.pose_.position.y
                 self.goal_.p.z = self.alt_
-                self.goal_.psi = self.quat2yaw(self.pose_.orientation)
+                self.goal_.psi = quat2yaw(self.pose_.orientation)
                 self.pub_goal_.publish(self.goal_)
                 self.flight_mode_ = FlightMode.HOVERING
                 print("Trajectory finished. Switched to HOVERING mode")
@@ -243,22 +243,88 @@ class TrajectoryGenerator:
         self.pub_goal_.publish(self.goal_)
     
     def generate_trajectory(self):
-        start_point = np.array([0, 0, 1])
-        end_point = np.array([1, 1, 1])
+        # Seed random numbers
+        seed = 0
+        key = jax.random.PRNGKey(seed)
 
-        # Define total time duration for the trajectory
-        total_time = 1.0  # seconds
+        # Generate smooth trajectories
+        num_traj = 1
+        T = 30
+        num_knots = 6
+        poly_orders = (9, 9, 6)
+        deriv_orders = (4, 4, 2)
+        min_step = jnp.array([-2., -2., -jnp.pi/6])
+        max_step = jnp.array([2., 2., jnp.pi/6])
+        min_knot = jnp.array([-jnp.inf, -jnp.inf, -jnp.pi/3])
+        max_knot = jnp.array([jnp.inf, jnp.inf, jnp.pi/3])
 
-        # Calculate constant velocity
-        velocity = (end_point - start_point) / total_time
+        key, *subkeys = jax.random.split(key, 1 + num_traj)
+        subkeys = jnp.vstack(subkeys)
+        in_axes = (0, None, None, None, None, None, None, None, None)
+        t_knots, knots, coefs = jax.vmap(random_ragged_spline, in_axes)(
+            subkeys, T, num_knots, poly_orders, deriv_orders,
+            min_step, max_step, min_knot, max_knot
+        )
 
-        # Create time array
-        time_array = np.linspace(0, total_time, num=3000)  # 3000 timesteps
+        # Sampled-time simulator
+        @partial(jax.vmap, in_axes=(None, 0, 0))
+        def simulate(ts, t_knots, coefs):
+            """TODO: docstring."""
+            # Construct spline reference trajectory
+            def reference(t):
+                x_coefs, y_coefs, ϕ_coefs = coefs
+                x = spline(t, t_knots, x_coefs)
+                y = spline(t, t_knots, y_coefs)
+                ϕ = spline(t, t_knots, ϕ_coefs)
+                ϕ = jnp.clip(ϕ, -jnp.pi/3, jnp.pi/3)
+                r = jnp.array([x, y, ϕ])
+                return r
 
-        # Calculate position, velocity, and acceleration matrices
-        r = np.outer(time_array, velocity) + np.tile(start_point, (len(time_array), 1))
-        dr = np.tile(velocity, (len(time_array), 1))
-        ddr = np.zeros_like(r)
+            # Required derivatives of the reference trajectory
+            def ref_derivatives(t):
+                ref_vel = jax.jacfwd(reference)
+                ref_acc = jax.jacfwd(ref_vel)
+                r = reference(t)
+                dr = ref_vel(t)
+                ddr = ref_acc(t)
+                return r, dr, ddr
+
+            # Simulation loop
+            def loop(carry, input_slice):
+                t_prev = carry
+                t = input_slice
+
+                r, dr, ddr = ref_derivatives(t)
+                carry = (t)
+                output_slice = (r, dr, ddr)
+                return carry, output_slice
+
+            # Initial conditions
+            t0 = ts[0]
+            r0, dr0, ddr0 = ref_derivatives(t0)
+            
+            # Run simulation loop
+            carry = (t0)
+            carry, output = jax.lax.scan(loop, carry, ts[1:])
+            r, dr, ddr = output
+
+            # Prepend initial conditions
+            r = jnp.vstack((r0, r))
+            dr = jnp.vstack((dr0, dr))
+            ddr = jnp.vstack((ddr0, ddr))
+
+            return r, dr, ddr
+
+        # Simulate tracking for each `w`
+        dt = 0.01
+        t = jnp.arange(0, T + dt, dt)  # same times for each trajectory
+        # print('t_knots outside: ', t_knots.shape)
+        r, dr, ddr = simulate(t, t_knots, coefs)
+
+        # Take first trajectory
+        r = r[0]
+        dr = dr[0]
+        ddr = ddr[0]
 
         goals = []
 
