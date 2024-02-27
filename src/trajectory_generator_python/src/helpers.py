@@ -22,7 +22,8 @@ def simpleInterpolation(current, dest_pos, dest_yaw, vel, vel_yaw,
 
     Dx = dest_pos.p.x - current.p.x
     Dy = dest_pos.p.y - current.p.y
-    dist = math.sqrt(Dx * Dx + Dy * Dy)
+    Dz = dest_pos.p.z - current.p.z
+    dist = math.sqrt(Dx * Dx + Dy * Dy + Dz * Dz)
 
     delta_yaw = dest_yaw - current.psi
     delta_yaw = wrap(delta_yaw)
@@ -33,22 +34,27 @@ def simpleInterpolation(current, dest_pos, dest_yaw, vel, vel_yaw,
 
     accel_for_vel = 0.1
 
-    goal.p.z = dest_pos.p.z
+    # goal.p.z = dest_pos.p.z
 
     if dist_far:
         c = Dx / dist
         s = Dy / dist
+        v = Dz / dist
         goal.p.x = current.p.x + c * vel * dt
         goal.p.y = current.p.y + s * vel * dt
+        goal.p.z = current.p.z + v * vel * dt
 
         goal.v.x = min(current.v.x + accel_for_vel * dt, c * vel)
         goal.v.y = min(current.v.y + accel_for_vel * dt, s * vel)
+        goal.v.z = min(current.v.z + accel_for_vel * dt, v * vel)
     else:
         goal.p.x = dest_pos.p.x
         goal.p.y = dest_pos.p.y
+        goal.p.z = dest_pos.p.z
 
         goal.v.x = max(0.0, current.v.x - accel_for_vel * dt)
         goal.v.y = max(0.0, current.v.y - accel_for_vel * dt)
+        goal.v.z = max(0.0, current.v.z - accel_for_vel * dt)
 
     if yaw_far:
         sgn = 1 if delta_yaw >= 0 else -1
@@ -61,4 +67,4 @@ def simpleInterpolation(current, dest_pos, dest_yaw, vel, vel_yaw,
 
     goal.power = True
 
-    return goal
+    return goal, finished

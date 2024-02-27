@@ -1,0 +1,8 @@
+prefix=/home/raphaelpeabody/r/simulation_ws/install
+
+Name: behavior_selector_python
+Description: Description of behavior_selector_python
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

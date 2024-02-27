@@ -1,0 +1,7 @@
+set(behavior_selector_python_SETUP_PY_SETUP_MODULE "distutils.core")
+set(behavior_selector_python_SETUP_PY_VERSION "0.0.0")
+set(behavior_selector_python_SETUP_PY_SCRIPTS "")
+set(behavior_selector_python_SETUP_PY_PACKAGES "behavior_selector_python")
+set(behavior_selector_python_SETUP_PY_PACKAGE_DIRS "src/behavior_selector_python")
+set(behavior_selector_python_SETUP_PY_MODULES "")
+set(behavior_selector_python_SETUP_PY_MODULE_DIRS "")

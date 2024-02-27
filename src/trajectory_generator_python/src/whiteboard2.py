@@ -14,12 +14,12 @@ if __name__ == "__main__":
     num_traj = 1
     T = 30
     num_knots = 6
-    poly_orders = (9, 9, 6)
-    deriv_orders = (4, 4, 2)
-    min_step = jnp.array([-2., -2., -jnp.pi/6])
-    max_step = jnp.array([2., 2., jnp.pi/6])
-    min_knot = jnp.array([-jnp.inf, -jnp.inf, -jnp.pi/3])
-    max_knot = jnp.array([jnp.inf, jnp.inf, jnp.pi/3])
+    poly_orders = (9, 9, 9, 6, 6, 6)
+    deriv_orders = (4, 4, 4, 2, 2, 2)
+    min_step = jnp.array([-2., -2., 0, -jnp.pi/6, -jnp.pi/6, -jnp.pi/6])
+    max_step = jnp.array([2., 2., 2., jnp.pi/6, jnp.pi/6, jnp.pi/6])
+    min_knot = jnp.array([-jnp.inf, -jnp.inf, -jnp.inf, -jnp.pi/3, -jnp.pi/3, -jnp.pi/3])
+    max_knot = jnp.array([jnp.inf, jnp.inf, jnp.inf, jnp.pi/3, jnp.pi/3, jnp.pi/3])
 
     key, *subkeys = jax.random.split(key, 1 + num_traj)
     subkeys = jnp.vstack(subkeys)
@@ -35,12 +35,17 @@ if __name__ == "__main__":
         """TODO: docstring."""
         # Construct spline reference trajectory
         def reference(t):
-            x_coefs, y_coefs, ϕ_coefs = coefs
+            x_coefs, y_coefs, z_coefs, ϕ_coefs, Θ_coefs, Ψ_coefs = coefs
             x = spline(t, t_knots, x_coefs)
             y = spline(t, t_knots, y_coefs)
+            z = spline(t, t_knots, z_coefs)
             ϕ = spline(t, t_knots, ϕ_coefs)
+            Θ = spline(t, t_knots, Θ_coefs)
+            Ψ = spline(t, t_knots, Ψ_coefs)
             ϕ = jnp.clip(ϕ, -jnp.pi/3, jnp.pi/3)
-            r = jnp.array([x, y, ϕ])
+            Θ = jnp.clip(Θ, -jnp.pi/3, jnp.pi/3)
+            Ψ = jnp.clip(Ψ, -jnp.pi/3, jnp.pi/3)
+            r = jnp.array([x, y, z, ϕ, Θ, Ψ])
             return r
 
         # Required derivatives of the reference trajectory
@@ -84,6 +89,7 @@ if __name__ == "__main__":
     # print('t_knots outside: ', t_knots.shape)
     r, dr, ddr = simulate(t, t_knots, coefs)
 
+    # Take first trajectory
     r = r[0]
     dr = dr[0]
     ddr = ddr[0]

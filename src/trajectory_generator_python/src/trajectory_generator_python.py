@@ -64,10 +64,40 @@ class TrajectoryGenerator:
 
         rospy.loginfo("Successfully launched trajectory generator node.")
 
+        self.take_off()
+
         # Spin to keep the node alive and process callbacks
         rospy.spin()
 
-        
+    def take_off(self):
+        # Check inside safety bounds, and don't let the takeoff happen if outside them
+        xmin = self.xmin_ - self.margin_takeoff_outside_bounds_
+        ymin = self.ymin_ - self.margin_takeoff_outside_bounds_
+        xmax = self.xmax_ + self.margin_takeoff_outside_bounds_
+        ymax = self.ymax_ + self.margin_takeoff_outside_bounds_
+        if self.pose_.position.x < xmin or self.pose_.position.x > xmax or \
+        self.pose_.position.y < ymin or self.pose_.position.y > ymax:
+            rospy.logwarn("Can't take off: the vehicle is outside the safety bounds.")
+            return
+
+        # Takeoff initializations
+        self.init_pos_.x = self.pose_.position.x
+        self.init_pos_.y = self.pose_.position.y
+        self.init_pos_.z = self.pose_.position.z
+        # set the goal to our current position + yaw
+        self.reset_goal()
+        self.goal_.p.x = self.init_pos_.x
+        self.goal_.p.y = self.init_pos_.y
+        self.goal_.p.z = self.init_pos_.z
+        self.goal_.psi = quat2yaw(self.pose_.orientation)
+
+        # Take off
+        self.flight_mode_ = FlightMode.TAKING_OFF
+        rospy.loginfo("Taking off...")
+        # then it will switch automatically to HOVERING
+
+        # switch on motors after flight_mode changes, to avoid timer callback setting power to false
+        self.goal_.power = True
     
     def mode_cb(self, msg):
     # FSM transitions:
@@ -90,53 +120,7 @@ class TrajectoryGenerator:
             self.flight_mode_ = FlightMode.GROUND
             self.reset_goal()
             rospy.loginfo("Motors killed, switched to GROUND mode.")
-            return
-        elif self.flight_mode_ == FlightMode.GROUND and msg.mode == msg.GO:
-            # Check inside safety bounds, and don't let the takeoff happen if outside them
-            xmin = self.xmin_ - self.margin_takeoff_outside_bounds_
-            ymin = self.ymin_ - self.margin_takeoff_outside_bounds_
-            xmax = self.xmax_ + self.margin_takeoff_outside_bounds_
-            ymax = self.ymax_ + self.margin_takeoff_outside_bounds_
-            if self.pose_.position.x < xmin or self.pose_.position.x > xmax or \
-            self.pose_.position.y < ymin or self.pose_.position.y > ymax:
-                rospy.logwarn("Can't take off: the vehicle is outside the safety bounds.")
-                return
-
-            # Takeoff initializations
-            self.init_pos_.x = self.pose_.position.x
-            self.init_pos_.y = self.pose_.position.y
-            self.init_pos_.z = self.pose_.position.z
-            # set the goal to our current position + yaw
-            self.reset_goal()
-            self.goal_.p.x = self.init_pos_.x
-            self.goal_.p.y = self.init_pos_.y
-            self.goal_.p.z = self.init_pos_.z
-            self.goal_.psi = quat2yaw(self.pose_.orientation)
-
-            # Take off
-            self.flight_mode_ = FlightMode.TAKING_OFF
-            rospy.loginfo("Taking off...")
-            # then it will switch automatically to HOVERING
-
-            # switch on motors after flight_mode changes, to avoid timer callback setting power to false
-            self.goal_.power = True
-        elif self.flight_mode_ == FlightMode.HOVERING and msg.mode == msg.GO:
-            self.traj_goals_ = self.traj_goals_full_
-            self.index_msgs_ = self.index_msgs_full_
-            self.flight_mode_ = FlightMode.INIT_POS_TRAJ
-            rospy.loginfo("Going to the initial position of the generated trajectory...")
-        elif self.flight_mode_ == FlightMode.INIT_POS_TRAJ and msg.mode == msg.GO:
-            # Start following the generated trajectory if close to the init pos (in 2D)
-            dist_to_init = math.sqrt(pow(self.traj_goals_[0].p.x - self.pose_.position.x, 2) +
-                                    pow(self.traj_goals_[0].p.y - self.pose_.position.y, 2))
-            delta_yaw = self.traj_goals_[0].psi - quat2yaw(self.pose_.orientation)
-            delta_yaw = wrap(delta_yaw)
-            if dist_to_init > self.dist_thresh_ or abs(delta_yaw) > self.yaw_thresh_:
-                rospy.loginfo("Can't switch to the generated trajectory following mode, too far from the init pos")
-                return
-            self.pub_index_ = 0
-            self.flight_mode_ = FlightMode.TRAJ_FOLLOWING
-            rospy.loginfo("Following the generated trajectory...")
+            return  
         elif self.flight_mode_ == FlightMode.INIT_POS_TRAJ and msg.mode == msg.LAND:
             # Change mode to hover wherever the robot was when we clicked "END"
             # Need to send a current goal with 0 vel bc we could be moving to the init pos of traj
@@ -175,8 +159,10 @@ class TrajectoryGenerator:
             takeoff_alt = self.alt_  # Don't add init alt bc the traj is generated with z = alt_
             # If close to the takeoff_alt, switch to HOVERING
             if abs(takeoff_alt - self.pose_.position.z) < 0.10 and self.goal_.p.z >= takeoff_alt:
-                self.flight_mode_ = FlightMode.HOVERING
-                print("Take off completed")
+                self.traj_goals_ = self.traj_goals_full_
+                self.index_msgs_ = self.index_msgs_full_
+                self.flight_mode_ = FlightMode.INIT_POS_TRAJ
+                print("Take off completed, going to the initial position of the generated trajectory...")
             else:
                 # Increment the z cmd each timestep for a smooth takeoff.
                 # This is essentially saturating tracking error so actuation is low.
@@ -185,10 +171,22 @@ class TrajectoryGenerator:
         # else if(flight_mode_ == HOVERING) <- just publish current goal
         elif self.flight_mode_ == FlightMode.INIT_POS_TRAJ:
             finished = False
-            self.goal_ = simpleInterpolation(self.goal_, self.traj_goals_[0], self.traj_goals_[0].psi, 
+            self.goal_, finished = simpleInterpolation(self.goal_, self.traj_goals_[0], self.traj_goals_[0].psi, 
                 self.vel_initpos_, self.vel_yaw_, self.dist_thresh_, 
                 self.yaw_thresh_, self.dt_, finished)
-            # If finished, switch to traj following mode? No, prefer to choose when
+            if finished:
+                # Start following the generated trajectory if close to the init pos (in 2D)
+                dist_to_init = math.sqrt(pow(self.traj_goals_[0].p.x - self.pose_.position.x, 2) +
+                                        pow(self.traj_goals_[0].p.y - self.pose_.position.y, 2) +
+                                        pow(self.traj_goals_[0].p.z - self.pose_.position.z, 2))
+                delta_yaw = self.traj_goals_[0].psi - quat2yaw(self.pose_.orientation)
+                delta_yaw = wrap(delta_yaw)
+                if dist_to_init > self.dist_thresh_ or abs(delta_yaw) > self.yaw_thresh_:
+                    rospy.loginfo("Can't switch to the generated trajectory following mode, too far from the init pos")
+                    return
+                self.pub_index_ = 0
+                self.flight_mode_ = FlightMode.TRAJ_FOLLOWING
+                rospy.loginfo("Following the generated trajectory...")
 
         elif self.flight_mode_ == FlightMode.TRAJ_FOLLOWING:
             self.goal_ = self.traj_goals_[self.pub_index_]
@@ -196,22 +194,27 @@ class TrajectoryGenerator:
                 print(self.index_msgs_[self.pub_index_])
             self.pub_index_ += 1
             if self.pub_index_ == len(self.traj_goals_):
-                # Switch to HOVERING mode after finishing the trajectory
-                self.reset_goal()
-                self.goal_.p.x = self.pose_.position.x
-                self.goal_.p.y = self.pose_.position.y
-                self.goal_.p.z = self.alt_
-                self.goal_.psi = quat2yaw(self.pose_.orientation)
-                self.pub_goal_.publish(self.goal_)
-                self.flight_mode_ = FlightMode.HOVERING
-                print("Trajectory finished. Switched to HOVERING mode")
+                # # Switch to HOVERING mode after finishing the trajectory
+                # self.reset_goal()
+                # self.goal_.p.x = self.pose_.position.x
+                # self.goal_.p.y = self.pose_.position.y
+                # self.goal_.p.z = self.alt_
+                # self.goal_.psi = quat2yaw(self.pose_.orientation)
+                # self.pub_goal_.publish(self.goal_)
+                # self.flight_mode_ = FlightMode.HOVERING
+                # print("Trajectory finished. Switched to HOVERING mode")
+
+                self.traj_goals_ = self.traj_goals_full_
+                self.index_msgs_ = self.index_msgs_full_
+                self.flight_mode_ = FlightMode.INIT_POS_TRAJ
+                print("Trajectory completed, going to the initial position of the generated trajectory...")
 
         elif self.flight_mode_ == FlightMode.INIT_POS:
             # Go to init_pos_ but with altitude alt_ and current yaw
             finished = False
             dest = self.init_pos_
             dest.z = self.alt_
-            self.goal_ = simpleInterpolation(self.goal_, dest, self.goal_.psi, self.vel_initpos_,
+            self.goal_, finished = simpleInterpolation(self.goal_, dest, self.goal_.psi, self.vel_initpos_,
                                             self.vel_yaw_, self.dist_thresh_, self.yaw_thresh_,
                                             self.dt_, finished)
             if finished:  # land when close to the init pos
@@ -251,12 +254,12 @@ class TrajectoryGenerator:
         num_traj = 1
         T = 30
         num_knots = 6
-        poly_orders = (9, 9, 6)
-        deriv_orders = (4, 4, 2)
-        min_step = jnp.array([-2., -2., -jnp.pi/6])
-        max_step = jnp.array([2., 2., jnp.pi/6])
-        min_knot = jnp.array([-jnp.inf, -jnp.inf, -jnp.pi/3])
-        max_knot = jnp.array([jnp.inf, jnp.inf, jnp.pi/3])
+        poly_orders = (9, 9, 9, 6, 6, 6)
+        deriv_orders = (4, 4, 4, 2, 2, 2)
+        min_step = jnp.array([-2., -2., 0, -jnp.pi/6, -jnp.pi/6, -jnp.pi/6])
+        max_step = jnp.array([2., 2., 2., jnp.pi/6, jnp.pi/6, jnp.pi/6])
+        min_knot = jnp.array([-jnp.inf, -jnp.inf, -jnp.inf, -jnp.pi/3, -jnp.pi/3, -jnp.pi/3])
+        max_knot = jnp.array([jnp.inf, jnp.inf, jnp.inf, jnp.pi/3, jnp.pi/3, jnp.pi/3])
 
         key, *subkeys = jax.random.split(key, 1 + num_traj)
         subkeys = jnp.vstack(subkeys)
@@ -272,12 +275,17 @@ class TrajectoryGenerator:
             """TODO: docstring."""
             # Construct spline reference trajectory
             def reference(t):
-                x_coefs, y_coefs, ϕ_coefs = coefs
+                x_coefs, y_coefs, z_coefs, ϕ_coefs, Θ_coefs, Ψ_coefs = coefs
                 x = spline(t, t_knots, x_coefs)
                 y = spline(t, t_knots, y_coefs)
+                z = spline(t, t_knots, z_coefs)
                 ϕ = spline(t, t_knots, ϕ_coefs)
+                Θ = spline(t, t_knots, Θ_coefs)
+                Ψ = spline(t, t_knots, Ψ_coefs)
                 ϕ = jnp.clip(ϕ, -jnp.pi/3, jnp.pi/3)
-                r = jnp.array([x, y, ϕ])
+                Θ = jnp.clip(Θ, -jnp.pi/3, jnp.pi/3)
+                Ψ = jnp.clip(Ψ, -jnp.pi/3, jnp.pi/3)
+                r = jnp.array([x, y, z, ϕ, Θ, Ψ])
                 return r
 
             # Required derivatives of the reference trajectory
