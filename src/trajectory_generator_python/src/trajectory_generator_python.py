@@ -41,7 +41,7 @@ class TrajectoryGenerator:
         self.zmax_ = rospy.get_param("~/room_bounds/z_max")
 
         self.traj_goals_full_ = self.generate_trajectory()
-        self.index_msgs_full_ = []  # Initialize as needed
+        self.traj_goals_index = 0
 
         self.flight_mode_ = FlightMode.GROUND
         self.pose_ = Pose()
@@ -133,9 +133,9 @@ class TrajectoryGenerator:
             self.pub_goal_.publish(self.goal_)
             self.flight_mode_ = FlightMode.HOVERING
             rospy.loginfo("Switched to HOVERING mode")
-        elif self.flight_mode_ == FlightMode.TRAJ_FOLLOWING and msg.mode == msg.LAND:
-            # Generate a braking trajectory. Then, we will automatically switch to hover when done
-            self.traj_.generateStopTraj(self.traj_goals_, self.index_msgs_, self.pub_index_)
+        # elif self.flight_mode_ == FlightMode.TRAJ_FOLLOWING and msg.mode == msg.LAND:
+        #     # Generate a braking trajectory. Then, we will automatically switch to hover when done
+        #     self.traj_.generateStopTraj(self.traj_goals_, self.index_msgs_, self.pub_index_)
         elif self.flight_mode_ == FlightMode.HOVERING and msg.mode == msg.LAND:
             # go to the initial position
             self.flight_mode_ = FlightMode.INIT_POS
@@ -159,10 +159,10 @@ class TrajectoryGenerator:
             takeoff_alt = self.alt_  # Don't add init alt bc the traj is generated with z = alt_
             # If close to the takeoff_alt, switch to HOVERING
             if abs(takeoff_alt - self.pose_.position.z) < 0.10 and self.goal_.p.z >= takeoff_alt:
-                self.traj_goals_ = self.traj_goals_full_
-                self.index_msgs_ = self.index_msgs_full_
+                self.traj_goals_ = self.traj_goals_full_[self.traj_goals_index]
+                # self.index_msgs_ = self.index_msgs_full_
                 self.flight_mode_ = FlightMode.INIT_POS_TRAJ
-                print("Take off completed, going to the initial position of the generated trajectory...")
+                print(f"Take off completed, going to the initial position of trajectory {self.traj_goals_index+1}...")
             else:
                 # Increment the z cmd each timestep for a smooth takeoff.
                 # This is essentially saturating tracking error so actuation is low.
@@ -186,28 +186,23 @@ class TrajectoryGenerator:
                     return
                 self.pub_index_ = 0
                 self.flight_mode_ = FlightMode.TRAJ_FOLLOWING
-                rospy.loginfo("Following the generated trajectory...")
+                rospy.loginfo(f"Following trajectory {self.traj_goals_index+1}...")
 
         elif self.flight_mode_ == FlightMode.TRAJ_FOLLOWING:
             self.goal_ = self.traj_goals_[self.pub_index_]
-            if self.pub_index_ in self.index_msgs_:
-                print(self.index_msgs_[self.pub_index_])
+            # if self.pub_index_ in self.index_msgs_:
+            #     print(self.index_msgs_[self.pub_index_])
             self.pub_index_ += 1
             if self.pub_index_ == len(self.traj_goals_):
-                # # Switch to HOVERING mode after finishing the trajectory
-                # self.reset_goal()
-                # self.goal_.p.x = self.pose_.position.x
-                # self.goal_.p.y = self.pose_.position.y
-                # self.goal_.p.z = self.alt_
-                # self.goal_.psi = quat2yaw(self.pose_.orientation)
-                # self.pub_goal_.publish(self.goal_)
-                # self.flight_mode_ = FlightMode.HOVERING
-                # print("Trajectory finished. Switched to HOVERING mode")
-
-                self.traj_goals_ = self.traj_goals_full_
-                self.index_msgs_ = self.index_msgs_full_
+                self.traj_goals_index += 1
+                if self.traj_goals_index == len(self.traj_goals_full_):
+                    self.flight_mode_ = FlightMode.LANDING
+                    print("Landing...")
+                    return
+                self.traj_goals_ = self.traj_goals_full_[self.traj_goals_index]
+                # self.index_msgs_ = self.index_msgs_full_
                 self.flight_mode_ = FlightMode.INIT_POS_TRAJ
-                print("Trajectory completed, going to the initial position of the generated trajectory...")
+                print(f"Trajectory {self.traj_goals_index} completed, going to the initial position of trajectory {self.traj_goals_index+1}...")
 
         elif self.flight_mode_ == FlightMode.INIT_POS:
             # Go to init_pos_ but with altitude alt_ and current yaw
@@ -246,12 +241,13 @@ class TrajectoryGenerator:
         self.pub_goal_.publish(self.goal_)
     
     def generate_trajectory(self):
+        print("Generating trajectories...")
         # Seed random numbers
         seed = 0
         key = jax.random.PRNGKey(seed)
 
         # Generate smooth trajectories
-        num_traj = 1
+        num_traj = 5
         T = 30
         num_knots = 6
         poly_orders = (9, 9, 9, 6, 6, 6)
@@ -329,17 +325,17 @@ class TrajectoryGenerator:
         # print('t_knots outside: ', t_knots.shape)
         r, dr, ddr = simulate(t, t_knots, coefs)
 
-        # Take first trajectory
-        r = r[0]
-        dr = dr[0]
-        ddr = ddr[0]
+        all_goals = []
 
-        goals = []
-
-        for r_i, dr_i, ddr_i in zip(r, dr, ddr):
-            goals.append(self.create_goal(r_i, dr_i, ddr_i))
+        for i in range(num_traj):
+            goal_i = []
+            for r_i, dr_i, ddr_i in zip(r[i], dr[i], ddr[i]):
+                goal_i.append(self.create_goal(r_i, dr_i, ddr_i))
+            all_goals.append(goal_i)
         
-        return goals
+        print("Finished generating trajectories...")
+        
+        return all_goals
 
     def create_goal(self, r_i, dr_i, ddr_i):
         goal = Goal()
