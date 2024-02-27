@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.cmake.em
 
-message(STATUS "snapstack_msgs: 11 messages, 0 services")
+message(STATUS "snapstack_msgs: 12 messages, 0 services")
 
 set(MSG_I_FLAGS "-Isnapstack_msgs:/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg;-Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg;-Igeometry_msgs:/opt/ros/noetic/share/geometry_msgs/cmake/../msg;-Inav_msgs:/opt/ros/noetic/share/nav_msgs/cmake/../msg;-Iactionlib_msgs:/opt/ros/noetic/share/actionlib_msgs/cmake/../msg")
 
@@ -19,17 +19,17 @@ add_custom_target(snapstack_msgs_generate_messages ALL)
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg" NAME_WE)
 add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg" "geometry_msgs/Quaternion:std_msgs/Header:geometry_msgs/Vector3"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg" "geometry_msgs/Vector3:std_msgs/Header:geometry_msgs/Quaternion"
 )
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg" NAME_WE)
 add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg" "geometry_msgs/Quaternion:std_msgs/Header:geometry_msgs/Vector3"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg" "geometry_msgs/Vector3:std_msgs/Header:geometry_msgs/Quaternion"
 )
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg" NAME_WE)
 add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg" "geometry_msgs/Point:std_msgs/Header:geometry_msgs/Vector3"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg" "geometry_msgs/Vector3:std_msgs/Header:geometry_msgs/Point"
 )
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/QuadFlightMode.msg" NAME_WE)
@@ -39,7 +39,7 @@ add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg" NAME_WE)
 add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg" "geometry_msgs/Point:geometry_msgs/Quaternion:std_msgs/Header:geometry_msgs/Vector3"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg" "geometry_msgs/Vector3:std_msgs/Header:geometry_msgs/Point:geometry_msgs/Quaternion"
 )
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/CommAge.msg" NAME_WE)
@@ -49,12 +49,12 @@ add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/IMU.msg" NAME_WE)
 add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/IMU.msg" "std_msgs/Header:geometry_msgs/Vector3"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/IMU.msg" "geometry_msgs/Vector3:std_msgs/Header"
 )
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg" NAME_WE)
 add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg" "geometry_msgs/Quaternion:std_msgs/Header:geometry_msgs/Vector3"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg" "geometry_msgs/Vector3:std_msgs/Header:geometry_msgs/Quaternion"
 )
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Motors.msg" NAME_WE)
@@ -64,12 +64,17 @@ add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg" NAME_WE)
 add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg" "geometry_msgs/Pose:geometry_msgs/Point:geometry_msgs/Vector3:std_msgs/Header:geometry_msgs/Twist:geometry_msgs/Quaternion"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg" "std_msgs/Header:geometry_msgs/Quaternion:geometry_msgs/Twist:geometry_msgs/Vector3:geometry_msgs/Point:geometry_msgs/Pose"
 )
 
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg" NAME_WE)
 add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
   COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg" "std_msgs/Header"
+)
+
+get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg" NAME_WE)
+add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "snapstack_msgs" "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg" "geometry_msgs/Vector3:std_msgs/Header"
 )
 
 #
@@ -81,19 +86,19 @@ add_custom_target(_snapstack_msgs_generate_messages_check_deps_${_filename}
 _generate_msg_cpp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_cpp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_cpp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_cpp(snapstack_msgs
@@ -105,7 +110,7 @@ _generate_msg_cpp(snapstack_msgs
 _generate_msg_cpp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_cpp(snapstack_msgs
@@ -117,13 +122,13 @@ _generate_msg_cpp(snapstack_msgs
 _generate_msg_cpp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/IMU.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_cpp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_cpp(snapstack_msgs
@@ -135,13 +140,19 @@ _generate_msg_cpp(snapstack_msgs
 _generate_msg_cpp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_cpp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
+)
+_generate_msg_cpp(snapstack_msgs
+  "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg"
+  "${MSG_I_FLAGS}"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/snapstack_msgs
 )
 
@@ -181,6 +192,8 @@ get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snaps
 add_dependencies(snapstack_msgs_generate_messages_cpp _snapstack_msgs_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg" NAME_WE)
 add_dependencies(snapstack_msgs_generate_messages_cpp _snapstack_msgs_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg" NAME_WE)
+add_dependencies(snapstack_msgs_generate_messages_cpp _snapstack_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(snapstack_msgs_gencpp)
@@ -194,19 +207,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS snapstack_msgs_generate_messages_cp
 _generate_msg_eus(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_eus(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_eus(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_eus(snapstack_msgs
@@ -218,7 +231,7 @@ _generate_msg_eus(snapstack_msgs
 _generate_msg_eus(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_eus(snapstack_msgs
@@ -230,13 +243,13 @@ _generate_msg_eus(snapstack_msgs
 _generate_msg_eus(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/IMU.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_eus(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_eus(snapstack_msgs
@@ -248,13 +261,19 @@ _generate_msg_eus(snapstack_msgs
 _generate_msg_eus(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_eus(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
+)
+_generate_msg_eus(snapstack_msgs
+  "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg"
+  "${MSG_I_FLAGS}"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/snapstack_msgs
 )
 
@@ -294,6 +313,8 @@ get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snaps
 add_dependencies(snapstack_msgs_generate_messages_eus _snapstack_msgs_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg" NAME_WE)
 add_dependencies(snapstack_msgs_generate_messages_eus _snapstack_msgs_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg" NAME_WE)
+add_dependencies(snapstack_msgs_generate_messages_eus _snapstack_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(snapstack_msgs_geneus)
@@ -307,19 +328,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS snapstack_msgs_generate_messages_eu
 _generate_msg_lisp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_lisp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_lisp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_lisp(snapstack_msgs
@@ -331,7 +352,7 @@ _generate_msg_lisp(snapstack_msgs
 _generate_msg_lisp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_lisp(snapstack_msgs
@@ -343,13 +364,13 @@ _generate_msg_lisp(snapstack_msgs
 _generate_msg_lisp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/IMU.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_lisp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_lisp(snapstack_msgs
@@ -361,13 +382,19 @@ _generate_msg_lisp(snapstack_msgs
 _generate_msg_lisp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_lisp(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
+)
+_generate_msg_lisp(snapstack_msgs
+  "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg"
+  "${MSG_I_FLAGS}"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/snapstack_msgs
 )
 
@@ -407,6 +434,8 @@ get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snaps
 add_dependencies(snapstack_msgs_generate_messages_lisp _snapstack_msgs_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg" NAME_WE)
 add_dependencies(snapstack_msgs_generate_messages_lisp _snapstack_msgs_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg" NAME_WE)
+add_dependencies(snapstack_msgs_generate_messages_lisp _snapstack_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(snapstack_msgs_genlisp)
@@ -420,19 +449,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS snapstack_msgs_generate_messages_li
 _generate_msg_nodejs(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_nodejs(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_nodejs(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_nodejs(snapstack_msgs
@@ -444,7 +473,7 @@ _generate_msg_nodejs(snapstack_msgs
 _generate_msg_nodejs(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_nodejs(snapstack_msgs
@@ -456,13 +485,13 @@ _generate_msg_nodejs(snapstack_msgs
 _generate_msg_nodejs(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/IMU.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_nodejs(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_nodejs(snapstack_msgs
@@ -474,13 +503,19 @@ _generate_msg_nodejs(snapstack_msgs
 _generate_msg_nodejs(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_nodejs(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
+)
+_generate_msg_nodejs(snapstack_msgs
+  "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg"
+  "${MSG_I_FLAGS}"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/snapstack_msgs
 )
 
@@ -520,6 +555,8 @@ get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snaps
 add_dependencies(snapstack_msgs_generate_messages_nodejs _snapstack_msgs_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg" NAME_WE)
 add_dependencies(snapstack_msgs_generate_messages_nodejs _snapstack_msgs_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg" NAME_WE)
+add_dependencies(snapstack_msgs_generate_messages_nodejs _snapstack_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
 add_custom_target(snapstack_msgs_gennodejs)
@@ -533,19 +570,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS snapstack_msgs_generate_messages_no
 _generate_msg_py(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/ControlLog.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_py(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/AttitudeCommand.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_py(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Goal.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_py(snapstack_msgs
@@ -557,7 +594,7 @@ _generate_msg_py(snapstack_msgs
 _generate_msg_py(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/State.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_py(snapstack_msgs
@@ -569,13 +606,13 @@ _generate_msg_py(snapstack_msgs
 _generate_msg_py(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/IMU.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_py(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/SMCData.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_py(snapstack_msgs
@@ -587,13 +624,19 @@ _generate_msg_py(snapstack_msgs
 _generate_msg_py(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg"
+  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Quaternion.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Twist.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Point.msg;/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Pose.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
 )
 _generate_msg_py(snapstack_msgs
   "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg"
   "${MSG_I_FLAGS}"
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
+)
+_generate_msg_py(snapstack_msgs
+  "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg"
+  "${MSG_I_FLAGS}"
+  "/opt/ros/noetic/share/geometry_msgs/cmake/../msg/Vector3.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/snapstack_msgs
 )
 
@@ -632,6 +675,8 @@ add_dependencies(snapstack_msgs_generate_messages_py _snapstack_msgs_generate_me
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg" NAME_WE)
 add_dependencies(snapstack_msgs_generate_messages_py _snapstack_msgs_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg" NAME_WE)
+add_dependencies(snapstack_msgs_generate_messages_py _snapstack_msgs_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg" NAME_WE)
 add_dependencies(snapstack_msgs_generate_messages_py _snapstack_msgs_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

@@ -141,6 +141,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Motors.msg"
     "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/VioFilterState.msg"
     "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/TimeFilter.msg"
+    "/home/raphaelpeabody/r/simulation_ws/src/snapstack_msgs/msg/Wind.msg"
     )
 endif()
 

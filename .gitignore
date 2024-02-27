@@ -1,4 +1,6 @@
-/logs
+/logs/
+build/
+devel/
 
 **/.catkin_tools/
 **/.vscode/

@@ -47,6 +47,7 @@ add_message_files(
   Motors.msg
   VioFilterState.msg
   TimeFilter.msg
+  Wind.msg
 )
 
 ## Generate services in the 'srv' folder

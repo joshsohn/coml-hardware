@@ -23,5 +23,7 @@
    "TIMEFILTER"
    "<VIOFILTERSTATE>"
    "VIOFILTERSTATE"
+   "<WIND>"
+   "WIND"
   ))
 

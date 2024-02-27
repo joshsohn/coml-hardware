@@ -10,6 +10,7 @@ file(REMOVE_RECURSE
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/gennodejs/ros/snapstack_msgs/msg/State.js"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/gennodejs/ros/snapstack_msgs/msg/TimeFilter.js"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/gennodejs/ros/snapstack_msgs/msg/VioFilterState.js"
+  "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/gennodejs/ros/snapstack_msgs/msg/Wind.js"
   "CMakeFiles/snapstack_msgs_generate_messages_nodejs"
 )
 

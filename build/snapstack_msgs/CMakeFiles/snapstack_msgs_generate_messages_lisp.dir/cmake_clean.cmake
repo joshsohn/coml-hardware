@@ -10,6 +10,7 @@ file(REMOVE_RECURSE
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/common-lisp/ros/snapstack_msgs/msg/State.lisp"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/common-lisp/ros/snapstack_msgs/msg/TimeFilter.lisp"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/common-lisp/ros/snapstack_msgs/msg/VioFilterState.lisp"
+  "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/common-lisp/ros/snapstack_msgs/msg/Wind.lisp"
   "CMakeFiles/snapstack_msgs_generate_messages_lisp"
 )
 

@@ -6,7 +6,7 @@
 
   <arg name="rviz" default="true" /> <!-- show rviz? -->
   <arg name="key" default="false" /> <!-- use acl_joy/vimfly? -->
-  <arg name="behavior_gui" default="true" /> <!-- use acl_joy/vimfly? -->
+  <arg name="behavior_gui" default="false" /> <!-- use acl_joy/vimfly? -->
 
   <!-- Init position-->
   <arg name="x" default="0" />  <!-- +1.0-->

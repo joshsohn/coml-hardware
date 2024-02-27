@@ -7,6 +7,7 @@
 
 #include "snap_sim/snap_sim.h"
 
+
 namespace acl {
 namespace snap_sim {
 
@@ -35,6 +36,7 @@ SnapSim::SnapSim(const ros::NodeHandle& nh, const ros::NodeHandle& nhp)
   time_last_simStepCb_ = ros::Time::now();
   tim_imu_ = nh_.createTimer(ros::Duration(imu_dt_), &SnapSim::simStepCb, this);
   tim_mocap_ = nh_.createTimer(ros::Duration(mocap_dt_), &SnapSim::mocapCb, this);
+  wind_ =  nh_.subscribe("wind", 1, &SnapSim::windCb, this);
 }
 
 // ----------------------------------------------------------------------------
@@ -346,6 +348,13 @@ void SnapSim::mocapCb(const ros::TimerEvent& e)
 
     pub_vizmesh_.publish(m);
   }
+}
+
+void SnapSim::windCb(const snapstack_msgs::Wind& msg)
+{
+  // ROS_INFO("Received wind speed: [%f], direction: [%f]", msg.w_nominal.x, msg.w_gust.y);
+  Eigen::Vector3d wind = Eigen::Vector3d(msg.w_nominal.x,  msg.w_nominal.y,  msg.w_nominal.z);  
+  multirotor_->setWind(wind); 
 }
 
 } // ns snap_sim

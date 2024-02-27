@@ -28,4 +28,6 @@
     (:file "_package_TimeFilter" :depends-on ("_package"))
     (:file "VioFilterState" :depends-on ("_package_VioFilterState"))
     (:file "_package_VioFilterState" :depends-on ("_package"))
+    (:file "Wind" :depends-on ("_package_Wind"))
+    (:file "_package_Wind" :depends-on ("_package"))
   ))

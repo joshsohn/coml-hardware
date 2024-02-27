@@ -6,6 +6,28 @@
 
 #IncludeRegexTransform: 
 
+/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/Wind.h
+string
+-
+vector
+-
+memory
+-
+ros/types.h
+-
+ros/serialization.h
+-
+ros/builtin_message_traits.h
+-
+ros/message_operations.h
+-
+std_msgs/Header.h
+-
+geometry_msgs/Vector3.h
+-
+geometry_msgs/Vector3.h
+-
+
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/client.h
 iostream
 -
@@ -149,6 +171,8 @@ geometry_msgs/TwistStamped.h
 -
 visualization_msgs/Marker.h
 -
+snapstack_msgs/Wind.h
+-
 snap_sim/physics_engine.h
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/snap_sim/snap_sim/physics_engine.h
 snap_sim/multirotor.h
@@ -226,25 +250,7 @@ vector
 snap_sim/multirotor.h
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/multirotor.h
 
-/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/physics_engine.cpp
-snap_sim/physics_engine.h
-/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/physics_engine.h
-
-/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/rigid_body.cpp
-snap_sim/rigid_body.h
-/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/rigid_body.h
-iostream
--
-
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim.cpp
-snap_sim/snap_sim.h
-/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/snap_sim.h
-
-/home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim_node.cpp
-iostream
--
-ros/ros.h
--
 snap_sim/snap_sim.h
 /home/raphaelpeabody/r/simulation_ws/src/snap_sim/src/snap_sim/snap_sim.h
 

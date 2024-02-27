@@ -11,6 +11,7 @@ file(REMOVE_RECURSE
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/State.l"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/TimeFilter.l"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/VioFilterState.l"
+  "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/share/roseus/ros/snapstack_msgs/msg/Wind.l"
   "CMakeFiles/snapstack_msgs_generate_messages_eus"
 )
 

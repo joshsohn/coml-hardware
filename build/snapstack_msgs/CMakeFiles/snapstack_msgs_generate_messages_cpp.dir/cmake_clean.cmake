@@ -10,6 +10,7 @@ file(REMOVE_RECURSE
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/State.h"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/TimeFilter.h"
   "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/VioFilterState.h"
+  "/home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/Wind.h"
   "CMakeFiles/snapstack_msgs_generate_messages_cpp"
 )
 

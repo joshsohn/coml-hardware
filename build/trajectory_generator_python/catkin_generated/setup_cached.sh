@@ -9,6 +9,7 @@
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/raphaelpeabody/r/simulation_ws/devel/.private/trajectory_generator_python:$CMAKE_PREFIX_PATH"
 export LD_LIBRARY_PATH="/home/raphaelpeabody/r/simulation_ws/devel/.private/trajectory_generator_python/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/raphaelpeabody/r/simulation_ws/devel/.private/trajectory_generator_python/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/raphaelpeabody/r/simulation_ws/build/trajectory_generator_python'
 export PYTHONPATH="/home/raphaelpeabody/r/simulation_ws/devel/.private/trajectory_generator_python/lib/python3/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/raphaelpeabody/r/simulation_ws/devel/.private/trajectory_generator_python/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"

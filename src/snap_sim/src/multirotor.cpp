@@ -92,7 +92,8 @@ double Multirotor::readIMU(Eigen::Vector3d& acc, Eigen::Vector3d& gyr)
 RigidBody::Wrench Multirotor::getWrench(double dt)
 {
   // Get wind in world frame
-  Eigen::Vector3d wind = getWind(dt);
+  Eigen::Vector3d wind = received_wind_; //getWind(dt);
+  // std::cout << received_wind_;
   // Use wind triangle to calculate airspeed vector
   Eigen::Vector3d Va = state_.q.inverse() * (state_.v - wind);  // in body frame
 

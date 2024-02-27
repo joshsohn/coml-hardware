@@ -11,6 +11,7 @@ let Goal = require('./Goal.js');
 let ControlLog = require('./ControlLog.js');
 let AttitudeCommand = require('./AttitudeCommand.js');
 let CommAge = require('./CommAge.js');
+let Wind = require('./Wind.js');
 let VioFilterState = require('./VioFilterState.js');
 
 module.exports = {
@@ -24,5 +25,6 @@ module.exports = {
   ControlLog: ControlLog,
   AttitudeCommand: AttitudeCommand,
   CommAge: CommAge,
+  Wind: Wind,
   VioFilterState: VioFilterState,
 };

@@ -637,6 +637,7 @@ CMakeFiles/snap_sim_node.dir/src/rigid_body.cpp.o: /usr/include/eigen3/Eigen/src
 CMakeFiles/snap_sim_node.dir/src/rigid_body.cpp.o: /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/snap_sim_node.dir/src/rigid_body.cpp.o: /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
+CMakeFiles/snap_sim_node.dir/src/snap_sim.cpp.o: /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/Wind.h
 CMakeFiles/snap_sim_node.dir/src/snap_sim.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/client.h
 CMakeFiles/snap_sim_node.dir/src/snap_sim.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_datatypes.h
 CMakeFiles/snap_sim_node.dir/src/snap_sim.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_interface.h
@@ -953,6 +954,7 @@ CMakeFiles/snap_sim_node.dir/src/snap_sim.cpp.o: /usr/include/eigen3/Eigen/src/p
 CMakeFiles/snap_sim_node.dir/src/snap_sim.cpp.o: /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
 CMakeFiles/snap_sim_node.dir/src/snap_sim.cpp.o: /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
+CMakeFiles/snap_sim_node.dir/src/snap_sim_node.cpp.o: /home/raphaelpeabody/r/simulation_ws/devel/.private/snapstack_msgs/include/snapstack_msgs/Wind.h
 CMakeFiles/snap_sim_node.dir/src/snap_sim_node.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/client.h
 CMakeFiles/snap_sim_node.dir/src/snap_sim_node.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_datatypes.h
 CMakeFiles/snap_sim_node.dir/src/snap_sim_node.cpp.o: /home/raphaelpeabody/r/simulation_ws/src/snap_sim/include/shims/esc_interface/esc_interface.h

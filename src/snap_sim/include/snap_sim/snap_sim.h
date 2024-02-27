@@ -22,6 +22,8 @@
 #include <geometry_msgs/TwistStamped.h>
 #include <visualization_msgs/Marker.h>
 
+#include <snapstack_msgs/Wind.h>
+
 #include "snap_sim/physics_engine.h"
 #include "snap_sim/multirotor.h"
 
@@ -45,6 +47,7 @@ namespace snap_sim {
     ros::NodeHandle nh_, nhp_;
     ros::Timer tim_imu_, tim_mocap_;
     ros::Publisher pub_pose_, pub_twist_, pub_vizmesh_;
+    ros::Subscriber wind_;
     tf2_ros::TransformBroadcaster br_;
 
     /// \brief Parameters
@@ -82,6 +85,7 @@ namespace snap_sim {
     void escReadThread();
     void simStepCb(const ros::TimerEvent& e);
     void mocapCb(const ros::TimerEvent& e);
+    void windCb(const snapstack_msgs::Wind& msg);
   };
 
 } // ns snap_sim

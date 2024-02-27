@@ -100,6 +100,12 @@ namespace snap_sim {
      */
     double readIMU(Eigen::Vector3d& acc, Eigen::Vector3d& gyr);
 
+  
+    void setWind(const Eigen::Vector3d& wind){
+      // check wind value within range?
+      received_wind_ = wind; 
+    };
+
   protected:
 
     /**
@@ -121,6 +127,8 @@ namespace snap_sim {
   private:
     State state0_; ///< initial kinematic state
     Params params_; ///< inertial, geometric, and actuator properties
+
+    Eigen::Vector3d received_wind_ = Eigen::Vector3d::Zero(); // wind speed received from the subcriber. 
 
     MotorCmds u_; ///< normalized pwm commands, in [0, 1]
 
