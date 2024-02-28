@@ -9,7 +9,7 @@ import math
 from utils import spline, random_ragged_spline
 from geometry_msgs.msg import Pose, Quaternion, Vector3
 from helpers import quat2yaw, saturate, simpleInterpolation, wrap
-from snapstack_msgs.msg import State, Goal, QuadFlightMode, ControlLog
+from snapstack_msgs.msg import State, Goal, QuadFlightMode, Wind
 from structs import FlightMode
 
 class TrajectoryGenerator:
@@ -40,13 +40,14 @@ class TrajectoryGenerator:
         self.zmin_ = rospy.get_param("~/room_bounds/z_min")
         self.zmax_ = rospy.get_param("~/room_bounds/z_max")
 
-        self.traj_goals_full_ = self.generate_trajectory()
-        self.traj_goals_index = 0
+        self.traj_goals_full_, self.winds_full_ = self.generate_trajectory()
+        self.index = 0
 
         self.flight_mode_ = FlightMode.GROUND
         self.pose_ = Pose()
         self.goal_ = Goal()
         self.init_pos_ = Vector3()
+        self.wind_ = Wind()
 
         # Subscribe and publish
         rospy.Subscriber('/globalflightmode', QuadFlightMode, self.mode_cb)
@@ -54,6 +55,7 @@ class TrajectoryGenerator:
  
         self.pub_timer_ = rospy.Timer(rospy.Duration(self.dt_), self.pub_cb)
         self.pub_goal_ = rospy.Publisher('goal',Goal, queue_size=1)
+        self.pub_wind_ = rospy.Publisher('wind',Wind, queue_size=1)
 
         rospy.sleep(1.0)  # To ensure that the state has been received
 
@@ -61,6 +63,8 @@ class TrajectoryGenerator:
         self.goal_.p.x = self.pose_.position.x
         self.goal_.p.y = self.pose_.position.y
         self.goal_.p.z = self.pose_.position.z
+
+        self.reset_wind()
 
         rospy.loginfo("Successfully launched trajectory generator node.")
 
@@ -90,6 +94,8 @@ class TrajectoryGenerator:
         self.goal_.p.y = self.init_pos_.y
         self.goal_.p.z = self.init_pos_.z
         self.goal_.psi = quat2yaw(self.pose_.orientation)
+
+        self.reset_wind()
 
         # Take off
         self.flight_mode_ = FlightMode.TAKING_OFF
@@ -148,27 +154,27 @@ class TrajectoryGenerator:
         self.pose_.orientation = msg.quat
     
     def pub_cb(self, event):
-        # Always publish a goal to avoid ramps in comm_monitor
+        # on ground
         if self.flight_mode_ == FlightMode.GROUND:
             self.goal_.power = False  # Not needed but just in case, for safety
 
-        # if taking off, increase alt until we reach
+        # taking off
         elif self.flight_mode_ == FlightMode.TAKING_OFF:
             # TODO: spinup time
 
             takeoff_alt = self.alt_  # Don't add init alt bc the traj is generated with z = alt_
             # If close to the takeoff_alt, switch to HOVERING
             if abs(takeoff_alt - self.pose_.position.z) < 0.10 and self.goal_.p.z >= takeoff_alt:
-                self.traj_goals_ = self.traj_goals_full_[self.traj_goals_index]
+                self.traj_goals_ = self.traj_goals_full_[self.index]
                 # self.index_msgs_ = self.index_msgs_full_
                 self.flight_mode_ = FlightMode.INIT_POS_TRAJ
-                print(f"Take off completed, going to the initial position of trajectory {self.traj_goals_index+1}...")
+                print(f"Take off completed, going to the initial position of trajectory {self.index+1}...")
             else:
                 # Increment the z cmd each timestep for a smooth takeoff.
                 # This is essentially saturating tracking error so actuation is low.
                 self.goal_.p.z = saturate(self.goal_.p.z + self.vel_take_ * self.dt_, 0.0, takeoff_alt)
 
-        # else if(flight_mode_ == HOVERING) <- just publish current goal
+        # go to initial position of trajectory
         elif self.flight_mode_ == FlightMode.INIT_POS_TRAJ:
             finished = False
             self.goal_, finished = simpleInterpolation(self.goal_, self.traj_goals_[0], self.traj_goals_[0].psi, 
@@ -186,24 +192,28 @@ class TrajectoryGenerator:
                     return
                 self.pub_index_ = 0
                 self.flight_mode_ = FlightMode.TRAJ_FOLLOWING
-                rospy.loginfo(f"Following trajectory {self.traj_goals_index+1}...")
+                self.wind_ = self.winds_full_[self.index]
+                rospy.loginfo(f"Following trajectory {self.index+1}...")
 
+        # follow trajectory
         elif self.flight_mode_ == FlightMode.TRAJ_FOLLOWING:
             self.goal_ = self.traj_goals_[self.pub_index_]
             # if self.pub_index_ in self.index_msgs_:
             #     print(self.index_msgs_[self.pub_index_])
             self.pub_index_ += 1
             if self.pub_index_ == len(self.traj_goals_):
-                self.traj_goals_index += 1
-                if self.traj_goals_index == len(self.traj_goals_full_):
+                self.index += 1
+                if self.index == len(self.traj_goals_full_):
                     self.flight_mode_ = FlightMode.LANDING
                     print("Landing...")
                     return
-                self.traj_goals_ = self.traj_goals_full_[self.traj_goals_index]
+                self.traj_goals_ = self.traj_goals_full_[self.index]
+                self.reset_wind()
                 # self.index_msgs_ = self.index_msgs_full_
                 self.flight_mode_ = FlightMode.INIT_POS_TRAJ
-                print(f"Trajectory {self.traj_goals_index} completed, going to the initial position of trajectory {self.traj_goals_index+1}...")
+                print(f"Trajectory {self.index} completed, going to the initial position of trajectory {self.index+1}...")
 
+        # go to initial pos?
         elif self.flight_mode_ == FlightMode.INIT_POS:
             # Go to init_pos_ but with altitude alt_ and current yaw
             finished = False
@@ -213,6 +223,7 @@ class TrajectoryGenerator:
                                             self.vel_yaw_, self.dist_thresh_, self.yaw_thresh_,
                                             self.dt_, finished)
             if finished:  # land when close to the init pos
+                self.reset_wind()
                 self.flight_mode_ = FlightMode.LANDING
                 print("Landing...")
 
@@ -238,6 +249,7 @@ class TrajectoryGenerator:
 
         # Goals should only be published here because this is the only place where we
         # apply safety bounds. Exceptions: when killing the drone and when clicking END at init pos traj
+        self.pub_wind_.publish(self.wind_)
         self.pub_goal_.publish(self.goal_)
     
     def generate_trajectory(self):
@@ -315,6 +327,14 @@ class TrajectoryGenerator:
 
             return r, dr, ddr
 
+        # Sample wind velocities from the training distribution
+        w_min = 0.  # minimum wind velocity in inertial `x`-direction
+        w_max = 6.  # maximum wind velocity in inertial `x`-direction
+        a = 5.      # shape parameter `a` for beta distribution
+        b = 9.      # shape parameter `b` for beta distribution
+        key, subkey = jax.random.split(key, 2)
+        w = w_min + (w_max - w_min)*jax.random.beta(subkey, a, b, (num_traj,))
+
         # Simulate tracking for each `w`
         dt = 0.01
         t = jnp.arange(0, T + dt, dt)  # same times for each trajectory
@@ -322,16 +342,19 @@ class TrajectoryGenerator:
         r, dr, ddr = simulate(t, t_knots, coefs)
 
         all_goals = []
+        all_winds = []
 
         for i in range(num_traj):
             goal_i = []
             for r_i, dr_i, ddr_i in zip(r[i], dr[i], ddr[i]):
                 goal_i.append(self.create_goal(r_i, dr_i, ddr_i))
             all_goals.append(goal_i)
+
+            all_winds.append(self.create_wind(w[i]))
         
         print("Finished generating trajectories...")
         
-        return all_goals
+        return all_goals, all_winds
 
     def create_goal(self, r_i, dr_i, ddr_i):
         goal = Goal()
@@ -355,6 +378,17 @@ class TrajectoryGenerator:
         goal.j.y  = 0
         goal.j.z  = 0
         return goal
+        
+    def create_wind(self, wind_x):
+        wind = Wind()
+        wind.w_nominal.x = wind_x
+        wind.w_nominal.y = 0
+        wind.w_nominal.z = 0
+        wind.w_gust.x = 0
+        wind.w_gust.y = 0
+        wind.w_gust.z = 0
+
+        return wind
 
     def reset_goal(self):
         # Creating a new goal message should already set this correctly, but just in case
@@ -370,6 +404,10 @@ class TrajectoryGenerator:
         # reset_xy_int and  reset_z_int are not used
         self.goal_.mode_xy = Goal.MODE_POSITION_CONTROL
         self.goal_.mode_z = Goal.MODE_POSITION_CONTROL
+    
+    def reset_wind(self):
+        self.wind_.w_nominal.x, self.wind_.w_nominal.y, self.wind_.w_nominal.z = 0, 0, 0
+        self.wind_.w_gust.x, self.wind_.w_gust.y, self.wind_.w_gust.z = 0, 0, 0
 
 def main():
     TrajectoryGenerator()
