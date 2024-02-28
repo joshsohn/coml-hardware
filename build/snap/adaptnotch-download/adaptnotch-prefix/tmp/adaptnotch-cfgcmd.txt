@@ -1,1 +1,0 @@
-cmd='cmake;/home/raphaelpeabody/r/simulation_ws/build/snap/adaptnotch-download/src;-DCMAKE_BUILD_TYPE=Release;-DBUILD_EXAPPS=OFF;-DCMAKE_INSTALL_PREFIX=/home/raphaelpeabody/r/simulation_ws/devel/.private/snap'

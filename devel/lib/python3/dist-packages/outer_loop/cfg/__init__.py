@@ -1,1 +1,0 @@
-/home/raphaelpeabody/r/simulation_ws/devel/.private/outer_loop/lib/python3/dist-packages/outer_loop/cfg/__init__.py
