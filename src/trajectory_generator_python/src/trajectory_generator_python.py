@@ -2,14 +2,17 @@
 
 import numpy as np
 import rospy
+import rospkg
 from functools import partial
 import jax
 import jax.numpy as jnp
 import math
+import os
+import pickle
 from utils import spline, random_ragged_spline
-from geometry_msgs.msg import Pose, Quaternion, Vector3
+from geometry_msgs.msg import Pose, Twist, Vector3
 from helpers import quat2yaw, saturate, simpleInterpolation, wrap
-from snapstack_msgs.msg import State, Goal, QuadFlightMode, Wind
+from snapstack_msgs.msg import State, Goal, QuadFlightMode, Wind, AttitudeCommand
 from structs import FlightMode
 
 class TrajectoryGenerator:
@@ -45,18 +48,23 @@ class TrajectoryGenerator:
 
         self.flight_mode_ = FlightMode.GROUND
         self.pose_ = Pose()
+        self.vel_ = Twist()
         self.goal_ = Goal()
         self.init_pos_ = Vector3()
         self.wind_ = Wind()
+        self.att_cmd_ = Vector3()
+
+        self.record = False
 
         # Subscribe and publish
         rospy.Subscriber('/globalflightmode', QuadFlightMode, self.mode_cb)
         rospy.Subscriber('state', State, self.state_cb)
+        rospy.Subscriber('attcmd', AttitudeCommand, self.cmd_cb)
  
         self.pub_timer_ = rospy.Timer(rospy.Duration(self.dt_), self.pub_cb)
         self.pub_goal_ = rospy.Publisher('goal',Goal, queue_size=1)
         self.pub_wind_ = rospy.Publisher('wind',Wind, queue_size=1)
-
+        
         rospy.sleep(1.0)  # To ensure that the state has been received
 
         self.reset_goal()
@@ -65,6 +73,12 @@ class TrajectoryGenerator:
         self.goal_.p.z = self.pose_.position.z
 
         self.reset_wind()
+
+        self.q = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
+        self.dq = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
+        self.u = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
+        self.r = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
+        self.dr = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
 
         rospy.loginfo("Successfully launched trajectory generator node.")
 
@@ -152,6 +166,18 @@ class TrajectoryGenerator:
         self.pose_.position.y = msg.pos.y
         self.pose_.position.z = msg.pos.z
         self.pose_.orientation = msg.quat
+
+        self.vel_.linear.x = msg.vel.x
+        self.vel_.linear.y = msg.vel.y
+        self.vel_.linear.z = msg.vel.z
+        self.vel_.angular.x = msg.w.x
+        self.vel_.angular.y = msg.w.y
+        self.vel_.angular.z = msg.w.z
+    
+    def cmd_cb(self, msg):
+        self.att_cmd_.x = msg.F_W.x
+        self.att_cmd_.y = msg.F_W.y
+        self.att_cmd_.z = msg.F_W.z
     
     def pub_cb(self, event):
         # on ground
@@ -192,23 +218,29 @@ class TrajectoryGenerator:
                     return
                 self.pub_index_ = 0
                 self.flight_mode_ = FlightMode.TRAJ_FOLLOWING
+                # Start wind
                 self.wind_ = self.winds_full_[self.index]
+                self.record = True
                 rospy.loginfo(f"Following trajectory {self.index+1}...")
 
         # follow trajectory
         elif self.flight_mode_ == FlightMode.TRAJ_FOLLOWING:
             self.goal_ = self.traj_goals_[self.pub_index_]
-            # if self.pub_index_ in self.index_msgs_:
-            #     print(self.index_msgs_[self.pub_index_])
+            # TODO: RECORD DATA FOR STATE AND GOAL
+            self.record_data()
             self.pub_index_ += 1
             if self.pub_index_ == len(self.traj_goals_):
                 self.index += 1
                 if self.index == len(self.traj_goals_full_):
                     self.flight_mode_ = FlightMode.LANDING
+                    self.reset_wind()
+                    self.record = False
+                    self.publish_data()
                     print("Landing...")
                     return
                 self.traj_goals_ = self.traj_goals_full_[self.index]
                 self.reset_wind()
+                self.record = False
                 # self.index_msgs_ = self.index_msgs_full_
                 self.flight_mode_ = FlightMode.INIT_POS_TRAJ
                 print(f"Trajectory {self.index} completed, going to the initial position of trajectory {self.index+1}...")
@@ -255,27 +287,29 @@ class TrajectoryGenerator:
     def generate_trajectory(self):
         print("Generating trajectories...")
         # Seed random numbers
-        seed = 0
-        key = jax.random.PRNGKey(seed)
+        self.seed = 0
+        self.key = jax.random.PRNGKey(self.seed)
 
         # Generate smooth trajectories
-        num_traj = 5
-        T = 30
+        self.T = 30
+        self.num_traj = 2
         num_knots = 6
         poly_orders = (9, 9, 9, 6)
         deriv_orders = (4, 4, 4, 2)
         min_step = jnp.array([-2., -2., 0, -jnp.pi/6])
         max_step = jnp.array([2., 2., 2., jnp.pi/6])
-        min_knot = jnp.array([-jnp.inf, -jnp.inf, -jnp.inf, -jnp.pi/3])
-        max_knot = jnp.array([jnp.inf, jnp.inf, jnp.inf, jnp.pi/3])
+        min_knot = jnp.array([self.xmin_, self.ymin_, self.zmin_, -jnp.pi/3])
+        max_knot = jnp.array([self.xmax_, self.ymax_, self.zmax_, jnp.pi/3])
 
-        key, *subkeys = jax.random.split(key, 1 + num_traj)
+        self.key, *subkeys = jax.random.split(self.key, 1 + self.num_traj)
         subkeys = jnp.vstack(subkeys)
         in_axes = (0, None, None, None, None, None, None, None, None)
-        t_knots, knots, coefs = jax.vmap(random_ragged_spline, in_axes)(
-            subkeys, T, num_knots, poly_orders, deriv_orders,
+        self.t_knots, self.knots, self.coefs = jax.vmap(random_ragged_spline, in_axes)(
+            subkeys, self.T, num_knots, poly_orders, deriv_orders,
             min_step, max_step, min_knot, max_knot
         )
+        # x_coefs, y_coefs, ϕ_coefs = coefs
+        self.r_knots = jnp.dstack(self.knots)
 
         # Sampled-time simulator
         @partial(jax.vmap, in_axes=(None, 0, 0))
@@ -328,29 +362,29 @@ class TrajectoryGenerator:
             return r, dr, ddr
 
         # Sample wind velocities from the training distribution
-        w_min = 0.  # minimum wind velocity in inertial `x`-direction
-        w_max = 6.  # maximum wind velocity in inertial `x`-direction
-        a = 5.      # shape parameter `a` for beta distribution
-        b = 9.      # shape parameter `b` for beta distribution
-        key, subkey = jax.random.split(key, 2)
-        w = w_min + (w_max - w_min)*jax.random.beta(subkey, a, b, (num_traj,))
+        self.w_min = 0.  # minimum wind velocity in inertial `x`-direction
+        self.w_max = 6.  # maximum wind velocity in inertial `x`-direction
+        self.a = 5.      # shape parameter `a` for beta distribution
+        self.b = 9.      # shape parameter `b` for beta distribution
+        self.key, subkey = jax.random.split(self.key, 2)
+        self.w = self.w_min + (self.w_max - self.w_min)*jax.random.beta(subkey, self.a, self.b, (self.num_traj,))
 
         # Simulate tracking for each `w`
-        dt = 0.01
-        t = jnp.arange(0, T + dt, dt)  # same times for each trajectory
+        self.dt = 0.01
+        self.t = jnp.arange(0, self.T + self.dt, self.dt)  # same times for each trajectory
         # print('t_knots outside: ', t_knots.shape)
-        r, dr, ddr = simulate(t, t_knots, coefs)
+        r, dr, ddr = simulate(self.t, self.t_knots, self.coefs)
 
         all_goals = []
         all_winds = []
 
-        for i in range(num_traj):
+        for i in range(self.num_traj):
             goal_i = []
             for r_i, dr_i, ddr_i in zip(r[i], dr[i], ddr[i]):
                 goal_i.append(self.create_goal(r_i, dr_i, ddr_i))
             all_goals.append(goal_i)
 
-            all_winds.append(self.create_wind(w[i]))
+            all_winds.append(self.create_wind(self.w[i]))
         
         print("Finished generating trajectories...")
         
@@ -408,6 +442,38 @@ class TrajectoryGenerator:
     def reset_wind(self):
         self.wind_.w_nominal.x, self.wind_.w_nominal.y, self.wind_.w_nominal.z = 0, 0, 0
         self.wind_.w_gust.x, self.wind_.w_gust.y, self.wind_.w_gust.z = 0, 0, 0
+    
+    def record_data(self):
+        if self.record:
+            goal_index = self.index
+            traj_index = self.pub_index_
+
+            self.q[goal_index, traj_index] = np.array([self.pose_.position.x, self.pose_.position.y, self.pose_.position.z])
+            self.dq[goal_index, traj_index] = np.array([self.vel_.linear.x, self.vel_.linear.y, self.vel_.linear.z])
+
+            self.u[goal_index, traj_index] = np.array([self.att_cmd_.x, self.att_cmd_.y, self.att_cmd_.z])
+
+            self.r[goal_index, traj_index] = np.array([self.goal_.p.x, self.goal_.p.y, self.goal_.p.z])
+            self.dr[goal_index, traj_index] = np.array([self.goal_.v.x, self.goal_.v.y, self.goal_.v.z])
+    
+    def publish_data(self):
+        print("Writing data...")
+
+        data = {
+            'seed': self.seed, 'prng_key': self.key,
+            't': self.t, 'q': self.q, 'dq': self.dq,
+            'u': self.u, 'r': self.r, 'dr': self.dr,
+            't_knots': self.t_knots, 'r_knots': self.r_knots,
+            'w': self.w, 'w_min': self.w_min, 'w_max': self.w_max,
+            'beta_params': (self.a, self.b),
+        }
+
+        rospack = rospkg.RosPack()
+        package_path = rospack.get_path('trajectory_generator_python')
+        file_path = package_path + '/src/training_data.pkl'
+
+        with open(file_path, 'wb+') as file:
+            pickle.dump(data, file)
 
 def main():
     TrajectoryGenerator()

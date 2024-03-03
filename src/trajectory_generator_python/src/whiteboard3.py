@@ -1,40 +1,26 @@
 if __name__ == "__main__":
     import pickle
-    from functools import partial
-    import jax
-    import jax.numpy as jnp
-    from jax.experimental.ode import odeint
-    from utils import spline, random_ragged_spline
+    import numpy as np
 
-    # Seed random numbers
-    seed = 0
-    key = jax.random.PRNGKey(seed)
+    with open('training_data.pkl', 'rb') as file:
+        raw = pickle.load(file)
+    
+    w_train = np.asarray(raw['w'])
+    w_min, w_max = raw['w_min'], raw['w_max']
+    a, b = raw['beta_params']
 
-    # Generate smooth trajectories
-    num_traj = 5
-    T = 30
-    num_knots = 6
-    poly_orders = (9, 9, 9, 6, 6, 6)
-    deriv_orders = (4, 4, 4, 2, 2, 2)
-    min_step = jnp.array([-2., -2., 0, -jnp.pi/6, -jnp.pi/6, -jnp.pi/6])
-    max_step = jnp.array([2., 2., 2., jnp.pi/6, jnp.pi/6, jnp.pi/6])
-    min_knot = jnp.array([-jnp.inf, -jnp.inf, -jnp.inf, -jnp.pi/3, -jnp.pi/3, -jnp.pi/3])
-    max_knot = jnp.array([jnp.inf, jnp.inf, jnp.inf, jnp.pi/3, jnp.pi/3, jnp.pi/3])
 
-    key, *subkeys = jax.random.split(key, 1 + num_traj)
-    subkeys = jnp.vstack(subkeys)
-    in_axes = (0, None, None, None, None, None, None, None, None)
-    t_knots, knots, coefs = jax.vmap(random_ragged_spline, in_axes)(
-        subkeys, T, num_knots, poly_orders, deriv_orders,
-        min_step, max_step, min_knot, max_knot
-    )
+    for key, value in raw.items():
+        print(f"{key}: {value}")
 
-    # Sample wind velocities from the training distribution
-    w_min = 0.  # minimum wind velocity in inertial `x`-direction
-    w_max = 6.  # maximum wind velocity in inertial `x`-direction
-    a = 5.      # shape parameter `a` for beta distribution
-    b = 9.      # shape parameter `b` for beta distribution
-    key, subkey = jax.random.split(key, 2)
-    w = w_min + (w_max - w_min)*jax.random.beta(subkey, a, b, (num_traj,))
+    error = raw['r'] - raw['q']
+    print(f"error: {error}")
 
-    print(w)
+    # data = {
+    #     'seed': self.seed, 'prng_key': self.key,
+    #     't': self.t, 'q': self.q, 'dq': self.dq,
+    #     'u': self.u, 'r': self.r, 'dr': self.dr,
+    #     't_knots': self.t_knots, 'r_knots': self.r_knots,
+    #     'w': self.w, 'w_min': self.w_min, 'w_max': self.w_max,
+    #     'beta_params': (self.a, self.b),
+    # }
