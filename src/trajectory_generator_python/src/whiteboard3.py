@@ -13,8 +13,10 @@ if __name__ == "__main__":
     for key, value in raw.items():
         print(f"{key}: {value}")
 
-    error = raw['r'] - raw['q']
-    print(f"error: {error}")
+    # error = raw['r'] - raw['q']
+    # derror = raw['dr'] - raw['dq']
+    # print(f"error: {error}")
+    # print(f"derror: {derror}")
 
     # data = {
     #     'seed': self.seed, 'prng_key': self.key,

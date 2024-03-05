@@ -470,7 +470,7 @@ class TrajectoryGenerator:
 
         rospack = rospkg.RosPack()
         package_path = rospack.get_path('trajectory_generator_python')
-        file_path = package_path + '/src/training_data.pkl'
+        file_path = package_path + f'/src/training_data_{self.num_traj}.pkl'
 
         with open(file_path, 'wb+') as file:
             pickle.dump(data, file)
