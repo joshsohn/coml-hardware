@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
+import datetime
 import rospy
 import rospkg
 from functools import partial
@@ -52,7 +53,7 @@ class TrajectoryGenerator:
         self.goal_ = Goal()
         self.init_pos_ = Vector3()
         self.wind_ = Wind()
-        self.att_cmd_ = Vector3()
+        self.att_cmd_ = AttitudeCommand()
 
         self.record = False
 
@@ -76,7 +77,7 @@ class TrajectoryGenerator:
 
         self.q = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
         self.dq = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
-        self.u = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
+        self.u = np.zeros((self.num_traj, int(self.T/self.dt)+1, 10))
         self.r = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
         self.dr = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
 
@@ -175,9 +176,18 @@ class TrajectoryGenerator:
         self.vel_.angular.z = msg.w.z
     
     def cmd_cb(self, msg):
-        self.att_cmd_.x = msg.F_W.x
-        self.att_cmd_.y = msg.F_W.y
-        self.att_cmd_.z = msg.F_W.z
+        self.att_cmd_.F_W.x = msg.F_W.x
+        self.att_cmd_.F_W.y = msg.F_W.y
+        self.att_cmd_.F_W.z = msg.F_W.z
+
+        self.att_cmd_.q.w = msg.q.w
+        self.att_cmd_.q.x = msg.q.x
+        self.att_cmd_.q.y = msg.q.y
+        self.att_cmd_.q.z = msg.q.z
+
+        self.att_cmd_.w.x = msg.w.x
+        self.att_cmd_.w.y = msg.w.y
+        self.att_cmd_.w.z = msg.w.z
     
     def pub_cb(self, event):
         # on ground
@@ -292,7 +302,7 @@ class TrajectoryGenerator:
 
         # Generate smooth trajectories
         self.T = 30
-        self.num_traj = 2
+        self.num_traj = 50
         num_knots = 6
         poly_orders = (9, 9, 9, 6)
         deriv_orders = (4, 4, 4, 2)
@@ -451,7 +461,9 @@ class TrajectoryGenerator:
             self.q[goal_index, traj_index] = np.array([self.pose_.position.x, self.pose_.position.y, self.pose_.position.z])
             self.dq[goal_index, traj_index] = np.array([self.vel_.linear.x, self.vel_.linear.y, self.vel_.linear.z])
 
-            self.u[goal_index, traj_index] = np.array([self.att_cmd_.x, self.att_cmd_.y, self.att_cmd_.z])
+            self.u[goal_index, traj_index] = np.array([self.att_cmd_.F_W.x, self.att_cmd_.F_W.y, self.att_cmd_.F_W.z,
+                self.att_cmd_.q.w, self.att_cmd_.q.x, self.att_cmd_.q.y, self.att_cmd_.q.z,
+                self.att_cmd_.w.x, self.att_cmd_.w.y, self.att_cmd_.w.z])
 
             self.r[goal_index, traj_index] = np.array([self.goal_.p.x, self.goal_.p.y, self.goal_.p.z])
             self.dr[goal_index, traj_index] = np.array([self.goal_.v.x, self.goal_.v.y, self.goal_.v.z])
@@ -468,9 +480,12 @@ class TrajectoryGenerator:
             'beta_params': (self.a, self.b),
         }
 
+        current_time = datetime.datetime.now()
+        timestamp = current_time.strftime("%Y-%m-%d_%H-%M-%S")
+
         rospack = rospkg.RosPack()
         package_path = rospack.get_path('trajectory_generator_python')
-        file_path = package_path + f'/src/training_data_{self.num_traj}.pkl'
+        file_path = package_path + f'/data/{timestamp}_traj{self.num_traj}_seed{self.seed}.pkl'
 
         with open(file_path, 'wb+') as file:
             pickle.dump(data, file)

@@ -1,17 +1,24 @@
 if __name__ == "__main__":
-    import pickle
-    import numpy as np
+    # import pickle
+    # import numpy as np
 
-    with open('training_data.pkl', 'rb') as file:
-        raw = pickle.load(file)
+    # with open('../data/training_data_2_1.pkl', 'rb') as file:
+    #     raw = pickle.load(file)
     
-    w_train = np.asarray(raw['w'])
-    w_min, w_max = raw['w_min'], raw['w_max']
-    a, b = raw['beta_params']
+    # w_train = np.asarray(raw['w'])
+    # w_min, w_max = raw['w_min'], raw['w_max']
+    # a, b = raw['beta_params']
 
 
-    for key, value in raw.items():
-        print(f"{key}: {value}")
+    # for key, value in raw.items():
+    #     print(f"{key}: {value}")
+
+    # print(raw['u'])
+
+    import datetime
+    current_time = datetime.datetime.now()
+    timestamp = current_time.strftime("%Y-%m-%d_%H-%M-%S")
+    print(timestamp)
 
     # error = raw['r'] - raw['q']
     # derror = raw['dr'] - raw['dq']
