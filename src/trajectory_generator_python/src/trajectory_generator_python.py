@@ -77,9 +77,11 @@ class TrajectoryGenerator:
 
         self.q = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
         self.dq = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
-        self.u = np.zeros((self.num_traj, int(self.T/self.dt)+1, 10))
+        self.u = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
         self.r = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
         self.dr = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
+        self.quat = np.zeros((self.num_traj, int(self.T/self.dt)+1, 4))
+        self.omega = np.zeros((self.num_traj, int(self.T/self.dt)+1, 3))
 
         rospy.loginfo("Successfully launched trajectory generator node.")
 
@@ -304,12 +306,18 @@ class TrajectoryGenerator:
         self.T = 30
         self.num_traj = 50
         num_knots = 6
-        poly_orders = (9, 9, 9, 6)
-        deriv_orders = (4, 4, 4, 2)
-        min_step = jnp.array([-2., -2., 0, -jnp.pi/6])
-        max_step = jnp.array([2., 2., 2., jnp.pi/6])
-        min_knot = jnp.array([self.xmin_, self.ymin_, self.zmin_, -jnp.pi/3])
-        max_knot = jnp.array([self.xmax_, self.ymax_, self.zmax_, jnp.pi/3])
+        # poly_orders = (9, 9, 9, 6)
+        poly_orders = (9, 9, 9)
+        # deriv_orders = (4, 4, 4, 2)
+        deriv_orders = (4, 4, 4)
+        # min_step = jnp.array([-2., -2., 0, -jnp.pi/6])
+        min_step = jnp.array([-2., -2., -0.75])
+        # max_step = jnp.array([2., 2., 2., jnp.pi/6])
+        max_step = jnp.array([2., 2., 0.75])
+        # min_knot = jnp.array([self.xmin_, self.ymin_, self.zmin_, -jnp.pi/3])
+        min_knot = jnp.array([self.xmin_, self.ymin_, self.zmin_])
+        # max_knot = jnp.array([self.xmax_, self.ymax_, self.zmax_, jnp.pi/3])
+        max_knot = jnp.array([self.xmax_, self.ymax_, self.zmax_])
 
         self.key, *subkeys = jax.random.split(self.key, 1 + self.num_traj)
         subkeys = jnp.vstack(subkeys)
@@ -327,13 +335,18 @@ class TrajectoryGenerator:
             """TODO: docstring."""
             # Construct spline reference trajectory
             def reference(t):
-                x_coefs, y_coefs, z_coefs, Ψ_coefs = coefs
+                # x_coefs, y_coefs, z_coefs, Ψ_coefs = coefs
+                x_coefs, y_coefs, z_coefs = coefs
                 x = spline(t, t_knots, x_coefs)
                 y = spline(t, t_knots, y_coefs)
                 z = spline(t, t_knots, z_coefs)
-                Ψ = spline(t, t_knots, Ψ_coefs)
-                Ψ = jnp.clip(Ψ, -jnp.pi/3, jnp.pi/3)
-                r = jnp.array([x, y, z, Ψ])
+                # Ψ = spline(t, t_knots, Ψ_coefs)
+                # Ψ = jnp.clip(Ψ, -jnp.pi/3, jnp.pi/3)
+                x = jnp.clip(x, self.xmin_, self.xmax_)
+                y = jnp.clip(y, self.ymin_, self.ymax_)
+                z = jnp.clip(z, self.zmin_, self.zmax_)
+                # r = jnp.array([x, y, z, Ψ])
+                r = jnp.array([x, y, z])
                 return r
 
             # Required derivatives of the reference trajectory
@@ -414,8 +427,8 @@ class TrajectoryGenerator:
         goal.a.z = ddr_i[2]
         goal.power = True
 
-        goal.psi = r_i[3]
-        goal.dpsi = dr_i[3]
+        goal.psi = 0
+        goal.dpsi = 0
 
         # jerk is set to 0
         goal.j.x  = 0
@@ -442,7 +455,7 @@ class TrajectoryGenerator:
         self.goal_.a.x, self.goal_.a.y, self.goal_.a.z = 0, 0, 0
         self.goal_.j.x, self.goal_.j.y, self.goal_.j.z = 0, 0, 0
         #self.goal_.s.x, self.goal_.s.y, self.goal_.s.z = 0, 0, 0
-        self.goal_.psi = quat2yaw(self.pose_.orientation)
+        self.goal_.psi = 0
         self.goal_.dpsi = 0
         # self.goal_.power = False
         # reset_xy_int and  reset_z_int are not used
@@ -461,9 +474,10 @@ class TrajectoryGenerator:
             self.q[goal_index, traj_index] = np.array([self.pose_.position.x, self.pose_.position.y, self.pose_.position.z])
             self.dq[goal_index, traj_index] = np.array([self.vel_.linear.x, self.vel_.linear.y, self.vel_.linear.z])
 
-            self.u[goal_index, traj_index] = np.array([self.att_cmd_.F_W.x, self.att_cmd_.F_W.y, self.att_cmd_.F_W.z,
-                self.att_cmd_.q.w, self.att_cmd_.q.x, self.att_cmd_.q.y, self.att_cmd_.q.z,
-                self.att_cmd_.w.x, self.att_cmd_.w.y, self.att_cmd_.w.z])
+            self.u[goal_index, traj_index] = np.array([self.att_cmd_.F_W.x, self.att_cmd_.F_W.y, self.att_cmd_.F_W.z])
+
+            self.quat[goal_index, traj_index] = np.array([self.pose_.orientation.w, self.pose_.orientation.x, self.pose_.orientation.y, self.pose_.orientation.z])
+            self.omega[goal_index, traj_index] = np.array([self.vel_.angular.x, self.vel_.angular.y, self.vel_.angular.z])
 
             self.r[goal_index, traj_index] = np.array([self.goal_.p.x, self.goal_.p.y, self.goal_.p.z])
             self.dr[goal_index, traj_index] = np.array([self.goal_.v.x, self.goal_.v.y, self.goal_.v.z])
@@ -475,6 +489,7 @@ class TrajectoryGenerator:
             'seed': self.seed, 'prng_key': self.key,
             't': self.t, 'q': self.q, 'dq': self.dq,
             'u': self.u, 'r': self.r, 'dr': self.dr,
+            'quat': self.quat, 'omega': self.omega,
             't_knots': self.t_knots, 'r_knots': self.r_knots,
             'w': self.w, 'w_min': self.w_min, 'w_max': self.w_max,
             'beta_params': (self.a, self.b),
