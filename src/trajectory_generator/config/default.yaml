@@ -29,7 +29,7 @@ vel_land_fast: 0.35
 vel_land_slow: 0.04
 vel_yaw: 0.2
 
-dist_thresh: 0.1  # m
+dist_thresh: 0.2  # m
 yaw_thresh: 0.2  # rad
 
 margin_takeoff_outside_bounds: 0.05  # m

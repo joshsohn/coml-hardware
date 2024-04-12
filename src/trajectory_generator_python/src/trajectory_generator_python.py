@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.8
 
 import numpy as np
 import datetime
@@ -426,11 +426,14 @@ class TrajectoryGenerator:
         goal.j.z  = 0
         return goal
         
-    def create_wind(self, wind_x):
+    def create_wind(self, w):
         wind = Wind()
-        wind.w_nominal.x = wind_x
-        wind.w_nominal.y = 0
-        wind.w_nominal.z = 0
+        random_vector = np.random.randn(3)
+        unit_vector = random_vector/np.linalg.norm(random_vector)
+        wind_vector = unit_vector*w
+        wind.w_nominal.x = wind_vector[0]
+        wind.w_nominal.y = wind_vector[1]
+        wind.w_nominal.z = wind_vector[2]
         wind.w_gust.x = 0
         wind.w_gust.y = 0
         wind.w_gust.z = 0
