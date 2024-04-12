@@ -14,6 +14,113 @@ from functools import partial
 from jax.flatten_util import ravel_pytree
 import jax.debug as jdebug
 
+def flat_rotation_matrix_to_quaternion(rot_mat_flat):
+    """Convert a rotation matrix to a quaternion. Quaternion is in w, x, y, z format."""
+    rot_mat = rot_mat_flat.reshape(3,3)
+    tr = rot_mat[0, 0] + rot_mat[1, 1] + rot_mat[2, 2]
+
+    def case1(_):
+        S = jnp.sqrt(tr + 1.0) * 2  # S=4*qw
+        qw = 0.25 * S
+        qx = (rot_mat[2, 1] - rot_mat[1, 2]) / S
+        qy = (rot_mat[0, 2] - rot_mat[2, 0]) / S
+        qz = (rot_mat[1, 0] - rot_mat[0, 1]) / S
+        return jnp.array([qw, qx, qy, qz])
+
+    def case2(_):
+        S = jnp.sqrt(1.0 + rot_mat[0, 0] - rot_mat[1, 1] - rot_mat[2, 2]) * 2
+        qw = (rot_mat[2, 1] - rot_mat[1, 2]) / S
+        qx = 0.25 * S
+        qy = (rot_mat[0, 1] + rot_mat[1, 0]) / S
+        qz = (rot_mat[0, 2] + rot_mat[2, 0]) / S
+        return jnp.array([qw, qx, qy, qz])
+
+    def case3(_):
+        S = jnp.sqrt(1.0 + rot_mat[1, 1] - rot_mat[0, 0] - rot_mat[2, 2]) * 2
+        qw = (rot_mat[0, 2] - rot_mat[2, 0]) / S
+        qx = (rot_mat[0, 1] + rot_mat[1, 0]) / S
+        qy = 0.25 * S
+        qz = (rot_mat[1, 2] + rot_mat[2, 1]) / S
+        return jnp.array([qw, qx, qy, qz])
+
+    def case4(_):
+        S = jnp.sqrt(1.0 + rot_mat[2, 2] - rot_mat[0, 0] - rot_mat[1, 1]) * 2
+        qw = (rot_mat[1, 0] - rot_mat[0, 1]) / S
+        qx = (rot_mat[0, 2] + rot_mat[2, 0]) / S
+        qy = (rot_mat[1, 2] + rot_mat[2, 1]) / S
+        qz = 0.25 * S
+        return jnp.array([qw, qx, qy, qz])
+
+    return jax.lax.cond(
+        tr > 0,
+        case1,
+        lambda _: jax.lax.cond(
+            rot_mat[0, 0] > rot_mat[1, 1],
+            case2,
+            lambda _: jax.lax.cond(
+                rot_mat[1, 1] > rot_mat[2, 2],
+                case3,
+                case4,
+                None
+            ),
+            None
+        ),
+        None
+    )
+
+def quaternion_to_rotation_matrix(Q):
+    """
+    Convert a quaternion into a full three-dimensional rotation matrix.
+    """
+    # Extract the values from Q
+    q_w = Q[0]
+    q_x = Q[1]
+    q_y = Q[2]
+    q_z = Q[3]
+     
+    # First row of the rotation matrix
+    r00 = 2 * (q_w * q_w + q_x * q_x) - 1
+    r01 = 2 * (q_x * q_y - q_w * q_z)
+    r02 = 2 * (q_x * q_z + q_w * q_y)
+     
+    # Second row of the rotation matrix
+    r10 = 2 * (q_x * q_y + q_w * q_z)
+    r11 = 2 * (q_w * q_w + q_y * q_y) - 1
+    r12 = 2 * (q_y * q_z - q_w * q_x)
+     
+    # Third row of the rotation matrix
+    r20 = 2 * (q_x * q_z - q_w * q_y)
+    r21 = 2 * (q_y * q_z + q_w * q_x)
+    r22 = 2 * (q_w * q_w + q_z * q_z) - 1
+     
+    # 3x3 rotation matrix
+    rot_matrix = jnp.array([[r00, r01, r02],
+                           [r10, r11, r12],
+                           [r20, r21, r22]])
+                            
+    return rot_matrix
+
+
+def quaternion_multiply(quaternion0, quaternion1):
+    w0, x0, y0, z0 = quaternion0
+    w1, x1, y1, z1 = quaternion1
+    return jnp.array([-x1 * x0 - y1 * y0 - z1 * z0 + w1 * w0,
+                     x1 * w0 + y1 * z0 - z1 * y0 + w1 * x0,
+                     -x1 * z0 + y1 * w0 + z1 * x0 + w1 * y0,
+                     x1 * y0 - y1 * x0 + z1 * w0 + w1 * z0])
+
+
+def hat(in_vec):
+    out_mat = jnp.array([[0, -in_vec[2], in_vec[1]],
+                        [in_vec[2], 0, -in_vec[0]],
+                        [-in_vec[1], in_vec[0], 0]])
+    return out_mat
+
+
+def vee(in_mat):
+    out_vec = jnp.array([in_mat[2, 1], in_mat[0, 2], in_mat[1, 0]])
+    return out_vec
+
 
 def mat_to_svec_dim(n):
     """Compute the number of unique entries in a symmetric matrix."""
@@ -137,18 +244,29 @@ def uniform_random_walk(key, num_steps, shape=(), min_step=0., max_step=1.):
     return points
 
 
-def random_spline(key, T_total, num_knots, poly_order, deriv_order,
-                  shape=(), min_step=0., max_step=1.):
-    """TODO: docstring."""
-    knots = uniform_random_walk(key, num_knots - 1, shape, min_step, max_step)
-    flat_knots = jnp.reshape(knots, (num_knots, -1))
-    diffs = jnp.linalg.norm(jnp.diff(flat_knots, axis=0), axis=1)
-    T = T_total * (diffs / jnp.sum(diffs))
-    t_knots = jnp.concatenate((jnp.array([0., ]),
-                               jnp.cumsum(T))).at[-1].set(T_total)
-    coefs = smooth_trajectory(knots, t_knots, poly_order, deriv_order)
-    return knots, t_knots, coefs
+# def random_spline(key, T_total, num_knots, poly_order, deriv_order,
+#                   shape=(), min_step=0., max_step=1.):
+#     """TODO: docstring."""
+#     knots = uniform_random_walk(key, num_knots - 1, shape, min_step, max_step)
+#     flat_knots = jnp.reshape(knots, (num_knots, -1))
+#     diffs = jnp.linalg.norm(jnp.diff(flat_knots, axis=0), axis=1)
+#     T = T_total * (diffs / jnp.sum(diffs))
+#     t_knots = jnp.concatenate((jnp.array([0., ]),
+#                                jnp.cumsum(T))).at[-1].set(T_total)
+#     coefs = smooth_trajectory(knots, t_knots, poly_order, deriv_order)
+#     return knots, t_knots, coefs
 
+def normalize_diffs_if_needed(normalized_diffs):
+    def true_fun(_):
+        return normalized_diffs / jnp.sum(normalized_diffs)
+    def false_fun(_):
+        return normalized_diffs
+    return jax.lax.cond(
+        jnp.sum(normalized_diffs) > 1,
+        true_fun,
+        false_fun,
+        operand=None
+    )
 
 def random_ragged_spline(key, T_total, num_knots, poly_orders, deriv_orders,
                          min_step, max_step, min_knot, max_knot):
@@ -162,7 +280,17 @@ def random_ragged_spline(key, T_total, num_knots, poly_orders, deriv_orders,
     knots = jnp.clip(knots, min_knot, max_knot)
     flat_knots = jnp.reshape(knots, (num_knots, -1))
     diffs = jnp.linalg.norm(jnp.diff(flat_knots, axis=0), axis=1)
-    T = T_total * (diffs / jnp.sum(diffs))
+    normalized_diffs = diffs / jnp.sum(diffs)
+
+    lower_bound = 0.1
+
+    # Ensure that each normalized time interval is above the lower bound
+    normalized_diffs = jnp.maximum(normalized_diffs, lower_bound)
+
+    # If the adjustment above made the total exceed 1, re-normalize the diffs
+    normalized_diffs = normalize_diffs_if_needed(normalized_diffs)
+
+    T = T_total * normalized_diffs
     t_knots = jnp.concatenate((jnp.array([0., ]),
                                jnp.cumsum(T))).at[-1].set(T_total)
     coefs = []
