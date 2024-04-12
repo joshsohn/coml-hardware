@@ -332,10 +332,10 @@ class TrajectoryGenerator:
                 x_coefs, y_coefs, z_coefs = coefs
                 x = spline(t, t_knots, x_coefs)
                 y = spline(t, t_knots, y_coefs)
-                z = spline(t, t_knots, z_coefs)
+                z = spline(t, t_knots, z_coefs) + 1.
                 x = jnp.clip(x, self.xmin_, self.xmax_)
                 y = jnp.clip(y, self.ymin_, self.ymax_)
-                z = jnp.clip(z, self.zmin_, self.zmax_) + 1
+                z = jnp.clip(z, self.zmin_, self.zmax_)
                 r = jnp.array([x, y, z])
                 return r
 
