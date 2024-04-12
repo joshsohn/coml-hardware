@@ -306,18 +306,12 @@ class TrajectoryGenerator:
         self.T = 30
         self.num_traj = 50
         num_knots = 6
-        # poly_orders = (9, 9, 9, 6)
         poly_orders = (9, 9, 9)
-        # deriv_orders = (4, 4, 4, 2)
         deriv_orders = (4, 4, 4)
-        # min_step = jnp.array([-2., -2., 0, -jnp.pi/6])
-        min_step = jnp.array([-2., -2., -0.75])
-        # max_step = jnp.array([2., 2., 2., jnp.pi/6])
-        max_step = jnp.array([2., 2., 0.75])
-        # min_knot = jnp.array([self.xmin_, self.ymin_, self.zmin_, -jnp.pi/3])
-        min_knot = jnp.array([self.xmin_, self.ymin_, self.zmin_])
-        # max_knot = jnp.array([self.xmax_, self.ymax_, self.zmax_, jnp.pi/3])
-        max_knot = jnp.array([self.xmax_, self.ymax_, self.zmax_])
+        min_step = jnp.array([-2, -2, -0.25])
+        max_step = jnp.array([2, 2, 0.25])
+        min_knot = jnp.array([self.xmin_, self.ymin_, self.zmin_-1]) # z lower bound should be -1.0
+        max_knot = jnp.array([self.xmax_, self.ymax_, self.zmax_-1]) # z upper bound should be 1.0
 
         self.key, *subkeys = jax.random.split(self.key, 1 + self.num_traj)
         subkeys = jnp.vstack(subkeys)
@@ -335,17 +329,13 @@ class TrajectoryGenerator:
             """TODO: docstring."""
             # Construct spline reference trajectory
             def reference(t):
-                # x_coefs, y_coefs, z_coefs, Ψ_coefs = coefs
                 x_coefs, y_coefs, z_coefs = coefs
                 x = spline(t, t_knots, x_coefs)
                 y = spline(t, t_knots, y_coefs)
                 z = spline(t, t_knots, z_coefs)
-                # Ψ = spline(t, t_knots, Ψ_coefs)
-                # Ψ = jnp.clip(Ψ, -jnp.pi/3, jnp.pi/3)
                 x = jnp.clip(x, self.xmin_, self.xmax_)
                 y = jnp.clip(y, self.ymin_, self.ymax_)
-                z = jnp.clip(z, self.zmin_, self.zmax_)
-                # r = jnp.array([x, y, z, Ψ])
+                z = jnp.clip(z, self.zmin_, self.zmax_) + 1
                 r = jnp.array([x, y, z])
                 return r
 
