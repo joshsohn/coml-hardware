@@ -62,9 +62,9 @@ class TrajectoryGenerator:
         rospy.Subscriber('state', State, self.state_cb)
         rospy.Subscriber('attcmd', AttitudeCommand, self.cmd_cb)
  
-        self.pub_timer_ = rospy.Timer(rospy.Duration(self.dt_), self.pub_cb)
         self.pub_goal_ = rospy.Publisher('goal',Goal, queue_size=1)
         self.pub_wind_ = rospy.Publisher('wind',Wind, queue_size=1)
+        self.pub_timer_ = rospy.Timer(rospy.Duration(self.dt_), self.pub_cb)
         
         rospy.sleep(1.0)  # To ensure that the state has been received
 
@@ -375,12 +375,17 @@ class TrajectoryGenerator:
             return r, dr, ddr
 
         # Sample wind velocities from the training distribution
-        self.w_min = 0.  # minimum wind velocity in inertial `x`-direction
-        self.w_max = 6.  # maximum wind velocity in inertial `x`-direction
+        self.w_min = 0.  # minimum wind velocity
+        self.w_max = 12.  # maximum wind velocity
         self.a = 5.      # shape parameter `a` for beta distribution
         self.b = 9.      # shape parameter `b` for beta distribution
         self.key, subkey = jax.random.split(self.key, 2)
         self.w = self.w_min + (self.w_max - self.w_min)*jax.random.beta(subkey, self.a, self.b, (self.num_traj,))
+        
+        # Randomize wind direction
+        random_vectors = jax.random.normal(self.key, (self.num_traj, 3))
+        unit_vectors = random_vectors/jnp.linalg.norm(random_vectors, axis=1, keepdims=True)
+        self.w_nominal_vectors = self.w[:, jnp.newaxis]*unit_vectors
 
         # Simulate tracking for each `w`
         self.dt = 0.01
@@ -397,7 +402,7 @@ class TrajectoryGenerator:
                 goal_i.append(self.create_goal(r_i, dr_i, ddr_i))
             all_goals.append(goal_i)
 
-            all_winds.append(self.create_wind(self.w[i]))
+            all_winds.append(self.create_wind(self.w_nominal_vectors[i]))
         
         print("Finished generating trajectories...")
         
@@ -426,14 +431,12 @@ class TrajectoryGenerator:
         goal.j.z  = 0
         return goal
         
-    def create_wind(self, w):
+    def create_wind(self, w_nominal_vector):
         wind = Wind()
-        # random_vector = np.random.randn(3)
-        # unit_vector = random_vector/np.linalg.norm(random_vector)
-        # wind_vector = unit_vector*w
-        wind.w_nominal.x = w
-        wind.w_nominal.y = 0
-        wind.w_nominal.z = 0
+        
+        wind.w_nominal.x = w_nominal_vector[0]
+        wind.w_nominal.y = w_nominal_vector[1]
+        wind.w_nominal.z = w_nominal_vector[2]
         wind.w_gust.x = 0
         wind.w_gust.y = 0
         wind.w_gust.z = 0
